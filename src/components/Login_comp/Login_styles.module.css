@@ -1,0 +1,90 @@
+.body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(125deg, rgba(0,0,0,1) 0%, rgb(114, 114, 114) 51%, rgba(0,0,0,1) 100%);
+
+    
+}
+.container {
+    display: flex;
+    width: 80%;
+    max-width: 1200px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    
+    background: rgb(87,178,255);
+    background: linear-gradient(121deg,     rgba(87,178,255,1) 0%, rgba(255,255,255,1) 51%, rgba(218,218,218,1) 100%);
+}
+.animation {
+    flex: 1.5; /* Increased flex value to make it wider */
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.animation img {
+    width: 100%;
+    height: auto;
+}
+.login_form {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.login_form h2 {
+    margin-bottom: 75px;
+    font-weight: 500;
+    color: #333;
+    font-size: 2.5rem; /* Increased font size */
+    text-align: center; /* Center the text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login_form .input_group {
+    margin-bottom: 20px;
+}
+.login_form .input_group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+.login_form .input_group input,
+.login_form .input_group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.login_form .input_group input:focus,
+.login_form .input_group select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+.login_form button {
+    padding: 10px;
+    background: #005bbd;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.login_form button:hover {
+    background: #2890ff;
+}
+
+.role_select{
+    width: 426px;
+}
