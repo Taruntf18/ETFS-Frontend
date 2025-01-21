@@ -1,14 +1,10 @@
 import React from "react";
 import styles from "./newfile.module.css";
 import Navbar from "../Navbar/Navbar";
-import { baseUrl } from "../../environments/environment";
+
 
 const NewFile = () => {
-  const getData = async() => {
-    const data = await fetch(`${baseUrl}users/test`);
-    console.log(data.json());
-  }
-  getData();
+  
   return (
     <>
     <Navbar/>
@@ -164,18 +160,6 @@ const NewFile = () => {
               </select>
             </div>
             <div className={styles.form_group}>
-              <label htmlFor="document-date">Document Date</label>
-              <input
-                type="date"
-                id={styles.document_date}
-                placeholder="dd-mm-yyyy"
-              />
-            </div>
-            <div className={styles.form_group}>
-              <label htmlFor="description">Description</label>
-              <textarea id={styles.description}></textarea>
-            </div>
-            <div className={styles.form_group}>
               <label>Priority</label>
               <div className={styles.radio_group}>
                 <label>
@@ -187,6 +171,45 @@ const NewFile = () => {
                 </label>
               </div>
             </div>
+            <div className={styles.form_group}>
+              <label htmlFor="">Subject</label>
+              <input type="text" className={styles.subject} />
+            </div>
+            {/* <div className={styles.form_group}>
+              <label htmlFor="document-date">Document Date</label>
+              <input
+                type="date"
+                id={styles.document_date}
+                placeholder="dd-mm-yyyy"
+              />
+            </div> */}
+            <div className={styles.form_group}>
+              <label htmlFor="description">Description</label>
+              <textarea id={styles.description}></textarea>
+            </div>
+            <div className={styles.form_group}>
+              <label>With whome we are sending</label>
+              <div className={styles.radio_group}>
+                <label>
+                  <input type="radio" name="sender" value="normal" /> Self
+                </label>
+                <label>
+                  <input type="radio" name="sender" value="immediate" />Others
+                </label>
+              </div>
+            </div>
+            <div className={styles.form_group}>
+              <label>With whome we are sending</label>
+              <div className={styles.radio_group}>
+                <label>
+                  <input type="radio" name="receiver" value="normal" /> Emplo
+                </label>
+                <label>
+                  <input type="radio" name="receiver" value="immediate" />Others
+                </label>
+              </div>
+            </div>
+            
             <div className={styles.form_group}>
               <label htmlFor="recipient">Sending:</label>
               <select id={styles.recipient}>
@@ -208,3 +231,6 @@ const NewFile = () => {
 };
 
 export default NewFile;
+
+
+

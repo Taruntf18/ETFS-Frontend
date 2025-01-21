@@ -14,6 +14,7 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 800px;
+    
     font-family: "Roboto", sans-serif; /* Another font option */
 }
 
@@ -43,6 +44,11 @@
     resize: vertical;
     height: 100px;
 }
+
+.form_group .subject{
+    width: 96.5%;
+}
+
 .form_group .radio_group {
     display: flex;
     align-items: center;

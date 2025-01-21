@@ -18,7 +18,7 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    navigate("/dashboard"); // Redirect to MainSection
+    navigate("/"); // Redirect to MainSection
   };
 
   return (

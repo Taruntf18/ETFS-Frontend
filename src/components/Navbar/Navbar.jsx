@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/"); // Redirect to Login page
+    navigate("/login"); // Redirect to Login page
   };
 
   return (

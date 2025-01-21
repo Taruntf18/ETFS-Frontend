@@ -1,0 +1,44 @@
+.body {
+    font-family: 'Roboto', sans-serif;
+    margin: 60px 200px;
+}
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.th, .td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+.th {
+    background-color: #f4f4f4;
+    font-weight: 700;
+}
+.tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.priority_immediate {
+    color: red;
+    font-weight: bold;
+}
+.priority_normal {
+    color: green;
+    font-weight: bold;
+}
+.thead .tr:first-child .th:first-child {
+    border-top-left-radius: 10px;
+}
+.thead .tr:first-child .th:last-child {
+    border-top-right-radius: 10px;
+}
+.tbody .tr:last-child .td:first-child {
+    border-bottom-left-radius: 10px;
+}
+.tbody .tr:last-child .td:last-child {
+    border-bottom-right-radius: 10px;
+}
