@@ -1,13 +1,40 @@
 import React from "react";
 import styles from "./newfile.module.css";
 import Navbar from "../Navbar/Navbar";
-
+import { useState } from "react";
 
 const NewFile = () => {
-  
+  // const [whome, setWhome] = useState();
+  // const [where, setWhere] = useState();
+  // const [workflow, setWorkflow] = useState();
+
+  // function setwhomeValue(changeEvent) {
+  //   setWhome({ state: changeEvent.target.value });
+  //   console.log(changeEvent.target.value + "whome");
+  // }
+  // function setwhereValue(changeEvent) {
+  //   setWhere({ state: changeEvent.target.value });
+  //   console.log(changeEvent.target.value + "where");
+  // }
+  // function setworkflowValue(changeEvent) {
+  //   setWorkflow({ state: changeEvent.target.value });
+  //   console.log(changeEvent.target.value + "workflow");
+  // }
+
+  const [sender, setSender] = useState("");
+  const [receiver, setReceiver] = useState("");
+
+  const handleSenderChange = (event) => {
+    setSender(event.target.value);
+  };
+
+  const handleReceiverChange = (event) => {
+    setReceiver(event.target.value);
+  };
+
   return (
     <>
-    <Navbar/>
+      <Navbar />
       <div className={styles.body}>
         <div className={styles.form_container}>
           <h2>Create New File</h2>
@@ -175,48 +202,110 @@ const NewFile = () => {
               <label htmlFor="">Subject</label>
               <input type="text" className={styles.subject} />
             </div>
-            {/* <div className={styles.form_group}>
-              <label htmlFor="document-date">Document Date</label>
-              <input
-                type="date"
-                id={styles.document_date}
-                placeholder="dd-mm-yyyy"
-              />
-            </div> */}
             <div className={styles.form_group}>
               <label htmlFor="description">Description</label>
               <textarea id={styles.description}></textarea>
             </div>
             <div className={styles.form_group}>
-              <label>With whome we are sending</label>
+              <label>Through whom are we sending it?</label>
               <div className={styles.radio_group}>
                 <label>
-                  <input type="radio" name="sender" value="normal" /> Self
+                  <input
+                    type="radio"
+                    name="sender"
+                    value="self"
+                    checked={sender === "self"}
+                    onChange={handleSenderChange}
+                  />
+                  Self
                 </label>
                 <label>
-                  <input type="radio" name="sender" value="immediate" />Others
+                  <input
+                    type="radio"
+                    name="sender"
+                    value="others"
+                    checked={sender === "others"}
+                    onChange={handleSenderChange}
+                  />
+                  Others
                 </label>
               </div>
+              {sender === "others" && (
+                <input
+                  type="text"
+                  placeholder="enter the person name"
+                  className={styles.subject}
+                />
+              )}
             </div>
-            <div className={styles.form_group}>
-              <label>With whome we are sending</label>
+
+            <div className={styles.form_group_whome}>
+              <label>Where we are sending</label>
               <div className={styles.radio_group}>
                 <label>
-                  <input type="radio" name="receiver" value="normal" /> Emplo
+                  <input
+                    type="radio"
+                    name="receiver"
+                    value="employee_of_my_division"
+                    checked={receiver === "employee_of_my_division"}
+                    onChange={handleReceiverChange}
+                  />
+                  Employees of My Division
                 </label>
                 <label>
-                  <input type="radio" name="receiver" value="immediate" />Others
+                  <input
+                    type="radio"
+                    name="receiver"
+                    value="divisional_office"
+                    checked={receiver === "divisional_office"}
+                    onChange={handleReceiverChange}
+                  />
+                  Divisional Office
                 </label>
               </div>
+              {receiver === "divisional_office" && (
+                <div className={styles.form_group}>
+                  <label htmlFor="">Division</label>
+                  <select id={styles.document_type}>
+                    <option>Select Division</option>
+                    <option>Agenda for Meeting</option>
+                    <option>Annual Report</option>
+                  </select>
+                </div>
+              )}
+              {receiver === "employee_of_my_division" && (
+                <div className={styles.form_group}>
+                <label htmlFor="">Employees</label>
+                <select id={styles.document_type}>
+                  <option>Select Employee</option>
+                  <option>Agenda </option>
+                  <option>Annual Report</option>
+                </select>
+              </div>
+              )}
             </div>
-            
             <div className={styles.form_group}>
-              <label htmlFor="recipient">Sending:</label>
-              <select id={styles.recipient}>
-                <option>Select Recipient</option>
-                <option> Employees of My Division</option>
-                <option value="">Divisional Office</option>
-              </select>
+              <label>Do you want to mention Workflow</label>
+              <div className={styles.radio_group}>
+                <label>
+                  <input
+                    type="radio"
+                    name="workflow"
+                    value={true}
+                    // onChange={setworkflowValue}
+                  />{" "}
+                  Yes
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="workflow"
+                    value={false}
+                    // onChange={setworkflowValue}
+                  />
+                  No
+                </label>
+              </div>
             </div>
             <div className={styles.form_group}>
               <button type="submit" className={styles.submit_btn}>
@@ -231,6 +320,3 @@ const NewFile = () => {
 };
 
 export default NewFile;
-
-
-
