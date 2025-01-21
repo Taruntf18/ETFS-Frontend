@@ -1,5 +1,5 @@
 .body {
-    font-family: "Poppins", sans-serif; /* Change to your preferred font */
+    font-family: "Poppins", sans-serif;
     background: linear-gradient(125deg, rgba(0,0,0,1) 0%, rgb(114, 114, 114) 51%, rgba(0,0,0,1) 100%);
     display: flex;
     justify-content: center;
@@ -71,6 +71,8 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    width: auto;
+
 }
 .form_group .submit_btn:hover {
     background-color: #2563eb;
@@ -91,7 +93,7 @@
 .form_group_whome .radio_group {
     display: flex;
     align-items: center;
-}
+}   
 .form_group_whome {
     margin-bottom: 20px;
 }
@@ -106,3 +108,38 @@
 #description{
     width: 96.5%;
 } 
+.add_btn {
+    background-color: #22c55e;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.add_btn:hover {
+    background-color: #16a34a; 
+}
+
+
+
+.division_row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.submit_button_div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submit_button_div .submit_btn{
+    width: 157px;
+    font-size: 20px;
+}

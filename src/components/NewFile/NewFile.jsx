@@ -1,28 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./newfile.module.css";
 import Navbar from "../Navbar/Navbar";
-import { useState } from "react";
+import { FaTrash } from "react-icons/fa";
 
 const NewFile = () => {
-  // const [whome, setWhome] = useState();
-  // const [where, setWhere] = useState();
-  // const [workflow, setWorkflow] = useState();
-
-  // function setwhomeValue(changeEvent) {
-  //   setWhome({ state: changeEvent.target.value });
-  //   console.log(changeEvent.target.value + "whome");
-  // }
-  // function setwhereValue(changeEvent) {
-  //   setWhere({ state: changeEvent.target.value });
-  //   console.log(changeEvent.target.value + "where");
-  // }
-  // function setworkflowValue(changeEvent) {
-  //   setWorkflow({ state: changeEvent.target.value });
-  //   console.log(changeEvent.target.value + "workflow");
-  // }
-
   const [sender, setSender] = useState("");
   const [receiver, setReceiver] = useState("");
+  const [workflow, setWorkflow] = useState(null);
+  const [divisions, setDivisions] = useState([]);
 
   const handleSenderChange = (event) => {
     setSender(event.target.value);
@@ -32,6 +17,24 @@ const NewFile = () => {
     setReceiver(event.target.value);
   };
 
+  const handleWorkflowChange = (event) => {
+    setWorkflow(event.target.value === "true");
+  };
+
+  const handleAddDivision = () => {
+    setDivisions([...divisions, ""]);
+  };
+
+  const handleDeleteDivision = (index) => {
+    setDivisions(divisions.filter((_, i) => i !== index));
+  };
+
+  const handleDivisionChange = (index, value) => {
+    const updatedDivisions = [...divisions];
+    updatedDivisions[index] = value;
+    setDivisions(updatedDivisions);
+  };
+
   return (
     <>
       <Navbar />
@@ -39,6 +42,7 @@ const NewFile = () => {
         <div className={styles.form_container}>
           <h2>Create New File</h2>
           <form>
+            {/* Existing Form Sections */}
             <div className={styles.form_group}>
               <label htmlFor="document-type">Type of Document</label>
               <select id={styles.document_type}>
@@ -182,8 +186,8 @@ const NewFile = () => {
                   Utilization Certificate
                 </option>
                 <option value="Visits">Visits</option>
-                <option value="">Work order</option>
                 <option value="">Work Package</option>
+                <option value="">Work order</option>
               </select>
             </div>
             <div className={styles.form_group}>
@@ -275,17 +279,18 @@ const NewFile = () => {
               )}
               {receiver === "employee_of_my_division" && (
                 <div className={styles.form_group}>
-                
-                <select id={styles.document_type}>
-                <option>Select Employee</option>
+                  <select id={styles.document_type}>
+                    <option>Select Employee</option>
                     <option>Pragathi</option>
                     <option>Harsha</option>
                     <option>Vivek</option>
                     <option>Tarun</option>
-                </select>
-              </div>
+                  </select>
+                </div>
               )}
             </div>
+
+            
             <div className={styles.form_group}>
               <label>Do you want to mention Workflow</label>
               <div className={styles.radio_group}>
@@ -293,8 +298,8 @@ const NewFile = () => {
                   <input
                     type="radio"
                     name="workflow"
-                    value={true}
-                    // onChange={setworkflowValue}
+                    value="true"
+                    onChange={handleWorkflowChange}
                   />{" "}
                   Yes
                 </label>
@@ -302,14 +307,45 @@ const NewFile = () => {
                   <input
                     type="radio"
                     name="workflow"
-                    value={false}
-                    // onChange={setworkflowValue}
+                    value="false"
+                    onChange={handleWorkflowChange}
                   />
                   No
                 </label>
               </div>
+              {workflow && (
+                <div className={styles.workflow_container}>
+                  {divisions.map((division, index) => (
+                    <div key={index} className={styles.division_row}>
+                      <select
+                        value={division}
+                        onChange={(e) =>
+                          handleDivisionChange(index, e.target.value)
+                        }
+                      >
+                        <option value="">Select Division</option>
+                        <option value="ICTD">ICTD</option>
+                        <option value="STORES">STORES</option>
+                        <option value="PURCHASE">PURCHASE</option>
+                        <option value="ADMIN">ADMIN</option>
+                      </select>
+                      <FaTrash
+                        className={styles.delete_icon}
+                        onClick={() => handleDeleteDivision(index)}
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleAddDivision}
+                    className={styles.add_btn}
+                  >
+                    Add Division
+                  </button>
+                </div>
+              )}
             </div>
-            <div className={styles.form_group}>
+            <div className={`${styles.form_group} ${styles.submit_button_div}`}>
               <button type="submit" className={styles.submit_btn}>
                 Submit
               </button>
