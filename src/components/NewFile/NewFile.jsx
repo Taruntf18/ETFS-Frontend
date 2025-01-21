@@ -233,14 +233,14 @@ const NewFile = () => {
               {sender === "others" && (
                 <input
                   type="text"
-                  placeholder="enter the person name"
+                  placeholder="Enter the Name"
                   className={styles.subject}
                 />
               )}
             </div>
 
             <div className={styles.form_group_whome}>
-              <label>Where we are sending</label>
+              <label>Sending To :</label>
               <div className={styles.radio_group}>
                 <label>
                   <input
@@ -265,21 +265,23 @@ const NewFile = () => {
               </div>
               {receiver === "divisional_office" && (
                 <div className={styles.form_group}>
-                  <label htmlFor="">Division</label>
                   <select id={styles.document_type}>
                     <option>Select Division</option>
-                    <option>Agenda for Meeting</option>
-                    <option>Annual Report</option>
+                    <option>ICTD</option>
+                    <option>ADMIN</option>
+                    <option>S&P</option>
                   </select>
                 </div>
               )}
               {receiver === "employee_of_my_division" && (
                 <div className={styles.form_group}>
-                <label htmlFor="">Employees</label>
+                
                 <select id={styles.document_type}>
-                  <option>Select Employee</option>
-                  <option>Agenda </option>
-                  <option>Annual Report</option>
+                <option>Select Employee</option>
+                    <option>Pragathi</option>
+                    <option>Harsha</option>
+                    <option>Vivek</option>
+                    <option>Tarun</option>
                 </select>
               </div>
               )}

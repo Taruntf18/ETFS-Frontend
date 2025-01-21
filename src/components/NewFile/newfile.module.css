@@ -9,13 +9,12 @@
 }
 
 .form_container {
-    background: linear-gradient(125deg, rgba(49,93,166,1) 0%, rgba(180, 179, 179, 0.445) 52%, rgba(49,93,166,1) 100%);
+    background: linear-gradient(125deg, rgba(144, 176, 218) 0%, rgba(228, 228, 228, 0.774) 52%, rgb(144, 176, 218) 100%);
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 800px;
-    
-    font-family: "Roboto", sans-serif; /* Another font option */
+    font-family: "Roboto", sans-serif; 
 }
 
 .form_container h2 {
