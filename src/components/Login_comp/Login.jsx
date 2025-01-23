@@ -18,7 +18,7 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    navigate("/"); // Redirect to MainSection
+    navigate("/");
   };
 
   return (
@@ -35,10 +35,9 @@ const Login = () => {
           <div className={styles.input_group}>
             <label htmlFor="role">Select Role</label>
             <select id="role" name="role" required>
-              <option value="">Select your role</option>
-              <option value="admin">Director</option>
-              <option value="user">Advisor</option>
-              <option value="guest">Employees</option>
+              <option value="">Select your Role</option>
+              <option value="admin">Employee</option>
+              <option value="user">Others</option>
             </select>
           </div>
           <div className={`${styles.input_group} ${styles.role_select}`}>
@@ -58,4 +57,4 @@ const Login = () => {
   );
 };
 
-export default Login; // ✅ Ensure default export
+export default Login; 
