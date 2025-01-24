@@ -13,15 +13,14 @@ const NewFile = () => {
   const [workflow, setWorkflow] = useState(null);
   const [divisions, setDivisions] = useState([]);
   const [resp, setResp] = useState([]);
-  const [dataArr, setDataArr] = useState([]);
+  const [documentArr, setDocumentArr] = useState([]);
 
   const getResp = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/getuser/getAllData"
+        "http://localhost:8080/document/getAllDocument"
       );
-      setDataArr(response);
-      console.log(response);
+      setDocumentArr(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
     }
@@ -66,7 +65,12 @@ const NewFile = () => {
             <div className={styles.form_group}>
               <label htmlFor="document-type">Type of Document</label>
               <select id={styles.document_type}>
-                <option>Select Document Type</option>
+                <option>Select the Document</option>
+                {documentArr.map((item) => (
+                  <option key={item.docId} value={item.docId}>
+                    {item.docType}
+                  </option>
+                ))}
               </select>
             </div>
             <div className={styles.form_group}>

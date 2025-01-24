@@ -2,13 +2,13 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import logo from "../Images/CSIR-National_Aerospace_Laboratories_Logo.png";
-import { FaUserCircle, FaBell } from "react-icons/fa"; // Import icons
+import { FaUserCircle, FaBell } from "react-icons/fa"; 
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/login"); // Redirect to Login page
+    navigate("/login"); 
   };
 
   return (
