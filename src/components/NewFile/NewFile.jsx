@@ -14,8 +14,12 @@ const NewFile = () => {
   const [divisions, setDivisions] = useState([]);
   const [resp, setResp] = useState([]);
   const [documentArr, setDocumentArr] = useState([]);
+  const [emp_of_my_div, setEmp_of_my_div] = useState([]);
+  const [divisionalOffice, setDivisionalOffice] = useState([]);
 
-  const getResp = async () => {
+
+  // fetching type of document data
+  const getDocumentResp = async () => {
     try {
       const response = await axios.get(
         "http://localhost:8080/document/getAllDocument"
@@ -26,7 +30,37 @@ const NewFile = () => {
     }
   };
   useEffect(() => {
-    getResp();
+    getDocumentResp();
+  }, []);
+
+  // fetching Employee of my division data
+  const getEmpOfMyDiv = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/document/getAllDocument"
+      );
+      setEmp_of_my_div(response.data);
+    } catch (error) {
+      console.error("Axios Error:", error);
+    }
+  };
+  useEffect(() => {
+    getEmpOfMyDiv();
+  }, []);
+
+  // fetching divisional office data
+  const getdivisionalOffice = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/document/getAllDocument"
+      );
+      setDivisionalOffice(response.data);
+    } catch (error) {
+      console.error("Axios Error:", error);
+    }
+  };
+  useEffect(() => {
+    getdivisionalOffice();
   }, []);
 
   const handleSenderChange = (event) => {
