@@ -22,7 +22,7 @@ const NewFile = () => {
   const getDocumentResp = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/document/getAllDocument"
+        "http://localhost:8080/getAllDocument"
       );
       setDocumentArr(response.data);
     } catch (error) {
@@ -37,7 +37,7 @@ const NewFile = () => {
   const getEmpOfMyDiv = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/document/getAllDocument"
+        "http://localhost:8080/getAllDocument"
       );
       setEmp_of_my_div(response.data);
     } catch (error) {
@@ -52,7 +52,7 @@ const NewFile = () => {
   const getdivisionalOffice = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/document/getAllDocument"
+        "http://localhost:8080/getAllDocument"
       );
       setDivisionalOffice(response.data);
     } catch (error) {
