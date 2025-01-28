@@ -17,13 +17,10 @@ const NewFile = () => {
   const [emp_of_my_div, setEmp_of_my_div] = useState([]);
   const [divisionalOffice, setDivisionalOffice] = useState([]);
 
-
   // fetching type of document data
   const getDocumentResp = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/getAllDocument"
-      );
+      const response = await axios.get("http://localhost:8080/getAllDocument");
       setDocumentArr(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
@@ -36,9 +33,7 @@ const NewFile = () => {
   // fetching Employee of my division data
   const getEmpOfMyDiv = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/getAllDocument"
-      );
+      const response = await axios.get("http://localhost:8080/getAllDocument");
       setEmp_of_my_div(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
@@ -51,9 +46,7 @@ const NewFile = () => {
   // fetching divisional office data
   const getdivisionalOffice = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/getAllDocument"
-      );
+      const response = await axios.get("http://localhost:8080/getDivisionData");
       setDivisionalOffice(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
@@ -120,7 +113,7 @@ const NewFile = () => {
               </div>
             </div>
             <div className={styles.form_group}>
-              <label htmlFor="">Subject</label>
+              <label>Subject</label>
               <input type="text" className={styles.subject} />
             </div>
             <div className={styles.form_group}>
@@ -187,10 +180,12 @@ const NewFile = () => {
               {receiver === "divisional_office" && (
                 <div className={styles.form_group}>
                   <select id={styles.document_type}>
-                    <option>Select Division</option>
-                    <option>ICTD</option>
-                    <option>ADMIN</option>
-                    <option>S&P</option>
+                  <option>Select Division</option>
+                    {divisionalOffice.map((item) => (
+                      <option key={item.divId} value={item.divName}>
+                        {item.divName}
+                      </option>
+                    ))}
                   </select>
                 </div>
               )}
