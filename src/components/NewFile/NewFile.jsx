@@ -1,26 +1,79 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./newfile.module.css";
 import Navbar from "../Navbar/Navbar";
+import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import axios from "axios";
 import { useEffect } from "react";
 
-const API_URL = "";
-
 const NewFile = () => {
+  // states for storing input form data
+  const [priority, setPriority] = useState("");
   const [sender, setSender] = useState("");
   const [receiver, setReceiver] = useState("");
-  const [workflow, setWorkflow] = useState(null);
+  const [subject, setSubject] = useState("");
+  const [description, setDescription] = useState("");
+  const [workflow, setWorkflow] = useState("");
+  const [senderName, SetsenderName] = useState("");
+  // const [receiverName, SetreceiverName] = useState("");
+  const [typeOfDoc, setTypeOfDoc] = useState("");
+
+  // states for hadling ui changes
   const [divisions, setDivisions] = useState([]);
-  const [resp, setResp] = useState([]);
+  const [showActualPopUp, setShowActualPopUp] = useState(false);
   const [documentArr, setDocumentArr] = useState([]);
   const [emp_of_my_div, setEmp_of_my_div] = useState([]);
   const [divisionalOffice, setDivisionalOffice] = useState([]);
 
+
+  function convertDateFormat(inputDate) {
+    const dateObject = new Date(inputDate);
+    if (isNaN(dateObject)) {
+      throw new Error("Invalid date format. Please use MM/DD/YYYY.");
+    }
+    const year = dateObject.getFullYear();
+    const month = String(dateObject.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const day = String(dateObject.getDate()).padStart(2, "0");
+  
+    return `${year}-${month}-${day}`;
+  }
+
+  const jsonObject = {
+    "docTypeID": typeOfDoc,
+    "divId": "",
+    "priority": priority,
+    "preparedBy": "",
+    "preparedDate": convertDateFormat(new Date().toLocaleDateString()),
+    "subject": subject,
+    "description": description,
+    // "sender" : sender,
+    // "senderName": senderName,
+    // "receiver" : receiver,
+    // "receiverName": receiverName,
+    // "workflowDescription" : divisions,
+    "workflow": divisions.toString(),
+    "status": ""
+  }
+
+  console.log(senderName);
+  
+  const handleSubmit = async() => {
+    // e.preventDefault();
+    console.log("Form Data:", JSON.stringify(jsonObject, null, 2));
+     try {
+      const result = await axios.post('http://localhost:8080/addFile', jsonObject);
+      console.log(result);
+    } catch (error) {
+      console.log("Axios Error:", error);
+    }
+  };
+
   // fetching type of document data
   const getDocumentResp = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/getAllDocument");
+      const response = await axios.get(
+        "http://localhost:8080/getAllDocument"
+      );
       setDocumentArr(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
@@ -30,7 +83,7 @@ const NewFile = () => {
     getDocumentResp();
   }, []);
 
-  // fetching Employee of my division data
+  // fetching employees of my division data
   const getEmpOfMyDiv = async () => {
     try {
       const response = await axios.get("http://localhost:8080/getAllDocument");
@@ -56,6 +109,26 @@ const NewFile = () => {
     getdivisionalOffice();
   }, []);
 
+  const hadleSubjectChange = (event) => {
+    setSubject(event.target.value);
+  }
+
+  const hadleSenderNameChange = (event) => {
+    SetsenderName(event.target.value);
+  }
+
+  const hadleReceiverName = (event) => {
+    SetreceiverName(event.target.value);
+  }
+
+  const hadleDescriptionChange = (event) => {
+    setDescription(event.target.value);
+  }
+
+  const handlePriorityChange = (event) => {
+    setPriority(event.target.value);
+  }
+
   const handleSenderChange = (event) => {
     setSender(event.target.value);
   };
@@ -65,7 +138,16 @@ const NewFile = () => {
   };
 
   const handleWorkflowChange = (event) => {
-    setWorkflow(event.target.value === "true");
+    setWorkflow(event.target.value);
+  };
+
+  const handlActualpop = () => {
+    if (showActualPopUp) setShowActualPopUp(false);
+    else setShowActualPopUp(true);
+  };
+
+  const closePopup = () => {
+    setShowActualPopUp(false);
   };
 
   const handleAddDivision = () => {
@@ -82,17 +164,33 @@ const NewFile = () => {
     setDivisions(updatedDivisions);
   };
 
+  const mileStoneRender = divisions.map((division, index) => (
+    <span
+      style={{
+        display: "inline-block",
+        marginBottom: "20px",
+        fontSize: "25px",
+        fontWeight: "bold",
+      }}
+      key={index}
+      className={styles.division_row}
+    >
+      {division}&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;
+    </span>
+  ));
+
   return (
     <>
       <Navbar />
+      {/* <TempNav /> */}
       <div className={styles.body}>
         <div className={styles.form_container}>
           <h2>Create New File</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className={styles.form_group}>
               <label htmlFor="document-type">Type of Document</label>
-              <select id={styles.document_type}>
-                <option>Select the Document</option>
+              <select id={styles.document_type} onChange={(e) => { setTypeOfDoc(e.target.value) }}>
+                <option value="">Select Document</option>
                 {documentArr.map((item) => (
                   <option key={item.docId} value={item.docId}>
                     {item.docType}
@@ -104,21 +202,21 @@ const NewFile = () => {
               <label>Priority</label>
               <div className={styles.radio_group}>
                 <label>
-                  <input type="radio" name="priority" value="normal" /> Normal
+                  <input type="radio" name="priority" checked={priority === 'normal'} onChange={handlePriorityChange} value="normal" /> Normal
                 </label>
                 <label>
-                  <input type="radio" name="priority" value="immediate" />{" "}
+                  <input type="radio" name="priority" checked={priority === 'immediate'} onChange={handlePriorityChange} value="immediate" />{" "}
                   Immediate
                 </label>
               </div>
             </div>
             <div className={styles.form_group}>
-              <label>Subject</label>
-              <input type="text" className={styles.subject} />
+              <label htmlFor="">Subject</label>
+              <input type="text" onChange={hadleSubjectChange} className={styles.subject} />
             </div>
             <div className={styles.form_group}>
               <label htmlFor="description">Description</label>
-              <textarea id={styles.description}></textarea>
+              <textarea onChange={hadleDescriptionChange} id={styles.description}></textarea>
             </div>
             <div className={styles.form_group}>
               <label>Through whom are we sending it?</label>
@@ -147,14 +245,15 @@ const NewFile = () => {
               {sender === "others" && (
                 <input
                   type="text"
+                  onChange={hadleSenderNameChange}
                   placeholder="Enter the Name"
-                  className={styles.subject}
+                  className={`${styles.subject} `}
                 />
               )}
             </div>
 
             <div className={styles.form_group_whome}>
-              <label>Sending To :</label>
+              <label>Sending To:</label>
               <div className={styles.radio_group}>
                 <label>
                   <input
@@ -178,9 +277,9 @@ const NewFile = () => {
                 </label>
               </div>
               {receiver === "divisional_office" && (
-                <div className={styles.form_group}>
+                <div className={`${styles.form_group}`}>
                   <select id={styles.document_type}>
-                  <option>Select Division</option>
+                    <option>Select Division</option>
                     {divisionalOffice.map((item) => (
                       <option key={item.divId} value={item.divName}>
                         {item.divName}
@@ -190,18 +289,17 @@ const NewFile = () => {
                 </div>
               )}
               {receiver === "employee_of_my_division" && (
-                <div className={styles.form_group}>
+                <div className={`${styles.form_group}`}>
                   <select id={styles.document_type}>
-                    <option>Select Employee</option>
-                    <option>Pragathi</option>
-                    <option>Harsha</option>
-                    <option>Vivek</option>
-                    <option>Tarun</option>
+                    {emp_of_my_div.map((item) => (
+                      <option key={item.docId} value={item.docId}>
+                        {item.docType}
+                      </option>
+                    ))}
                   </select>
                 </div>
               )}
             </div>
-
             <div className={styles.form_group}>
               <label>Do you want to mention Workflow</label>
               <div className={styles.radio_group}>
@@ -209,49 +307,35 @@ const NewFile = () => {
                   <input
                     type="radio"
                     name="workflow"
-                    value="true"
+                    value="yes"
+                    checked={workflow === 'yes'}
                     onChange={handleWorkflowChange}
-                  />{" "}
+                  />
                   Yes
                 </label>
                 <label>
                   <input
                     type="radio"
                     name="workflow"
-                    value="false"
+                    value="no"
+                    checked={workflow === 'no'}
                     onChange={handleWorkflowChange}
                   />
                   No
                 </label>
               </div>
-              {workflow && (
-                <div className={styles.workflow_container}>
-                  {divisions.map((division, index) => (
-                    <div key={index} className={styles.division_row}>
-                      <input
-                        type="text"
-                        value={division}
-                        onChange={(e) =>
-                          handleDivisionChange(index, e.target.value)
-                        }
-                        placeholder="Enter Division Name"
-                        className={styles.division_input}
-                      />
-                      <FaTrash
-                        className={styles.delete_icon}
-                        onClick={() => handleDeleteDivision(index)}
-                      />
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={handleAddDivision}
-                    className={styles.add_btn}
-                  >
-                    Add Division
-                  </button>
-                </div>
-              )}
+            </div>
+            {workflow === "yes" && (
+              <button
+                onClick={handlActualpop}
+                type="button"
+                className={styles.add_btn}
+              >
+                Add Division
+              </button>
+            )}
+            <div name="workflowdiv" id="workflowdiv">
+              {workflow === "yes" && mileStoneRender}
             </div>
             <div className={`${styles.form_group} ${styles.submit_button_div}`}>
               <button type="submit" className={styles.submit_btn}>
@@ -261,6 +345,46 @@ const NewFile = () => {
           </form>
         </div>
       </div>
+      {showActualPopUp && (
+        <div className={styles.popup}>
+          <div className={styles.popup_content}>
+            <h3>Workflow Details</h3>
+            <div className={styles.workflow_container}>
+              {divisions.map((division, index) => (
+                <div key={index} className={styles.division_row}>
+                  <input
+                    type="text"
+                    value={division}
+                    onChange={(e) =>
+                      handleDivisionChange(index, e.target.value)
+                    }
+                    placeholder="Enter Division Name"
+                    className={styles.division_input}
+                  />
+                  <FaTrash
+                    style={{ cursor: "pointer" }}
+                    className={styles.delete_icon}
+                    onClick={() => handleDeleteDivision(index)}
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={handleAddDivision}
+                className={styles.add_btn}
+              >
+                Add Division
+              </button>
+            </div>
+
+            <div className={styles.popup_buttons}>
+              <button onClick={closePopup} className={styles.close_btn}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
