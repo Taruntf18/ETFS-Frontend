@@ -32,14 +32,7 @@ const Login = () => {
             <img height={100} width={100} src={Nal_Logo} alt="" style={{ display: "inline-block", marginRight: "20px" }} />
             E-Tracking
           </h2>
-          <div className={styles.input_group}>
-            <label htmlFor="role">Select Role</label>
-            <select id="role" name="role" required>
-              <option value="">Select your Role</option>
-              <option value="admin">Employee</option>
-              <option value="user">Others</option>
-            </select>
-          </div>
+          
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="user-id">User ID</label>
             <input id="user-id" name="user-id" required type="text" />

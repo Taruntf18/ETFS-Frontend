@@ -1,10 +1,28 @@
-import Navbar from "../Navbar/Navbar";
+// import Navbar from "../Navbar/Navbar";
 import styles from "./received_file.module.css";
+import TempNav from "../Temp_nav/TempNav";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ReceivedFile = () => {
+  const [filesData, SetfilesData] = useState([]);
+  const getReceivedFilesData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/getAllFiles");
+      SetfilesData(response.data);
+    } catch (error) {
+      console.error("Axios Error:", error);
+    }
+  };
+  useEffect(() => {
+    getReceivedFilesData();
+  }, []);
+  console.log(filesData);
+
+
   return (
     <>
-      <Navbar />
+      <TempNav />
       <div className={styles.body}>
         <table className={styles.table}>
           <thead className={styles.thead}>
@@ -18,50 +36,16 @@ const ReceivedFile = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className={styles.tr}>
-              <td className={styles.td}>Invoice</td>
-              <td className={`${styles.priority_immediate} ${styles.td}`}>
-                Immediate
-              </td>
-              <td className={styles.td}>Invoice for October services</td>
-              <td className={styles.td}>John Doe</td>
-              <td className={styles.td}>John Doe</td>
-              <td className={styles.td}>John Doe</td>
-            </tr>
-            <tr className={styles.tr}>
-              <td className={styles.td}>Report</td>
-              <td className={`${styles.priority_normal} ${styles.td}`}>
-                Normal
-              </td>
-              <td className={styles.td}>Monthly performance report</td>
-              <td className={styles.td}>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Consectetur doloremque quidem, culpa iusto natus suscipit vitae?
-                Repudiandae quo ipsa nihil? Sint aperiam veritatis odio facere
-                omnis ratione aliquid! Perspiciatis laudantium nostrum quia
-                velit aperiam! Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Blanditiis ipsa quo corporis. Deleniti
-                nesciunt cumque, aliquid explicabo doloremque sunt neque magni
-                vero veritatis, eveniet accusamus cupiditate perferendis.
-                Excepturi qui vel totam doloremque? Corrupti sapiente, numquam
-                accusamus excepturi magni unde, quasi animi facilis non ullam
-                voluptate modi nostrum iusto ipsa vel!
-              </td>
-              <td className={styles.td}>John Doe</td>
-              <td className={styles.td}>John Doe</td>
-            </tr>
-            <tr className={styles.tr}>
-              <td className={styles.td}>Memo</td>
-              <td className={`${styles.priority_normal} ${styles.td}`}>
-                Normal
-              </td>
-              <td className={styles.td}>
-                Internal memo regarding policy changes
-              </td>
-              <td className={styles.td}>All Staff</td>
-              <td className={styles.td}>John Doe</td>
-              <td className={styles.td}>John Doe</td>
-            </tr>
+            {filesData.map((item) => (
+              <tr className={styles.tr}>
+                <td className={styles.td}>{item.docTypeID}</td>
+                <td className={`${styles.priority_normal} ${styles.td}`}>{item.priority}</td>
+                <td className={styles.td}>{item.subject}</td>
+                <td className={styles.td}>{item.description}</td>
+                <td className={styles.td}>{item.preparedBy}</td>
+                <td className={styles.td}>{item.workflow}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

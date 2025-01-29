@@ -55,7 +55,7 @@ const NewFile = () => {
     "status": ""
   }
 
-  console.log(senderName);
+  console.log(jsonObject , " jsonObject");
   
   const handleSubmit = async() => {
     // e.preventDefault();
