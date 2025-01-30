@@ -25,7 +25,6 @@ const NewFile = () => {
   const [emp_of_my_div, setEmp_of_my_div] = useState([]);
   const [divisionalOffice, setDivisionalOffice] = useState([]);
 
-
   function convertDateFormat(inputDate) {
     const dateObject = new Date(inputDate);
     if (isNaN(dateObject)) {
@@ -34,34 +33,37 @@ const NewFile = () => {
     const year = dateObject.getFullYear();
     const month = String(dateObject.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
     const day = String(dateObject.getDate()).padStart(2, "0");
-  
+
     return `${year}-${month}-${day}`;
   }
 
   const jsonObject = {
-    "docTypeID": typeOfDoc,
-    "divId": "",
-    "priority": priority,
-    "preparedBy": "",
-    "preparedDate": convertDateFormat(new Date().toLocaleDateString()),
-    "subject": subject,
-    "description": description,
+    docTypeID: typeOfDoc,
+    divId: "",
+    priority: priority,
+    preparedBy: "",
+    preparedDate: convertDateFormat(new Date().toLocaleDateString()),
+    subject: subject,
+    description: description,
     // "sender" : sender,
     // "senderName": senderName,
     // "receiver" : receiver,
     // "receiverName": receiverName,
     // "workflowDescription" : divisions,
-    "workflow": divisions.toString(),
-    "status": ""
-  }
+    workflow: divisions.toString(),
+    status: "",
+  };
 
-  console.log(jsonObject , " jsonObject");
-  
-  const handleSubmit = async() => {
+  console.log(jsonObject, " jsonObject");
+
+  const handleSubmit = async () => {
     // e.preventDefault();
     console.log("Form Data:", JSON.stringify(jsonObject, null, 2));
-     try {
-      const result = await axios.post('http://localhost:8080/addFile', jsonObject);
+    try {
+      const result = await axios.post(
+        "http://localhost:8080/addFile",
+        jsonObject
+      );
       console.log(result);
     } catch (error) {
       console.log("Axios Error:", error);
@@ -71,9 +73,7 @@ const NewFile = () => {
   // fetching type of document data
   const getDocumentResp = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/getAllDocument"
-      );
+      const response = await axios.get("http://localhost:8080/getAllDocument");
       setDocumentArr(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
@@ -111,23 +111,23 @@ const NewFile = () => {
 
   const hadleSubjectChange = (event) => {
     setSubject(event.target.value);
-  }
+  };
 
   const hadleSenderNameChange = (event) => {
     SetsenderName(event.target.value);
-  }
+  };
 
   const hadleReceiverName = (event) => {
     SetreceiverName(event.target.value);
-  }
+  };
 
   const hadleDescriptionChange = (event) => {
     setDescription(event.target.value);
-  }
+  };
 
   const handlePriorityChange = (event) => {
     setPriority(event.target.value);
-  }
+  };
 
   const handleSenderChange = (event) => {
     setSender(event.target.value);
@@ -164,21 +164,6 @@ const NewFile = () => {
     setDivisions(updatedDivisions);
   };
 
-  const mileStoneRender = divisions.map((division, index) => (
-    <span
-      style={{
-        display: "inline-block",
-        marginBottom: "20px",
-        fontSize: "25px",
-        fontWeight: "bold",
-      }}
-      key={index}
-      className={styles.division_row}
-    >
-      {division}&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;
-    </span>
-  ));
-
   return (
     <>
       <Navbar />
@@ -189,7 +174,12 @@ const NewFile = () => {
           <form onSubmit={handleSubmit}>
             <div className={styles.form_group}>
               <label htmlFor="document-type">Type of Document</label>
-              <select id={styles.document_type} onChange={(e) => { setTypeOfDoc(e.target.value) }}>
+              <select
+                id={styles.document_type}
+                onChange={(e) => {
+                  setTypeOfDoc(e.target.value);
+                }}
+              >
                 <option value="">Select Document</option>
                 {documentArr.map((item) => (
                   <option key={item.docId} value={item.docId}>
@@ -202,21 +192,41 @@ const NewFile = () => {
               <label>Priority</label>
               <div className={styles.radio_group}>
                 <label>
-                  <input type="radio" name="priority" checked={priority === 'normal'} onChange={handlePriorityChange} value="normal" /> Normal
+                  <input
+                    type="radio"
+                    name="priority"
+                    checked={priority === "normal"}
+                    onChange={handlePriorityChange}
+                    value="normal"
+                  />{" "}
+                  Normal
                 </label>
                 <label>
-                  <input type="radio" name="priority" checked={priority === 'immediate'} onChange={handlePriorityChange} value="immediate" />{" "}
+                  <input
+                    type="radio"
+                    name="priority"
+                    checked={priority === "immediate"}
+                    onChange={handlePriorityChange}
+                    value="immediate"
+                  />{" "}
                   Immediate
                 </label>
               </div>
             </div>
             <div className={styles.form_group}>
               <label htmlFor="">Subject</label>
-              <input type="text" onChange={hadleSubjectChange} className={styles.subject} />
+              <input
+                type="text"
+                onChange={hadleSubjectChange}
+                className={styles.subject}
+              />
             </div>
             <div className={styles.form_group}>
               <label htmlFor="description">Description</label>
-              <textarea onChange={hadleDescriptionChange} id={styles.description}></textarea>
+              <textarea
+                onChange={hadleDescriptionChange}
+                id={styles.description}
+              ></textarea>
             </div>
             <div className={styles.form_group}>
               <label>Through whom are we sending it?</label>
@@ -308,7 +318,7 @@ const NewFile = () => {
                     type="radio"
                     name="workflow"
                     value="yes"
-                    checked={workflow === 'yes'}
+                    checked={workflow === "yes"}
                     onChange={handleWorkflowChange}
                   />
                   Yes
@@ -318,7 +328,7 @@ const NewFile = () => {
                     type="radio"
                     name="workflow"
                     value="no"
-                    checked={workflow === 'no'}
+                    checked={workflow === "no"}
                     onChange={handleWorkflowChange}
                   />
                   No
@@ -335,7 +345,21 @@ const NewFile = () => {
               </button>
             )}
             <div name="workflowdiv" id="workflowdiv">
-              {workflow === "yes" && mileStoneRender}
+              {workflow === "yes" &&
+                divisions.map((division, index) => (
+                  <span
+                    style={{
+                      display: "inline-block",
+                      marginBottom: "20px",
+                      fontSize: "25px",
+                      fontWeight: "bold",
+                    }}
+                    key={index}
+                    className={styles.division_row}
+                  >
+                    {division}&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;
+                  </span>
+                ))}
             </div>
             <div className={`${styles.form_group} ${styles.submit_button_div}`}>
               <button type="submit" className={styles.submit_btn}>

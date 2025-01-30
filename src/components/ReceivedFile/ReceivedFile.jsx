@@ -1,6 +1,6 @@
-// import Navbar from "../Navbar/Navbar";
+import Navbar from "../Navbar/Navbar";
 import styles from "./received_file.module.css";
-import TempNav from "../Temp_nav/TempNav";
+// import TempNav from "../Temp_nav/TempNav";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -22,7 +22,7 @@ const ReceivedFile = () => {
 
   return (
     <>
-      <TempNav />
+      <Navbar />
       <div className={styles.body}>
         <table className={styles.table}>
           <thead className={styles.thead}>
