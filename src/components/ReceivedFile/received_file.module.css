@@ -1,13 +1,13 @@
 .body {
     font-family: 'Roboto', sans-serif;
-    margin: 60px 200px;
+    margin: 50px 200px;
+    
 }
 .table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     margin-bottom: 20px;
-    border-radius: 10px;
     overflow: hidden;
 }
 .th, .td {
@@ -30,15 +30,14 @@
     color: green;
     font-weight: bold;
 }
-.thead .tr:first-child .th:first-child {
-    border-top-left-radius: 10px;
+.receiveButton {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
 }
-.thead .tr:first-child .th:last-child {
-    border-top-right-radius: 10px;
-}
-.tbody .tr:last-child .td:first-child {
-    border-bottom-left-radius: 10px;
-}
-.tbody .tr:last-child .td:last-child {
-    border-bottom-right-radius: 10px;
+.receiveButton:hover {
+    background-color: #ff1111;
 }

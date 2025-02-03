@@ -7,7 +7,6 @@
     align-items: center;
     height: 100vh;
     background: linear-gradient(125deg, rgba(0,0,0,1) 0%, rgb(114, 114, 114) 51%, rgba(0,0,0,1) 100%);
-
     
 }
 .container {
@@ -18,7 +17,6 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     overflow: hidden;
-    
     background: rgb(87,178,255);
     background: linear-gradient(121deg,     rgba(87,178,255,1) 0%, rgba(255,255,255,1) 51%, rgba(218,218,218,1) 100%);
 }

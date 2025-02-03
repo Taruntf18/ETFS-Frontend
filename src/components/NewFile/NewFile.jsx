@@ -25,130 +25,53 @@ const NewFile = () => {
   const [emp_of_my_div, setEmp_of_my_div] = useState([]);
   const [divisionalOffice, setDivisionalOffice] = useState([]);
 
-  function convertDateFormat(inputDate) {
-    const dateObject = new Date(inputDate);
-    if (isNaN(dateObject)) {
-      throw new Error("Invalid date format. Please use MM/DD/YYYY.");
-    }
-    const year = dateObject.getFullYear();
-    const month = String(dateObject.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
-    const day = String(dateObject.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  }
-
   const jsonObject = {
-    docTypeID: typeOfDoc,
-    divId: "",
-    priority: priority,
-    preparedBy: "",
-    preparedDate: convertDateFormat(new Date().toLocaleDateString()),
-    subject: subject,
-    description: description,
+    "docTypeID": typeOfDoc,
+    "divId": "",
+    "priority": priority,
+    "preparedBy": "",
+    "subject": subject,
+    "description": description,
     // "sender" : sender,
     // "senderName": senderName,
     // "receiver" : receiver,
     // "receiverName": receiverName,
     // "workflowDescription" : divisions,
-    workflow: divisions.toString(),
-    status: "",
-  };
-
-  console.log(jsonObject, " jsonObject");
+    "workflow": divisions.toString(),
+    "status": ""
+  }
 
   const handleSubmit = async () => {
-    // e.preventDefault();
+   
+    console.log("submit button clicked");
     console.log("Form Data:", JSON.stringify(jsonObject, null, 2));
     try {
-      const result = await axios.post(
-        "http://localhost:8080/addFile",
-        jsonObject
-      );
+      const result = await axios.post('http://localhost:8080/addFile', jsonObject);
       console.log(result);
     } catch (error) {
       console.log("Axios Error:", error);
     }
   };
 
-  // fetching type of document data
-  const getDocumentResp = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/getAllDocument");
-      setDocumentArr(response.data);
-    } catch (error) {
-      console.error("Axios Error:", error);
-    }
-  };
+  // fetching DATA
   useEffect(() => {
-    getDocumentResp();
+    const fetchData = async () => {
+      try {
+        const [docResp, empResp, divResp] = await Promise.all([
+          axios.get("http://localhost:8080/getAllDocument"),
+          axios.get("http://localhost:8080/getAllDocument"),
+          axios.get("http://localhost:8080/getDivisionData"),
+        ]);
+        setDocumentArr(docResp.data);
+        setEmp_of_my_div(empResp.data);
+        setDivisionalOffice(divResp.data);
+      } catch (error) {
+        console.error("Axios Error:", error);
+      }
+    };
+
+    fetchData();
   }, []);
-
-  // fetching employees of my division data
-  const getEmpOfMyDiv = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/getAllDocument");
-      setEmp_of_my_div(response.data);
-    } catch (error) {
-      console.error("Axios Error:", error);
-    }
-  };
-  useEffect(() => {
-    getEmpOfMyDiv();
-  }, []);
-
-  // fetching divisional office data
-  const getdivisionalOffice = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/getDivisionData");
-      setDivisionalOffice(response.data);
-    } catch (error) {
-      console.error("Axios Error:", error);
-    }
-  };
-  useEffect(() => {
-    getdivisionalOffice();
-  }, []);
-
-  const hadleSubjectChange = (event) => {
-    setSubject(event.target.value);
-  };
-
-  const hadleSenderNameChange = (event) => {
-    SetsenderName(event.target.value);
-  };
-
-  const hadleReceiverName = (event) => {
-    SetreceiverName(event.target.value);
-  };
-
-  const hadleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  };
-
-  const handlePriorityChange = (event) => {
-    setPriority(event.target.value);
-  };
-
-  const handleSenderChange = (event) => {
-    setSender(event.target.value);
-  };
-
-  const handleReceiverChange = (event) => {
-    setReceiver(event.target.value);
-  };
-
-  const handleWorkflowChange = (event) => {
-    setWorkflow(event.target.value);
-  };
-
-  const handlActualpop = () => {
-    if (showActualPopUp) setShowActualPopUp(false);
-    else setShowActualPopUp(true);
-  };
-
-  const closePopup = () => {
-    setShowActualPopUp(false);
-  };
 
   const handleAddDivision = () => {
     setDivisions([...divisions, ""]);
@@ -174,12 +97,7 @@ const NewFile = () => {
           <form onSubmit={handleSubmit}>
             <div className={styles.form_group}>
               <label htmlFor="document-type">Type of Document</label>
-              <select
-                id={styles.document_type}
-                onChange={(e) => {
-                  setTypeOfDoc(e.target.value);
-                }}
-              >
+              <select id={styles.document_type} onChange={(e) => { setTypeOfDoc(e.target.value) }}>
                 <option value="">Select Document</option>
                 {documentArr.map((item) => (
                   <option key={item.docId} value={item.docId}>
@@ -192,41 +110,21 @@ const NewFile = () => {
               <label>Priority</label>
               <div className={styles.radio_group}>
                 <label>
-                  <input
-                    type="radio"
-                    name="priority"
-                    checked={priority === "normal"}
-                    onChange={handlePriorityChange}
-                    value="normal"
-                  />{" "}
-                  Normal
+                  <input type="radio" name="priority" checked={priority === 'normal'} onChange={(e) => setPriority(e.target.value)} value="normal" /> Normal
                 </label>
                 <label>
-                  <input
-                    type="radio"
-                    name="priority"
-                    checked={priority === "immediate"}
-                    onChange={handlePriorityChange}
-                    value="immediate"
-                  />{" "}
+                  <input type="radio" name="priority" checked={priority === 'immediate'} onChange={(e) => setPriority(e.target.value)} value="immediate" />{" "}
                   Immediate
                 </label>
               </div>
             </div>
             <div className={styles.form_group}>
               <label htmlFor="">Subject</label>
-              <input
-                type="text"
-                onChange={hadleSubjectChange}
-                className={styles.subject}
-              />
+              <input type="text" onChange={(e) => setSubject(e.target.value)} className={styles.subject} />
             </div>
             <div className={styles.form_group}>
               <label htmlFor="description">Description</label>
-              <textarea
-                onChange={hadleDescriptionChange}
-                id={styles.description}
-              ></textarea>
+              <textarea onChange={(e) => setDescription(e.target.value)} id={styles.description}></textarea>
             </div>
             <div className={styles.form_group}>
               <label>Through whom are we sending it?</label>
@@ -237,7 +135,7 @@ const NewFile = () => {
                     name="sender"
                     value="self"
                     checked={sender === "self"}
-                    onChange={handleSenderChange}
+                    onChange={(e) => setSender(e.target.value)}
                   />
                   Self
                 </label>
@@ -247,7 +145,7 @@ const NewFile = () => {
                     name="sender"
                     value="others"
                     checked={sender === "others"}
-                    onChange={handleSenderChange}
+                    onChange={(e) => setSender(e.target.value)}
                   />
                   Others
                 </label>
@@ -255,7 +153,7 @@ const NewFile = () => {
               {sender === "others" && (
                 <input
                   type="text"
-                  onChange={hadleSenderNameChange}
+                  onChange={(e) => SetsenderName(e.target.value)}
                   placeholder="Enter the Name"
                   className={`${styles.subject} `}
                 />
@@ -271,7 +169,7 @@ const NewFile = () => {
                     name="receiver"
                     value="employee_of_my_division"
                     checked={receiver === "employee_of_my_division"}
-                    onChange={handleReceiverChange}
+                    onChange={(e) => setReceiver(e.target.value)}
                   />
                   Employees of My Division
                 </label>
@@ -281,7 +179,7 @@ const NewFile = () => {
                     name="receiver"
                     value="divisional_office"
                     checked={receiver === "divisional_office"}
-                    onChange={handleReceiverChange}
+                    onChange={(e) => setReceiver(e.target.value)}
                   />
                   Divisional Office
                 </label>
@@ -318,8 +216,8 @@ const NewFile = () => {
                     type="radio"
                     name="workflow"
                     value="yes"
-                    checked={workflow === "yes"}
-                    onChange={handleWorkflowChange}
+                    checked={workflow === 'yes'}
+                    onChange={(e) => setWorkflow(e.target.value)}
                   />
                   Yes
                 </label>
@@ -328,87 +226,50 @@ const NewFile = () => {
                     type="radio"
                     name="workflow"
                     value="no"
-                    checked={workflow === "no"}
-                    onChange={handleWorkflowChange}
+                    checked={workflow === 'no'}
+                    onChange={(e) => setWorkflow(e.target.value)}
                   />
                   No
                 </label>
               </div>
             </div>
-            {workflow === "yes" && (
-              <button
-                onClick={handlActualpop}
-                type="button"
-                className={styles.add_btn}
-              >
-                Add Division
-              </button>
-            )}
-            <div name="workflowdiv" id="workflowdiv">
-              {workflow === "yes" &&
-                divisions.map((division, index) => (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      marginBottom: "20px",
-                      fontSize: "25px",
-                      fontWeight: "bold",
-                    }}
-                    key={index}
-                    className={styles.division_row}
+            {workflow === "yes" &&(
+                <div className={styles.workflow_container}>
+                  {divisions.map((division, index) => (
+                    <div key={index} className={styles.division_row}>
+                      <input
+                        type="text"
+                        value={division}
+                        onChange={(e) =>
+                          handleDivisionChange(index, e.target.value)
+                        }
+                        placeholder="Enter Division Name"
+                        className={styles.division_input}
+                      />
+                      <FaTrash
+                        className={styles.delete_icon}
+                        onClick={() => handleDeleteDivision(index)}
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleAddDivision}
+                    className={styles.add_btn}
                   >
-                    {division}&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;
-                  </span>
-                ))}
-            </div>
+                    Add Division
+                  </button>
+                </div>
+              )}
             <div className={`${styles.form_group} ${styles.submit_button_div}`}>
-              <button type="submit" className={styles.submit_btn}>
+              <button onClick={handleSubmit} type="submit" className={styles.submit_btn}>
                 Submit
               </button>
             </div>
           </form>
         </div>
       </div>
-      {showActualPopUp && (
-        <div className={styles.popup}>
-          <div className={styles.popup_content}>
-            <h3>Workflow Details</h3>
-            <div className={styles.workflow_container}>
-              {divisions.map((division, index) => (
-                <div key={index} className={styles.division_row}>
-                  <input
-                    type="text"
-                    value={division}
-                    onChange={(e) =>
-                      handleDivisionChange(index, e.target.value)
-                    }
-                    placeholder="Enter Division Name"
-                    className={styles.division_input}
-                  />
-                  <FaTrash
-                    style={{ cursor: "pointer" }}
-                    className={styles.delete_icon}
-                    onClick={() => handleDeleteDivision(index)}
-                  />
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={handleAddDivision}
-                className={styles.add_btn}
-              >
-                Add Division
-              </button>
-            </div>
-
-            <div className={styles.popup_buttons}>
-              <button onClick={closePopup} className={styles.close_btn}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </>
   );
 };
