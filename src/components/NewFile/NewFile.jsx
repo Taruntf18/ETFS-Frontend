@@ -9,47 +9,52 @@ import { useEffect } from "react";
 const NewFile = () => {
   // states for storing input form data
   const [priority, setPriority] = useState("");
-  const [sender, setSender] = useState("");
-  const [receiver, setReceiver] = useState("");
+  const [typeOfDoc, setTypeOfDoc] = useState();
+  const [divId, SetDivId] = useState();
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
+  const [sendingThrough, setsendingThrough] = useState("");
+  const [receiver, setReceiver] = useState("");
   const [workflow, setWorkflow] = useState("");
   const [senderName, SetsenderName] = useState("");
-  // const [receiverName, SetreceiverName] = useState("");
-  const [typeOfDoc, setTypeOfDoc] = useState("");
 
   // states for hadling ui changes
   const [divisions, setDivisions] = useState([]);
-  const [showActualPopUp, setShowActualPopUp] = useState(false);
   const [documentArr, setDocumentArr] = useState([]);
   const [emp_of_my_div, setEmp_of_my_div] = useState([]);
   const [divisionalOffice, setDivisionalOffice] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const jsonObject = {
-    "docTypeID": typeOfDoc,
-    "divId": "",
     "priority": priority,
-    "preparedBy": "",
+    "docTypeID": typeOfDoc,
+    "divId": divId,
     "subject": subject,
     "description": description,
+    "preparedBy": "",
     // "sender" : sender,
     // "senderName": senderName,
     // "receiver" : receiver,
     // "receiverName": receiverName,
     // "workflowDescription" : divisions,
+    "preparedDate":"",
+    "sendingThrough": sendingThrough === "others" ? senderName : "self",
+    "status": "1",
     "workflow": divisions.toString(),
-    "status": ""
   }
 
+  console.log(jsonObject);
+
   const handleSubmit = async () => {
-   
-    console.log("submit button clicked");
-    console.log("Form Data:", JSON.stringify(jsonObject, null, 2));
+    if (isLoading) return; 
+    setIsLoading(true);
     try {
       const result = await axios.post('http://localhost:8080/addFile', jsonObject);
       console.log(result);
     } catch (error) {
       console.log("Axios Error:", error);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -134,8 +139,8 @@ const NewFile = () => {
                     type="radio"
                     name="sender"
                     value="self"
-                    checked={sender === "self"}
-                    onChange={(e) => setSender(e.target.value)}
+                    checked={sendingThrough === "self"}
+                    onChange={(e) => setsendingThrough(e.target.value)}
                   />
                   Self
                 </label>
@@ -144,16 +149,18 @@ const NewFile = () => {
                     type="radio"
                     name="sender"
                     value="others"
-                    checked={sender === "others"}
-                    onChange={(e) => setSender(e.target.value)}
+                    checked={sendingThrough === "others"}
+                    onChange={(e) => setsendingThrough(e.target.value)}
                   />
                   Others
                 </label>
               </div>
-              {sender === "others" && (
+              {sendingThrough === "others" && (
                 <input
                   type="text"
-                  onChange={(e) => SetsenderName(e.target.value)}
+                  onChange={(e) => {
+                    SetsenderName(e.target.value)
+                  }}
                   placeholder="Enter the Name"
                   className={`${styles.subject} `}
                 />
@@ -186,10 +193,10 @@ const NewFile = () => {
               </div>
               {receiver === "divisional_office" && (
                 <div className={`${styles.form_group}`}>
-                  <select id={styles.document_type}>
+                  <select id={styles.document_type} onChange={(e) => SetDivId(e.target.value)}>
                     <option>Select Division</option>
                     {divisionalOffice.map((item) => (
-                      <option key={item.divId} value={item.divName}>
+                      <option key={item.divId} value={item.divId}>
                         {item.divName}
                       </option>
                     ))}
