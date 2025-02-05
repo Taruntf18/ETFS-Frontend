@@ -1,7 +1,7 @@
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login_styles.module.css";
-import animationData from "../Lotties/Login_animation1.json";
+import animationData from "./Login_animation1.json";
 import Lottie from "react-lottie";
 import Nal_Logo from "../Images/CSIR-National_Aerospace_Laboratories_Logo.png";
 import axios from "axios";
@@ -9,13 +9,8 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const [userid, SetUserid] = useState("");
-  const [password, Setpassword] = useState("");
-
-  const [userDetails, SetuserDetails] = useState([]);
-  const [roleDetails, SetroleDetails] = useState([]);
-
-  console.log(userDetails);
-  console.log(roleDetails);
+  const [password, Setpassword] = useState(""); 
+  const [message, SetMessage] = useState("");
 
   const defaultOptions = {
     loop: true,
@@ -28,16 +23,19 @@ const Login = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const result = await axios.post("http://localhost:8080/login", {
-        username: userid,
-        password: password,
-        active: "y",
+      const result = await axios.post('http://localhost:8080/login', {
+        "username": userid,
+        "password": password,
+        "active": "y"
       });
-      SetuserDetails(result.data.user);
-      SetroleDetails(result.data.roles);
+
+      console.log(result);
       localStorage.setItem("userId", JSON.stringify(result.data.user));
       localStorage.setItem("Roles", JSON.stringify(result.data.roles));
+      SetMessage("Login Successful");
+      navigate("/");
     } catch (error) {
+      SetMessage("Login Failed");
       console.log("Axios Error:", error);
     }
   };
@@ -47,7 +45,12 @@ const Login = () => {
       alert("Enter the details");
     } else {
       fetchUserDetails();
-      navigate("/new-file");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -55,13 +58,7 @@ const Login = () => {
     <div className={styles.body}>
       <div className={styles.container}>
         <div className={styles.animation}>
-          <Lottie
-            options={defaultOptions}
-            height={500}
-            width={500}
-            autoPlay
-            loop
-          />
+          <Lottie options={defaultOptions} height={500} width={500} autoPlay loop />
         </div>
         <div className={styles.login_form}>
           <h2>
@@ -74,35 +71,35 @@ const Login = () => {
             />
             ETFS
           </h2>
-          <h3>E - Tracking File System</h3>
-
+          <h5>E - Tracking File System</h5>
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="user-id">User ID</label>
-            <input
-              id="user-id"
-              name="user-id"
-              required
-              type="text"
-              onChange={(e) => {
-                SetUserid(e.target.value);
-              }}
+            <input 
+              id="user-id" 
+              name="user-id" 
+              required 
+              type="text" 
+              value={userid} 
+              onChange={(e) => SetUserid(e.target.value)} 
+              onKeyDown={handleKeyDown} 
             />
           </div>
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              required
-              type="password"
-              onChange={(e) => {
-                Setpassword(e.target.value);
-              }}
+            <input 
+              id="password" 
+              name="password" 
+              required 
+              type="password" 
+              value={password} 
+              onChange={(e) => Setpassword(e.target.value)} 
+              onKeyDown={handleKeyDown} 
             />
           </div>
           <button type="button" onClick={handleLogin}>
             Login
           </button>
+          <p style={{color:'red', fontWeight:'bolder'}}>{message}</p>
         </div>
       </div>
     </div>

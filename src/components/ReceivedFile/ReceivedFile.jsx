@@ -28,7 +28,7 @@ const ReceivedFile = () => {
 
   const handleReceive = (fileId) => {
     console.log(`File with ID ${fileId} received.`);
-    // You can also make an API call here to update the status
+    
   };
 
   useEffect(() => {
@@ -44,6 +44,10 @@ const ReceivedFile = () => {
     fetchData();
   }, []);
 
+  function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
   return (
     <>
       <Navbar />
@@ -56,7 +60,7 @@ const ReceivedFile = () => {
               <th className={styles.th}>Date</th>   
               <th className={styles.th}>Subject</th>
               <th className={styles.th}>Description</th>
-              <th className={styles.th}>Through whom I'm sending</th>
+              <th className={styles.th}>Through Whom</th>
               <th className={styles.th}>Workflow</th>
               <th className={styles.th}>Action</th>
               <th className={styles.th}>Sending To</th>
@@ -67,7 +71,9 @@ const ReceivedFile = () => {
               <tr className={styles.tr} key={key}>
                 <td className={styles.td}>{getDocTypeById(item.docTypeID, documentArr)}</td>
                 <td className={`${item.priority === "immediate" ? styles.priority_immediate : styles.priority_normal} ${styles.td}`}>
-                  {item.priority}
+                  {
+                      capitalizeFirstLetter(item.priority)
+                  }
                 </td>
                 <td className={styles.td}>{item.preparedDate}</td>
                 <td className={styles.td}>{item.subject}</td>

@@ -16,7 +16,6 @@ const NewFile = () => {
   const [sendingThrough, setsendingThrough] = useState("");
   const [receiver, setReceiver] = useState("");
   const [workflow, setWorkflow] = useState("");
-  const [senderName, SetsenderName] = useState("");
 
   // states for hadling ui changes
   const [divisions, setDivisions] = useState([]);
@@ -26,35 +25,32 @@ const NewFile = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const jsonObject = {
-    "priority": priority,
-    "docTypeID": typeOfDoc,
-    "divId": divId,
-    "subject": subject,
-    "description": description,
-    "preparedBy": "",
-    // "sender" : sender,
-    // "senderName": senderName,
-    // "receiver" : receiver,
-    // "receiverName": receiverName,
-    // "workflowDescription" : divisions,
-    "preparedDate":"",
-    "sendingThrough": sendingThrough === "others" ? senderName : "self",
-    "status": "1",
-    "workflow": divisions.toString(),
-  }
+    priority: priority,
+    docTypeID: typeOfDoc,
+    divId: divId,
+    subject: subject,
+    description: description,
+    preparedBy: localStorage.getItem("userId").toString().substring(1, localStorage.getItem("userId").toString().length - 1),
+    preparedDate: "",
+    sendingThrough: sendingThrough,
+    status: "1",
+    workflow: divisions.toString(),
+  };
 
   console.log(jsonObject);
 
   const handleSubmit = async () => {
-    if (isLoading) return; 
+    if (isLoading) return;
     setIsLoading(true);
     try {
-      const result = await axios.post('http://localhost:8080/addFile', jsonObject);
-      console.log(result);
+      const result = await axios.post(
+        "http://localhost:8080/addFile",
+        jsonObject
+      );
     } catch (error) {
       console.log("Axios Error:", error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -102,7 +98,13 @@ const NewFile = () => {
           <form onSubmit={handleSubmit}>
             <div className={styles.form_group}>
               <label htmlFor="document-type">Type of Document</label>
-              <select id={styles.document_type} onChange={(e) => { setTypeOfDoc(e.target.value) }}>
+              <select
+                id={styles.document_type}
+                onChange={(e) => {
+                  setTypeOfDoc(e.target.value);
+                }}
+                required
+              >
                 <option value="">Select Document</option>
                 {documentArr.map((item) => (
                   <option key={item.docId} value={item.docId}>
@@ -115,56 +117,57 @@ const NewFile = () => {
               <label>Priority</label>
               <div className={styles.radio_group}>
                 <label>
-                  <input type="radio" name="priority" checked={priority === 'normal'} onChange={(e) => setPriority(e.target.value)} value="normal" /> Normal
+                  <input
+                    type="radio"
+                    name="priority"
+                    checked={priority === "normal"}
+                    onChange={(e) => setPriority(e.target.value)}
+                    value="normal"
+                    required
+                  />{" "}
+                  Normal
                 </label>
                 <label>
-                  <input type="radio" name="priority" checked={priority === 'immediate'} onChange={(e) => setPriority(e.target.value)} value="immediate" />{" "}
+                  <input
+                    type="radio"
+                    name="priority"
+                    checked={priority === "immediate"}
+                    onChange={(e) => setPriority(e.target.value)}
+                    value="immediate"
+                    required
+                  />{" "}
                   Immediate
                 </label>
               </div>
             </div>
             <div className={styles.form_group}>
               <label htmlFor="">Subject</label>
-              <input type="text" onChange={(e) => setSubject(e.target.value)} className={styles.subject} />
+              <input
+                type="text"
+                onChange={(e) => setSubject(e.target.value)}
+                className={styles.subject}
+                placeholder="Enter the Subject"
+                required
+              />
             </div>
-            <div className={styles.form_group}>
+            <div className={styles.form_group} required>
               <label htmlFor="description">Description</label>
-              <textarea onChange={(e) => setDescription(e.target.value)} id={styles.description}></textarea>
+              <textarea
+                onChange={(e) => setDescription(e.target.value)}
+                id={styles.description}
+                placeholder="Enter the Description"
+                required
+              ></textarea>
             </div>
             <div className={styles.form_group}>
               <label>Through whom are we sending it?</label>
-              <div className={styles.radio_group}>
-                <label>
-                  <input
-                    type="radio"
-                    name="sender"
-                    value="self"
-                    checked={sendingThrough === "self"}
-                    onChange={(e) => setsendingThrough(e.target.value)}
-                  />
-                  Self
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="sender"
-                    value="others"
-                    checked={sendingThrough === "others"}
-                    onChange={(e) => setsendingThrough(e.target.value)}
-                  />
-                  Others
-                </label>
-              </div>
-              {sendingThrough === "others" && (
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    SetsenderName(e.target.value)
-                  }}
-                  placeholder="Enter the Name"
-                  className={`${styles.subject} `}
-                />
-              )}
+              <input
+                type="text"
+                onChange={(e) => setsendingThrough(e.target.value)}
+                placeholder="Enter the Name"
+                className={styles.subject}
+                required
+              />
             </div>
 
             <div className={styles.form_group_whome}>
@@ -177,6 +180,7 @@ const NewFile = () => {
                     value="employee_of_my_division"
                     checked={receiver === "employee_of_my_division"}
                     onChange={(e) => setReceiver(e.target.value)}
+                    required
                   />
                   Employees of My Division
                 </label>
@@ -187,13 +191,17 @@ const NewFile = () => {
                     value="divisional_office"
                     checked={receiver === "divisional_office"}
                     onChange={(e) => setReceiver(e.target.value)}
+                    required
                   />
                   Divisional Office
                 </label>
               </div>
               {receiver === "divisional_office" && (
                 <div className={`${styles.form_group}`}>
-                  <select id={styles.document_type} onChange={(e) => SetDivId(e.target.value)}>
+                  <select
+                    id={styles.document_type}
+                    onChange={(e) => SetDivId(e.target.value)}
+                  >
                     <option>Select Division</option>
                     {divisionalOffice.map((item) => (
                       <option key={item.divId} value={item.divId}>
@@ -223,7 +231,7 @@ const NewFile = () => {
                     type="radio"
                     name="workflow"
                     value="yes"
-                    checked={workflow === 'yes'}
+                    checked={workflow === "yes"}
                     onChange={(e) => setWorkflow(e.target.value)}
                   />
                   Yes
@@ -233,50 +241,53 @@ const NewFile = () => {
                     type="radio"
                     name="workflow"
                     value="no"
-                    checked={workflow === 'no'}
+                    checked={workflow === "no"}
                     onChange={(e) => setWorkflow(e.target.value)}
                   />
                   No
                 </label>
               </div>
             </div>
-            {workflow === "yes" &&(
-                <div className={styles.workflow_container}>
-                  {divisions.map((division, index) => (
-                    <div key={index} className={styles.division_row}>
-                      <input
-                        type="text"
-                        value={division}
-                        onChange={(e) =>
-                          handleDivisionChange(index, e.target.value)
-                        }
-                        placeholder="Enter Division Name"
-                        className={styles.division_input}
-                      />
-                      <FaTrash
-                        className={styles.delete_icon}
-                        onClick={() => handleDeleteDivision(index)}
-                      />
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={handleAddDivision}
-                    className={styles.add_btn}
-                  >
-                    Add Division
-                  </button>
-                </div>
-              )}
+            {workflow === "yes" && (
+              <div className={styles.workflow_container}>
+                {divisions.map((division, index) => (
+                  <div key={index} className={styles.division_row}>
+                    <input
+                      type="text"
+                      value={division}
+                      onChange={(e) =>
+                        handleDivisionChange(index, e.target.value)
+                      }
+                      placeholder="Enter Division Name"
+                      className={styles.division_input}
+                    />
+                    <FaTrash
+                      className={styles.delete_icon}
+                      onClick={() => handleDeleteDivision(index)}
+                    />
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={handleAddDivision}
+                  className={styles.add_btn}
+                >
+                  Add Division
+                </button>
+              </div>
+            )}
             <div className={`${styles.form_group} ${styles.submit_button_div}`}>
-              <button onClick={handleSubmit} type="submit" className={styles.submit_btn}>
+              <button
+                onClick={handleSubmit}
+                type="submit"
+                className={styles.submit_btn}
+              >
                 Submit
               </button>
             </div>
           </form>
         </div>
       </div>
-      
     </>
   );
 };
