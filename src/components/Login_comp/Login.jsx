@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login_styles.module.css";
-import animationData from "./Login_animation1.json";
+import animationData from "../Lotties/Login_animation1.json";
 import Lottie from "react-lottie";
 import Nal_Logo from "../Images/CSIR-National_Aerospace_Laboratories_Logo.png";
 import axios from "axios";

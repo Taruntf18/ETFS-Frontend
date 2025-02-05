@@ -8,6 +8,7 @@ const ReceivedFile = () => {
   const [documentArr, setDocumentArr] = useState([]);
 
   console.log(filesData);
+  
   function getDocTypeById(docId, documents) {
     const doc = documents.find(doc => doc.docId === docId);
     return doc ? doc.docType : null;
@@ -28,13 +29,12 @@ const ReceivedFile = () => {
 
   const handleReceive = (fileId) => {
     console.log(`File with ID ${fileId} received.`);
-    
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const docResp = await axios.get("http://localhost:8080/getAllDocument")
+        const docResp = await axios.get("http://localhost:8080/getAllDocument");
         setDocumentArr(docResp.data);
       } catch (error) {
         console.error("Axios Error:", error);
@@ -46,7 +46,7 @@ const ReceivedFile = () => {
 
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-}
+  }
 
   return (
     <>
@@ -62,8 +62,8 @@ const ReceivedFile = () => {
               <th className={styles.th}>Description</th>
               <th className={styles.th}>Through Whom</th>
               <th className={styles.th}>Workflow</th>
+              <th className={styles.th}>Prepared By</th>
               <th className={styles.th}>Action</th>
-              <th className={styles.th}>Sending To</th>
             </tr>
           </thead>
           <tbody>
@@ -71,15 +71,14 @@ const ReceivedFile = () => {
               <tr className={styles.tr} key={key}>
                 <td className={styles.td}>{getDocTypeById(item.docTypeID, documentArr)}</td>
                 <td className={`${item.priority === "immediate" ? styles.priority_immediate : styles.priority_normal} ${styles.td}`}>
-                  {
-                      capitalizeFirstLetter(item.priority)
-                  }
+                  {capitalizeFirstLetter(item.priority)}
                 </td>
                 <td className={styles.td}>{item.preparedDate}</td>
                 <td className={styles.td}>{item.subject}</td>
                 <td className={styles.td}>{item.description}</td>
                 <td className={styles.td}>{item.sendingThrough}</td>
                 <td className={styles.td}>{item.workflow}</td>
+                <td className={styles.td}>{item.preparedBy}</td>
                 <td className={styles.td}>
                   <button className={styles.receiveButton} onClick={() => handleReceive(item.id)}>
                     Receive
