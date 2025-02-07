@@ -33,7 +33,7 @@ const Login = () => {
       localStorage.setItem("userId", JSON.stringify(result.data.user));
       localStorage.setItem("Roles", JSON.stringify(result.data.roles));
       SetMessage("Login Successful");
-      navigate("/");
+      navigate("/mainsection");
     } catch (error) {
       SetMessage("Login Failed");
       console.log("Axios Error:", error);

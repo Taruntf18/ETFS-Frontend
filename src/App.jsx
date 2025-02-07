@@ -3,18 +3,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login_comp/Login";
 import MainSection from "./components/Mainsection/Mainsection";
 import NewFile from "./components/NewFile/NewFile";
-import ReceviedFile from "./components/ReceivedFile/ReceivedFile";
-
+import Status from "./components/Status/Status";
+import ReceivedFile from "./components/ReceivedFile/ReceivedFile";
 
 const App = () => {
   return (
     <Router>
-      
       <Routes>
-        <Route path="/" element={<MainSection />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/mainsection" element={<MainSection />} />
+        <Route path="/" element={<Login />} />
         <Route path="/new-file" element={<NewFile />} />
-        <Route path="/received-file" element={<ReceviedFile/>} />
+        <Route path="/status" element={<Status/>} />
+        <Route path="/received-file" element={<ReceivedFile />} />
+
 
       </Routes>
     </Router>

@@ -30,7 +30,10 @@ const NewFile = () => {
     divId: divId,
     subject: subject,
     description: description,
-    preparedBy: localStorage.getItem("userId").toString().substring(1, localStorage.getItem("userId").toString().length - 1),
+    preparedBy: localStorage
+      .getItem("userId")
+      .toString()
+      .substring(1, localStorage.getItem("userId").toString().length - 1),
     preparedDate: "",
     sendingThrough: sendingThrough,
     status: "1",
@@ -91,8 +94,10 @@ const NewFile = () => {
   return (
     <>
       <Navbar />
+
       {/* <TempNav /> */}
       <div className={styles.body}>
+        <div style={{ height: "100px" }}></div>
         <div className={styles.form_container}>
           <h2>Create New File</h2>
           <form onSubmit={handleSubmit}>
@@ -171,57 +176,20 @@ const NewFile = () => {
             </div>
 
             <div className={styles.form_group_whome}>
-              <label>Sending To:</label>
-              <div className={styles.radio_group}>
-                <label>
-                  <input
-                    type="radio"
-                    name="receiver"
-                    value="employee_of_my_division"
-                    checked={receiver === "employee_of_my_division"}
-                    onChange={(e) => setReceiver(e.target.value)}
-                    required
-                  />
-                  Employees of My Division
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="receiver"
-                    value="divisional_office"
-                    checked={receiver === "divisional_office"}
-                    onChange={(e) => setReceiver(e.target.value)}
-                    required
-                  />
-                  Divisional Office
-                </label>
+              <label>Sending To Divisional Office:</label>
+              <div className={`${styles.form_group}`}>
+                <select
+                  id={styles.document_type}
+                  onChange={(e) => SetDivId(e.target.value)}
+                >
+                  <option>Select Division</option>
+                  {divisionalOffice.map((item) => (
+                    <option key={item.divId} value={item.divId}>
+                      {item.divName}
+                    </option>
+                  ))}
+                </select>
               </div>
-              {receiver === "divisional_office" && (
-                <div className={`${styles.form_group}`}>
-                  <select
-                    id={styles.document_type}
-                    onChange={(e) => SetDivId(e.target.value)}
-                  >
-                    <option>Select Division</option>
-                    {divisionalOffice.map((item) => (
-                      <option key={item.divId} value={item.divId}>
-                        {item.divName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              {receiver === "employee_of_my_division" && (
-                <div className={`${styles.form_group}`}>
-                  <select id={styles.document_type}>
-                    {emp_of_my_div.map((item) => (
-                      <option key={item.docId} value={item.docId}>
-                        {item.docType}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
             </div>
             <div className={styles.form_group}>
               <label>Do you want to mention Workflow</label>

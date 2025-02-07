@@ -19,6 +19,7 @@
     "framer-motion": "^11.18.0",
     "lottie-react": "^2.4.0",
     "react": "^18.3.1",
+    "react-barcode": "^1.5.3",
     "react-bootstrap": "^2.10.7",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.2",
@@ -27,6 +28,7 @@
     "react-redux": "^9.2.0",
     "react-router": "^7.1.1",
     "react-router-dom": "^7.1.1",
+    "reactjs-popup": "^2.0.6",
     "redux": "^5.0.1"
   },
   "devDependencies": {
