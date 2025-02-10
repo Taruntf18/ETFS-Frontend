@@ -6,6 +6,7 @@ import NewFile from "./components/NewFile/NewFile";
 import Status from "./components/Status/Status";
 import ReceivedFile from "./components/ReceivedFile/ReceivedFile";
 
+
 const App = () => {
   return (
     <Router>
@@ -15,7 +16,6 @@ const App = () => {
         <Route path="/new-file" element={<NewFile />} />
         <Route path="/status" element={<Status/>} />
         <Route path="/received-file" element={<ReceivedFile />} />
-
 
       </Routes>
     </Router>

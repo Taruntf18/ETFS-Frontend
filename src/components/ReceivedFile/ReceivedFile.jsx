@@ -14,11 +14,6 @@ const ReceivedFile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  function getDocTypeById(docId, documents) {
-    const doc = documents.find((doc) => doc.docId === docId);
-    return doc ? doc.docType : null;
-  }
-
   console.log(filesData);
 
   const getReceivedFilesData = async () => {
@@ -50,7 +45,6 @@ const ReceivedFile = () => {
         console.error("Axios Error:", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -80,9 +74,7 @@ const ReceivedFile = () => {
             {filesData.map((item, key) => (
               <tr className={styles.tr} key={key}>
                 <td className={styles.td}>{item.fileUtn}</td>
-                <td className={styles.td}>
-                  {getDocTypeById(item.docTypeID, documentArr)}
-                </td>
+                <td className={styles.td}>{item.docType}</td>
                 <td
                   className={`${
                     item.priority === "immediate"
@@ -97,7 +89,9 @@ const ReceivedFile = () => {
                 </td>
                 <td className={styles.td}>{item.preparedDate}</td>
                 <td className={styles.td}>{item.subject}</td>
-                <td className={styles.td}>{item.description}</td>
+                <td style={{ textWrap: "wrap" }} className={styles.td}>
+                  {item.description}
+                </td>
                 <td className={styles.td}>{item.sendingThrough}</td>
                 <td className={styles.td}>
                   <button
@@ -135,7 +129,7 @@ const ReceivedFile = () => {
                   <td>
                     <strong>Type of Document:</strong>
                   </td>
-                  <td>{getDocTypeById(selectedFile.docTypeID, documentArr)}</td>
+                  <td>{selectedFile.docType}</td>
                 </tr>
                 <tr>
                   <td>
@@ -184,7 +178,7 @@ const ReceivedFile = () => {
 
                 <tr>
                   <td>
-                    <strong>Workflow</strong>
+                    <strong>Proposed Workflow</strong>
                   </td>
                   <td>
                     <div className={styles.workflowContainer}>
@@ -199,7 +193,56 @@ const ReceivedFile = () => {
                         <div>N/A</div>
                       )}
                     </div>
-                  </td> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Current Workflow</strong>
+                  </td>
+                  <td>
+                    <div className={styles.workflowContainer}>
+                      {/* {selectedFile.etfsFileTracking.map((item, key) => {
+                        (
+                          <div>
+                            {item}
+                          </div>
+                        )
+                      })} */}
+                      {selectedFile.etfsFileTracking &&
+                      selectedFile.etfsFileTracking.length > 0 ? (
+                        <table border="1">
+                          <thead>
+                            <tr>
+                              <th>Transaction ID</th>
+                              <th>File Date</th>
+                              <th>File From</th>
+                              <th>File To</th>
+                              <th>To Date</th>
+                              <th>Status</th>
+                              <th>Remarks</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {selectedFile.etfsFileTracking.map(
+                              (file, index) => (
+                                <tr key={index}>
+                                  <td>{file.transId}</td>
+                                  <td>{file.fileDate}</td>
+                                  <td>{file.filFrom}</td>
+                                  <td>{file.fileTo || "N/A"}</td>
+                                  <td>{file.toDate || "N/A"}</td>
+                                  <td>{file.status}</td>
+                                  <td>{file.remarks || "N/A"}</td>
+                                </tr>
+                              )
+                            )}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <p>No file tracking data available.</p>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>

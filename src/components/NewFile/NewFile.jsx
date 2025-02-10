@@ -5,8 +5,10 @@ import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import axios from "axios";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NewFile = () => {
+  const navigate = useNavigate();
   // states for storing input form data
   const [priority, setPriority] = useState("");
   const [typeOfDoc, setTypeOfDoc] = useState();
@@ -14,8 +16,8 @@ const NewFile = () => {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [sendingThrough, setsendingThrough] = useState("");
-  const [receiver, setReceiver] = useState("");
   const [workflow, setWorkflow] = useState("");
+  const [user, Setuser] = useState("");
 
   // states for hadling ui changes
   const [divisions, setDivisions] = useState([]);
@@ -24,23 +26,21 @@ const NewFile = () => {
   const [divisionalOffice, setDivisionalOffice] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  //storing userid from localStorage
+  const [userid, Setuserid] = useState("");
+
   const jsonObject = {
     priority: priority,
     docTypeID: typeOfDoc,
     divId: divId,
     subject: subject,
     description: description,
-    preparedBy: localStorage
-      .getItem("userId")
-      .toString()
-      .substring(1, localStorage.getItem("userId").toString().length - 1),
-    preparedDate: "",
+    preparedBy: localStorage.getItem("userId").toString().slice(1, -1),
+    preparedDate: '',
     sendingThrough: sendingThrough,
     status: "1",
     workflow: divisions.toString(),
   };
-
-  console.log(jsonObject);
 
   const handleSubmit = async () => {
     if (isLoading) return;
@@ -59,22 +59,28 @@ const NewFile = () => {
 
   // fetching DATA
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [docResp, empResp, divResp] = await Promise.all([
-          axios.get("http://localhost:8080/getAllDocument"),
-          axios.get("http://localhost:8080/getAllDocument"),
-          axios.get("http://localhost:8080/getDivisionData"),
-        ]);
-        setDocumentArr(docResp.data);
-        setEmp_of_my_div(empResp.data);
-        setDivisionalOffice(divResp.data);
-      } catch (error) {
-        console.error("Axios Error:", error);
-      }
-    };
-
-    fetchData();
+    if (localStorage.getItem("userId") == null) {
+      navigate("/");
+    } else {
+      Setuserid("userId");
+      Setuser(localStorage.getItem("currentRole"));
+      const fetchData = async () => {
+        try {
+          const [docResp, empResp, divResp] = await Promise.all([
+            axios.get("http://localhost:8080/getAllDocument"),
+            axios.get("http://localhost:8080/getAllDocument"),
+            axios.get("http://localhost:8080/getDivisionData"),
+          ]);
+          setDocumentArr(docResp.data);
+          setEmp_of_my_div(empResp.data);
+          setDivisionalOffice(divResp.data);
+        } catch (error) {
+          console.error("Axios Error:", error);
+        }
+      };
+      fetchData();
+    }
+    
   }, []);
 
   const handleAddDivision = () => {
@@ -94,13 +100,30 @@ const NewFile = () => {
   return (
     <>
       <Navbar />
-
-      {/* <TempNav /> */}
       <div className={styles.body}>
-        <div style={{ height: "100px" }}></div>
+        <div style={{ height: '100px' }}></div>
         <div className={styles.form_container}>
           <h2>Create New File</h2>
           <form onSubmit={handleSubmit}>
+            {user == " Divisional Office" && (
+              <div className={styles.form_group}>
+                <label htmlFor="document-type">File Initiator</label>
+                <select
+                  id={styles.document_type}
+                  onChange={(e) => {
+                    setTypeOfDoc(e.target.value);
+                  }}
+                  required
+                >
+                  <option value="">Select Employee</option>
+                  {documentArr.map((item) => (
+                    <option key={item.docId} value={item.docId}>
+                      {item.docType}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className={styles.form_group}>
               <label htmlFor="document-type">Type of Document</label>
               <select
@@ -174,23 +197,24 @@ const NewFile = () => {
                 required
               />
             </div>
-
-            <div className={styles.form_group_whome}>
-              <label>Sending To Divisional Office:</label>
-              <div className={`${styles.form_group}`}>
-                <select
-                  id={styles.document_type}
-                  onChange={(e) => SetDivId(e.target.value)}
-                >
-                  <option>Select Division</option>
-                  {divisionalOffice.map((item) => (
-                    <option key={item.divId} value={item.divId}>
-                      {item.divName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+              {user == " Divisional Office" && (
+                <div className={styles.form_group_whome}>
+                  <label>Sending To Divisional Office:</label>
+                  <div className={`${styles.form_group}`}>
+                    <select
+                      id={styles.document_type}
+                      onChange={(e) => SetDivId(e.target.value)}
+                    >
+                      <option>Select Division</option>
+                      {divisionalOffice.map((item) => (
+                        <option key={item.divId} value={item.divId}>
+                          {item.divName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
             <div className={styles.form_group}>
               <label>Do you want to mention Workflow</label>
               <div className={styles.radio_group}>

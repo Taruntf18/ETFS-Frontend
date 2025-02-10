@@ -87,11 +87,14 @@ background-color: #0056b3;
 
 .workflowContainer {
 display: flex;
-flex-direction: column; /* Makes the workflow vertical */
-gap: 5px; /* Adds spacing between steps */
+flex-direction: column; 
+gap: 5px; 
 }
 
 .workflowStep {
 padding: 5px;
+}
 
+td{
+  text-wrap:nowrap;
 }

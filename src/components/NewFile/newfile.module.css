@@ -1,220 +1,220 @@
 .body {
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(125deg, rgba(0,0,0,1) 0%, rgb(114, 114, 114) 51%, rgba(0,0,0,1) 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Allow scrolling if needed */
-    overflow-y: auto; /* Prevents content overflow */
-    padding: 20px;
-    margin: 0;
-    width: 100%;
-    box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(125deg, rgba(0,0,0,1) 0%, rgb(114, 114, 114) 51%, rgba(0,0,0,1) 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Allow scrolling if needed */
+  overflow-y: auto; /* Prevents content overflow */
+  padding: 20px;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
 
 }
 
 .form_container {
-  background: linear-gradient(125deg, rgba(144, 176, 218) 0%, rgb(187, 188, 189) 52%, rgb(144, 176, 218) 100%);
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 800px;
-  font-family: "Roboto", sans-serif;
+background: linear-gradient(125deg, rgba(144, 176, 218) 0%, rgb(187, 188, 189) 52%, rgb(144, 176, 218) 100%);
+padding: 30px;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+width: 800px;
+font-family: "Roboto", sans-serif;
 }
 
 .form_container h2 {
-  margin-top: 0;
-  margin-bottom: 40px;
-  font-size: 44px;
+margin-top: 0;
+margin-bottom: 40px;
+font-size: 44px;
 }
 .form_group {
-  margin-bottom: 20px;
+margin-bottom: 20px;
 }
 .form_group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
+display: block;
+margin-bottom: 8px;
+font-weight: bold;
 }
 .form_group select,
 .form_group input,
 .form_group textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  background-color: #f3f4f6;
+width: 100%;
+padding: 12px;
+border: 1px solid #d1d5db;
+border-radius: 4px;
+background-color: #f3f4f6;
 }
 .form_group textarea {
-  resize: vertical;
-  height: 100px;
+resize: vertical;
+height: 100px;
 }
 
 .form_group .subject {
-  width: 96.5%;
+width: 96.5%;
 }
 
 .form_group .radio_group {
-  display: flex;
-  align-items: center;
+display: flex;
+align-items: center;
 }
 .form_group .radio_group label {
-  margin-right: 20px;
-  font-weight: normal;
-  display: flex;
-  align-items: center;
+margin-right: 20px;
+font-weight: normal;
+display: flex;
+align-items: center;
 }
 .form_group .radio_group input {
-  margin-right: 5px;
+margin-right: 5px;
 }
 .form_group .radio_group label:last-child {
-  margin-right: 0;
+margin-right: 0;
 }
 .form_group .submit_btn {
-  background-color: #3b82f6;
-  color: #fff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+background-color: #3b82f6;
+color: #fff;
+padding: 12px 20px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
 }
 .form_group .submit_btn:hover {
-  background-color: #2563eb;
+background-color: #2563eb;
 }
 
 .form_group_whome label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
+display: block;
+margin-bottom: 8px;
+font-weight: bold;
 }
 
 .form_group_whome .radio_group label {
-  margin-right: 20px;
-  font-weight: normal;
-  display: flex;
-  align-items: center;
+margin-right: 20px;
+font-weight: normal;
+display: flex;
+align-items: center;
 }
 .form_group_whome .radio_group {
-  display: flex;
-  align-items: center;
+display: flex;
+align-items: center;
 }
 .form_group_whome {
-  margin-bottom: 20px;
+margin-bottom: 20px;
 }
 .change_styles {
-  width: 200px;
+width: 200px;
 }
 
 #document_date {
-  width: 96.5%;
+width: 96.5%;
 }
 
 #description {
-  font-family: "Roboto", sans-serif;
-  width: 96.5%;
+font-family: "Roboto", sans-serif;
+width: 96.5%;
 }
 
 .sending_to {
-  margin-left: 20px;
+margin-left: 20px;
 }
 
 .submit_button_div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 .popup {
-  font-family: "Poppins", sans-serif;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+font-family: "Poppins", sans-serif;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+backdrop-filter: blur(10px);
+display: flex;
+justify-content: center;
+align-items: center;
 }
 
 .popup_content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  min-width: 600px;
-  text-align: center;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+background: #fff;
+padding: 20px;
+border-radius: 10px;
+min-width: 600px;
+text-align: center;
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .popup_content h3 {
-  font-size: 30px;
+font-size: 30px;
 }
 
 .popup_buttons {
-  display: flex;
-  justify-content: space-between;
+display: flex;
+justify-content: space-between;
 }
 
 .close_btn,
 .save_btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .close_btn {
-  background: #f44336;
-  color: #fff;
+background: #f44336;
+color: #fff;
 }
 
 .save_btn {
-  background: #4caf50;
-  color: #fff;
+background: #4caf50;
+color: #fff;
 }
 
 .add_btn {
-  background-color: #22c55e;
-  color: #fff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-  margin: 20px 0px;
-  margin-top: 0;
+background-color: #22c55e;
+color: #fff;
+padding: 10px 16px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-size: 14px;
+transition: background-color 0.3s ease;
+margin: 20px 0px;
+margin-top: 0;
 }
 
 .add_btn:hover {
-  background-color: #16a34a;
+background-color: #16a34a;
 }
 
 .division_row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 10px;
 }
 
 .division_row input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  background-color: #f3f4f6;
+width: 100%;
+padding: 12px;
+border: 1px solid #d1d5db;
+border-radius: 4px;
+background-color: #f3f4f6;
 }
 
 .division_input {
-  width: 200px;
+width: 200px;
 }
 
 .submit_button_div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 .submit_button_div .submit_btn {
-  width: 157px;
-  font-size: 20px;
+width: 157px;
+font-size: 20px;
 }
