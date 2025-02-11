@@ -6,10 +6,15 @@ const UserContext = createContext(null);
 // Create a provider component
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({
-    userId: null,
+    userId: "",
     userName: "",
-    currentRole: "",
+    userRoles: "",
+    userDivision:"",
+    userSection:"",
+    isLoggedIn:false,
   });
+
+  const[currentUserRole, setCurrentUserRole]=useState("");
 
   // Function to update the user state
   const updateUser = (newUserData) => {
@@ -17,7 +22,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, updateUser }}>
+    <UserContext.Provider value={{ user, updateUser,  currentUserRole, setCurrentUserRole}}>
       {children}
     </UserContext.Provider>
   );

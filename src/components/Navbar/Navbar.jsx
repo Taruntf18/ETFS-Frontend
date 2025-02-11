@@ -1,51 +1,33 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./navbar.css";
 import logo from "../Images/CSIR-National_Aerospace_Laboratories_Logo.png";
 import { FaUserCircle } from "react-icons/fa";
-import axios from 'axios'
+import { useUser } from "../UserContext/UserContext";
+import "./navbar.css";
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const { user } = useUser();
+    const {currentUserRole} = useUser();
+    const {setCurrentUserRole} = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showSwitchMenu, setShowSwitchMenu] = useState(false);
-    const [roles, Setroles] = useState("");
-    const [user, setUser] = useState("");
     const profileRef = useRef(null);
-    const [filesData, SetfilesData] = useState([]);
-
-    const getReceivedFilesData = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8080/getDataByEmpId/${localStorage.getItem("userId").toString().slice(1, -1)}`);
-            console.log(response.data);
-            SetfilesData(response.data);
-        } catch (error) {
-            console.error("Axios Error:", error);
-        }
-    };
+    console.log(currentUserRole);
 
     const handleLogout = () => {
-        localStorage.clear();
+        user.isLoggedIn = false;
         navigate("/");
     };
 
     let array = [];
-    if (roles && roles !== "[]") {
-        array = roles.toString().replace(/^\[|\]$/g, "").split(",");
-        array[1]
-    }
+    array = user.userRoles.toString().replace(/^\[|\]$/g, "").split(",");
+    array[1]
     array.unshift("Employee");
-
+    
     useEffect(() => {
-        if (localStorage.getItem("userId") == null) {
-            navigate("/");
-        } else {
-            const storedUser = localStorage.getItem("userId").toString() || '""'; // Prevent null
-            const storedRoles = localStorage.getItem("Roles").toString() || "[]"; // Prevent null
-            setUser(storedUser);
-            Setroles(storedRoles.substring(1, storedRoles.length - 1));
-            getReceivedFilesData();
-        }
+        console.log(user);
+
         const handleClickOutside = (event) => {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
                 setShowProfileMenu(false);
@@ -68,7 +50,7 @@ const Navbar = () => {
                 </Link>
                 <ul>
                     <li><button><Link className="nav-link" to="/new-file">New File</Link></button></li>
-                    <li><button><Link className="nav-link" to="/received-file">Inbox</Link></button></li>
+                    {currentUserRole == "Divisional Office" && (<li><button><Link className="nav-link" to="/received-file">Inbox</Link></button></li>)}
                     <li><button><Link className="nav-link" to="/status">Status</Link></button></li>
                 </ul>
                 <div className="navbar-icons">
@@ -81,18 +63,13 @@ const Navbar = () => {
                         />
                         {showProfileMenu && (
                             <div className="dropdown-menu">
-                                <p className="user-name">{filesData[0].empName}</p>
-                                <div
-                                    className="dropdown-item"
-                                    onClick={() => setShowSwitchMenu(!showSwitchMenu)}
-                                >
-                                    Switch Account
-                                </div>
-                                {showSwitchMenu && (
-                                    <div className="nested-dropdown">
-                                        {array.map((data, key) => <div onClick={() => {localStorage.setItem("currentRole", data); location.reload();} } value={data} key={key} className="dropdown-item">{data}</div>)}
-                                    </div>
-                                )}
+                                <p className="user-name">{user.userName}</p>
+                                
+                                    <select onChange={(e) => {setCurrentUserRole(e.target.value)}} name="" id="">
+                                        <option className="dropdown-item">Select Role</option>
+                                        {array.map((data, key) => <option value={data} key={key} className="dropdown-item">{data}</option>)}
+                                    </select>
+                                
                             </div>
                         )}
                     </div>

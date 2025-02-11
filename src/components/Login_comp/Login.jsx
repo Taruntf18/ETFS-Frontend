@@ -5,12 +5,16 @@ import animationData from "../Lotties/Login_animation1.json";
 import Lottie from "react-lottie";
 import Nal_Logo from "../Images/CSIR-National_Aerospace_Laboratories_Logo.png";
 import axios from "axios";
+import { useUser } from "../UserContext/UserContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { updateUser } = useUser();
+  const { user } = useUser();
   const [userid, SetUserid] = useState("");
-  const [password, Setpassword] = useState(""); 
+  const [password, Setpassword] = useState("");
   const [message, SetMessage] = useState("");
+  const {setCurrentUserRole} = useUser();
 
   const defaultOptions = {
     loop: true,
@@ -20,6 +24,7 @@ const Login = () => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  console.log(user);
 
   const fetchUserDetails = async () => {
     try {
@@ -29,9 +34,15 @@ const Login = () => {
         "active": "y"
       });
 
-      console.log(result);
-      localStorage.setItem("userId", JSON.stringify(result.data.user));
-      localStorage.setItem("Roles", JSON.stringify(result.data.roles));
+      updateUser({
+        "userId": result.data.user,
+        "userName": result.data.empData.empname,
+        "userRoles": result.data.roles,
+        "userDivision": result.data.empData.division,
+        "userSection": result.data.empData.section,
+        "isLoggedIn": true,
+      });
+      setCurrentUserRole("Employee");
       SetMessage("Login Successful");
       navigate("/mainsection");
     } catch (error) {
@@ -74,32 +85,32 @@ const Login = () => {
           <h5>E - Tracking File System</h5>
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="user-id">User ID</label>
-            <input 
-              id="user-id" 
-              name="user-id" 
-              required 
-              type="text" 
-              value={userid} 
-              onChange={(e) => SetUserid(e.target.value)} 
-              onKeyDown={handleKeyDown} 
+            <input
+              id="user-id"
+              name="user-id"
+              required
+              type="text"
+              value={userid}
+              onChange={(e) => SetUserid(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="password">Password</label>
-            <input 
-              id="password" 
-              name="password" 
-              required 
-              type="password" 
-              value={password} 
-              onChange={(e) => Setpassword(e.target.value)} 
-              onKeyDown={handleKeyDown} 
+            <input
+              id="password"
+              name="password"
+              required
+              type="password"
+              value={password}
+              onChange={(e) => Setpassword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <button type="button" onClick={handleLogin}>
             Login
           </button>
-          <p style={{color:'red', fontWeight:'bolder'}}>{message}</p>
+          <p style={{ color: 'red', fontWeight: 'bolder' }}>{message}</p>
         </div>
       </div>
     </div>

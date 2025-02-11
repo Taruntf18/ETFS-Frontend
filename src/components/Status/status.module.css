@@ -83,3 +83,37 @@
 .receiveButton:hover {
     background-color: #6085ff;
 }
+
+.container {
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+}
+.date_picker {
+  padding: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px 30px;
+  
+}
+.date_picker label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+}
+.date_picker input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  font-size: 16px;
+  transition: border-color 0.2s;
+  width: 150px;
+}
+.date_picker input[type="date"]:focus {
+  border-color: #80bdff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

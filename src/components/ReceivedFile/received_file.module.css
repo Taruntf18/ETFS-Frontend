@@ -1,100 +1,179 @@
 .body {
-  font-family: 'Roboto', sans-serif;
-  margin: 50px 200px;
+    font-family: 'Roboto', sans-serif;
+    margin: 50px 200px;
+    padding-top: 60px; /* Adjust for navbar height */
+  }
   
-}
-.table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-.th, .td {
-  padding: 12px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-.th {
-  background-color: #f4f4f4;
-  font-weight: 700;
-}
-.tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-.priority_immediate {
-  color: red;
-  font-weight: bold;
-}
-.priority_normal {
-  color: green;
-  font-weight: bold;
-}
-.receiveButton {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-.receiveButton:hover {
-  background-color: #ff1111;
-}
-.modal {
-padding: 20px;
-background: white;
-border-radius: 8px;
-width: 50%; 
-/* max-width: 800px; */
-text-align: center;
-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-position: fixed;
-left: 50%;
-top: 50%;
-transform: translate(-50%, -50%);
-}
-
-.modalTable {
-width: 100%;
-border-collapse: collapse;
-margin-top: 10px;
-}
-
-.modalTable td {
-border: 1px solid #ddd;
-padding: 12px; /* Increase padding */
-text-align: left;
-}
-
-.modalTable tr:nth-child(even) {
-background-color: #f9f9f9;
-}
-
-.closeButton {
-margin-top: 15px;
-padding: 10px 20px;
-border: none;
-background-color: #007bff;
-color: white;
-cursor: pointer;
-border-radius: 5px;
-}
-
-.closeButton:hover {
-background-color: #0056b3;
-}
-
-.workflowContainer {
-display: flex;
-flex-direction: column; 
-gap: 5px; 
-}
-
-.workflowStep {
-padding: 5px;
-}
-
-td{
-  text-wrap:nowrap;
-}
+  .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  
+  .th, .td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .th {
+    background-color: #f4f4f4;
+    font-weight: 700;
+  }
+  
+  .tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .priority_immediate {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .priority_normal {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .receiveButton {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .receiveButton:hover {
+    background-color: #ff1111;
+  }
+  
+  /* Modal Styles */
+  .modal {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    width: 50%;
+    max-height: 75vh; /* Adjust height due to navbar */
+    overflow-y: auto; /* Enable scrolling */
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 50%;
+    top: 55%; /* Adjusted to avoid navbar */
+    transform: translate(-50%, -50%);
+  }
+  
+  
+  /* Ensure main content is scrollable and not cut off */
+  .main-content {
+    margin-top: 60px; /* Adjust for navbar */
+    overflow-y: auto;
+    max-height: calc(100vh - 60px); /* Viewport minus navbar */
+  }
+  
+  
+  
+  /* Custom Scrollbar for Modal */
+  .modal::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .modal::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+  
+  .modal::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+  
+  
+  
+  /* Modal Table */
+  .modalTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .modalTable td {
+    border: 1px solid #ddd;
+    padding: 12px; /* Increased padding */
+    text-align: left;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  
+  .modalTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Close Button */
+  .closeButton {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .closeButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Workflow Container */
+  .workflowContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 200px; /* Prevent overflow */
+    overflow-y: auto;
+    padding: 5px;
+  }
+  
+  /* Custom Scrollbar for Workflow */
+  .workflowContainer::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .workflowContainer::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 3px;
+  }
+  
+  .workflowContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+  
+  /* Workflow Step */
+  .workflowStep {
+    padding: 5px;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+  }
+  
+  /* Workflow Table */
+  .workflowTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .workflowTable th, .workflowTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .workflowTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .workflowContainer {
+    margin-top: 10px;
+  }

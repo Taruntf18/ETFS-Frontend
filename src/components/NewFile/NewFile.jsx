@@ -6,10 +6,13 @@ import { FaTrash } from "react-icons/fa";
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../UserContext/UserContext";
 
 const NewFile = () => {
   const navigate = useNavigate();
   // states for storing input form data
+  const {user} = useUser();
+  const {currentUserRole} = useUser();
   const [priority, setPriority] = useState("");
   const [typeOfDoc, setTypeOfDoc] = useState();
   const [divId, SetDivId] = useState();
@@ -17,7 +20,7 @@ const NewFile = () => {
   const [description, setDescription] = useState("");
   const [sendingThrough, setsendingThrough] = useState("");
   const [workflow, setWorkflow] = useState("");
-  const [user, Setuser] = useState("");
+
 
   // states for hadling ui changes
   const [divisions, setDivisions] = useState([]);
@@ -26,8 +29,7 @@ const NewFile = () => {
   const [divisionalOffice, setDivisionalOffice] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  //storing userid from localStorage
-  const [userid, Setuserid] = useState("");
+
 
   const jsonObject = {
     priority: priority,
@@ -35,14 +37,15 @@ const NewFile = () => {
     divId: divId,
     subject: subject,
     description: description,
-    preparedBy: localStorage.getItem("userId").toString().slice(1, -1),
+    preparedBy: user.userId,
     preparedDate: '',
     sendingThrough: sendingThrough,
     status: "1",
     workflow: divisions.toString(),
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     if (isLoading) return;
     setIsLoading(true);
     try {
@@ -59,11 +62,6 @@ const NewFile = () => {
 
   // fetching DATA
   useEffect(() => {
-    if (localStorage.getItem("userId") == null) {
-      navigate("/");
-    } else {
-      Setuserid("userId");
-      Setuser(localStorage.getItem("currentRole"));
       const fetchData = async () => {
         try {
           const [docResp, empResp, divResp] = await Promise.all([
@@ -79,8 +77,6 @@ const NewFile = () => {
         }
       };
       fetchData();
-    }
-    
   }, []);
 
   const handleAddDivision = () => {
@@ -105,7 +101,7 @@ const NewFile = () => {
         <div className={styles.form_container}>
           <h2>Create New File</h2>
           <form onSubmit={handleSubmit}>
-            {user == " Divisional Office" && (
+            {currentUserRole == "Divisional Office" && (
               <div className={styles.form_group}>
                 <label htmlFor="document-type">File Initiator</label>
                 <select
@@ -197,7 +193,7 @@ const NewFile = () => {
                 required
               />
             </div>
-              {user == " Divisional Office" && (
+              {currentUserRole == "Divisional Office" && (
                 <div className={styles.form_group_whome}>
                   <label>Sending To Divisional Office:</label>
                   <div className={`${styles.form_group}`}>
