@@ -18,7 +18,6 @@ const ReceivedFile = () => {
       );
       SetfilesData(response.data);
       console.log(response.data);
-      console.log(response.data[0]);
     } catch (error) {
       console.error("Axios Error:", error);
     }

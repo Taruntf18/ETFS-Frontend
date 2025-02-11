@@ -13,7 +13,6 @@ const Navbar = () => {
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showSwitchMenu, setShowSwitchMenu] = useState(false);
     const profileRef = useRef(null);
-    console.log(currentUserRole);
 
     const handleLogout = () => {
         user.isLoggedIn = false;
@@ -26,7 +25,6 @@ const Navbar = () => {
     array.unshift("Employee");
     
     useEffect(() => {
-        console.log(user);
 
         const handleClickOutside = (event) => {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
