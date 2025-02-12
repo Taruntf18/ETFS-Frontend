@@ -6,6 +6,7 @@ import Lottie from "react-lottie";
 import Nal_Logo from "../Images/CSIR-National_Aerospace_Laboratories_Logo.png";
 import axios from "axios";
 import { useUser } from "../UserContext/UserContext";
+import { baseUrl } from "../../environments/environment";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Login = () => {
   const [userid, SetUserid] = useState("");
   const [password, Setpassword] = useState("");
   const [message, SetMessage] = useState("");
-  const {setCurrentUserRole} = useUser();
+  const { setCurrentUserRole } = useUser();
 
   const defaultOptions = {
     loop: true,
@@ -28,19 +29,19 @@ const Login = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const result = await axios.post('http://localhost:8080/login', {
-        "username": userid,
-        "password": password,
-        "active": "y"
+      const result = await axios.post(`${baseUrl}login`, {
+        username: userid,
+        password: password,
+        active: "y",
       });
 
       updateUser({
-        "userId": result.data.user,
-        "userName": result.data.empData.empname,
-        "userRoles": result.data.roles,
-        "userDivision": result.data.empData.division,
-        "userSection": result.data.empData.section,
-        "isLoggedIn": true,
+        userId: result.data.user,
+        userName: result.data.empData.empname,
+        userRoles: result.data.roles,
+        userDivision: result.data.empData.division,
+        userSection: result.data.empData.section,
+        isLoggedIn: true,
       });
       setCurrentUserRole("Employee");
       SetMessage("Login Successful");
@@ -69,7 +70,13 @@ const Login = () => {
     <div className={styles.body}>
       <div className={styles.container}>
         <div className={styles.animation}>
-          <Lottie options={defaultOptions} height={500} width={500} autoPlay loop />
+          <Lottie
+            options={defaultOptions}
+            height={500}
+            width={500}
+            autoPlay
+            loop
+          />
         </div>
         <div className={styles.login_form}>
           <h2>
@@ -86,6 +93,7 @@ const Login = () => {
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="user-id">User ID</label>
             <input
+              placeholder="Enter UserID "
               id="user-id"
               name="user-id"
               required
@@ -98,6 +106,7 @@ const Login = () => {
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="password">Password</label>
             <input
+              placeholder="Enter Password "
               id="password"
               name="password"
               required
@@ -110,7 +119,7 @@ const Login = () => {
           <button type="button" onClick={handleLogin}>
             Login
           </button>
-          <p style={{ color: 'red', fontWeight: 'bolder' }}>{message}</p>
+          <p style={{ color: "red", fontWeight: "bolder" }}>{message}</p>
         </div>
       </div>
     </div>

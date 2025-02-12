@@ -1,21 +1,19 @@
 import styles from "./received_file.module.css";
-import Navbar from "../Navbar/Navbar";  
+import Navbar from "../Navbar/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
+import { baseUrl } from "../../environments/environment";
 
 const ReceivedFile = () => {
   const [filesData, SetfilesData] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   const getReceivedFilesData = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/getAllFiles`
-      );
+      const response = await axios.get(`${baseUrl}getAllFiles`);
       SetfilesData(response.data);
       console.log(response.data);
     } catch (error) {
@@ -57,9 +55,13 @@ const ReceivedFile = () => {
           <tbody>
             {filesData.map((item, key) => (
               <tr className={styles.tr} key={key}>
-                <td style={{ textWrap: "nowrap" }} className={styles.td}>{item.fileUtn}</td>
-                <td style={{ textWrap: "nowrap" }} className={styles.td}>{item.docType}</td>
-                <td 
+                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                  {item.fileUtn}
+                </td>
+                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                  {item.docType}
+                </td>
+                <td
                   className={`${
                     item.priority === "immediate"
                       ? styles.priority_immediate
@@ -71,8 +73,12 @@ const ReceivedFile = () => {
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.empName} - {item.empNumber}
                 </td>
-                <td style={{ textWrap: "nowrap" }} className={styles.td}>{item.preparedDate}</td>
-                <td style={{ textWrap: "wrap" }} className={styles.td}>{item.subject}</td>
+                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                  {item.preparedDate}
+                </td>
+                <td style={{ textWrap: "wrap" }} className={styles.td}>
+                  {item.subject}
+                </td>
                 <td style={{ textWrap: "wrap" }} className={styles.td}>
                   {item.description}
                 </td>
@@ -170,11 +176,13 @@ const ReceivedFile = () => {
                       <div className={styles.workflowContainer}>
                         {selectedFile.workflow &&
                         selectedFile.workflow.trim() !== "" ? (
-                          selectedFile.workflow.split(",").map((step, index) => (
-                            <div key={index} className={styles.workflowStep}>
-                              {index + 1}. {step}
-                            </div>
-                          ))
+                          selectedFile.workflow
+                            .split(",")
+                            .map((step, index) => (
+                              <div key={index} className={styles.workflowStep}>
+                                {index + 1}. {step}
+                              </div>
+                            ))
                         ) : (
                           <div>-</div>
                         )}
@@ -196,7 +204,6 @@ const ReceivedFile = () => {
                         <th>File From</th>
                         <th>File To</th>
                         <th>To Date</th>
-                        {/* <th>Status</th> */}
                         <th>Remarks</th>
                       </tr>
                     </thead>
@@ -207,7 +214,6 @@ const ReceivedFile = () => {
                           <td>{file.fileFrom}</td>
                           <td>{file.fileTo || "-"}</td>
                           <td>{file.toDate || "-"}</td>
-                          {/* <td>{file.status}</td> */}
                           <td>{file.remarks || "-"}</td>
                         </tr>
                       ))}
@@ -217,18 +223,44 @@ const ReceivedFile = () => {
                   <p>No file tracking data available.</p>
                 )}
               </div>
+
+              {/* Remarks and Send To Section - Stacked Layout */}
+              <div className={styles.remarksSendContainer}>
+                {/* Remarks Input (Top) */}
+                <div className={styles.remarksContainer}>
+                  <label className={styles.label}>
+                    <strong>Remarks:</strong>
+                  </label>
+                  <textarea
+                    className={styles.remarksInput}
+                    placeholder="Enter remarks..."
+                  ></textarea>
+                </div>
+
+                {/* Send To Dropdown (Below Remarks) */}
+                <div className={styles.sendToContainer}>
+                  <label className={styles.label}>
+                    <strong>Send To:</strong>
+                  </label>
+                  <select className={styles.sendToDropdown}>
+                    <option value="">Select Division</option>
+                    {selectedFile.divisionList?.map((division, index) => (
+                      <option key={index} value={division}>
+                        {division}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Submit Button - Centered Below */}
+              <div className={styles.submitContainer}>
+                <button className={styles.submitButton}>Submit</button>
+              </div>
             </>
           )}
-          <button
-            className={styles.closeButton}
-            onClick={() => setIsModalOpen(false)}
-          >
-            Close
-          </button>
         </div>
       </Popup>
-
-
     </>
   );
 };

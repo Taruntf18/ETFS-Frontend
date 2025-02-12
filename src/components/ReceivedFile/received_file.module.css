@@ -177,3 +177,94 @@
   .workflowContainer {
     margin-top: 10px;
   }
+
+/* Button */
+
+/* Stack Remarks and Send To one below the other */
+.remarksSendContainer {
+  display: flex;
+  flex-direction: column; /* Stacks elements vertically */
+  gap: 15px; /* Space between Remarks and Send To */
+  width: 100%;
+  margin-top: 15px;
+}
+
+/* Label Styling */
+.label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Remarks Container */
+.remarksContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Remarks Text Box */
+.remarksInput {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+/* Send To Container */
+.sendToContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Send To Dropdown */
+.sendToDropdown {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Hover and focus effects */
+.sendToDropdown:hover,
+.sendToDropdown:focus,
+.remarksInput:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Submit Button Container - Centered */
+.submitContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Submit Button Styling */
+.submitButton {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Hover effect */
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+/* Click effect */
+.submitButton:active {
+  background-color: #004092;
+  transform: scale(0.98);
+}

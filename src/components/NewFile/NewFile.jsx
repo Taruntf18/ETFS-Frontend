@@ -7,6 +7,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserContext/UserContext";
+import { baseUrl } from "../../environments/environment";
 
 const NewFile = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const NewFile = () => {
     setIsLoading(true);
     try {
       const result = await axios.post(
-        "http://localhost:8080/addFile",
+        `${baseUrl}addFile`,
         jsonObject
       );
     } catch (error) {
@@ -65,9 +66,9 @@ const NewFile = () => {
       const fetchData = async () => {
         try {
           const [docResp, empResp, divResp] = await Promise.all([
-            axios.get("http://localhost:8080/getAllDocument"),
-            axios.get("http://localhost:8080/getAllDocument"),
-            axios.get("http://localhost:8080/getDivisionData"),
+            axios.get(`${baseUrl}getAllDocument`),
+            axios.get(`${baseUrl}getAllDocument`),
+            axios.get(`${baseUrl}getDivisionData`),
           ]);
           setDocumentArr(docResp.data);
           setEmp_of_my_div(empResp.data);

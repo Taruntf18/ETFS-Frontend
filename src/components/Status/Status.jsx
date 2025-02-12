@@ -3,6 +3,7 @@ import Navbar from '../Navbar/Navbar'
 import styles from './status.module.css'
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import { baseUrl } from '../../environments/environment';
 
 const Status = () => {
     const [filesData, SetfilesData] = useState([]);
@@ -13,7 +14,7 @@ const Status = () => {
 
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getDataByKeywords/${searchInput.replaceAll('/', "_")}`);
+            const response = await axios.get(`${baseUrl}getDataByKeywords/${searchInput.replaceAll('/', "_")}`);
             SetfilesData(response.data);
         } catch (error) {
             console.error("Axios Error:", error);
@@ -23,7 +24,7 @@ const Status = () => {
 
     const getReceivedFilesData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/getAllFiles`);
+            const response = await axios.get(`${baseUrl}getAllFiles`);
             console.log(response.data);
             SetfilesData(response.data);
         } catch (error) {
@@ -79,29 +80,29 @@ const Status = () => {
                 <table className={styles.table}>
                     <thead className={styles.thead}>
                         <tr className={styles.tr}>
+                            <th className={styles.th}>File Utn</th> 
                             <th className={styles.th}>Type of Document</th>
                             <th className={styles.th}>Priority</th>
+                            <th className={styles.th}>Prepared By</th>
                             <th className={styles.th}>Date</th>
                             <th className={styles.th}>Subject</th>
                             <th className={styles.th}>Description</th>
                             <th className={styles.th}>Through Whom</th>
-                            <th className={styles.th}>File Utn</th>
-                            <th className={styles.th}>Prepared By</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filesData.map((item, key) => (
                             <tr className={styles.tr} key={key}>
+                                <td className={styles.td}>{item.fileUtn}</td>
                                 <td className={styles.td}>{item.docType}</td>
                                 <td className={`${item.priority === "immediate" ? styles.priority_immediate : styles.priority_normal} ${styles.td}`}>
                                     {capitalizeFirstLetter(item.priority)}
                                 </td>
+                                <td className={styles.td}>{item.empName} - {item.empNumber}</td>
                                 <td className={styles.td}>{item.preparedDate}</td>
                                 <td className={styles.td}>{item.subject}</td>
                                 <td style={{ textWrap: 'wrap' }} className={styles.td}>{item.description}</td>
                                 <td className={styles.td}>{item.sendingThrough}</td>
-                                <td className={styles.td}>{item.fileUtn}</td>
-                                <td className={styles.td}>{item.empName} - {item.empNumber}</td>
                             </tr>
                         ))}
                     </tbody>
