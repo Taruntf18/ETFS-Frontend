@@ -13,8 +13,8 @@ export const UserProvider = ({ children }) => {
     userSection:"",
     isLoggedIn:false,
   });
-
   const[currentUserRole, setCurrentUserRole]=useState("");
+  const[division, setDivision]=useState("");
 
   // Function to update the user state
   const updateUser = (newUserData) => {
@@ -22,7 +22,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, updateUser,  currentUserRole, setCurrentUserRole}}>
+    <UserContext.Provider value={{ user, updateUser,  currentUserRole, setCurrentUserRole, division, setDivision}}>
       {children}
     </UserContext.Provider>
   );

@@ -61,10 +61,10 @@ const Navbar = () => {
                         />
                         {showProfileMenu && (
                             <div className="dropdown-menu">
-                                <p className="user-name">{user.userName}</p>
+                                <p style={{textWrap: "nowrap"}} className="user-name">{user.userName}</p>
                                 
                                     <select onChange={(e) => {setCurrentUserRole(e.target.value)}} name="" id="">
-                                        <option className="dropdown-item">Select Role</option>
+                                        <option className="dropdown-item">- Select Role -  </option>
                                         {array.map((data, key) => <option value={data} key={key} className="dropdown-item">{data}</option>)}
                                     </select>
                                 

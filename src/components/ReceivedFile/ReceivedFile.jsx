@@ -7,10 +7,14 @@ import "reactjs-popup/dist/index.css";
 import { baseUrl } from "../../environments/environment";
 
 const ReceivedFile = () => {
-  const [filesData, SetfilesData] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filesData, SetfilesData] = useState([]); // State for fetched files data
+  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [remarks, setRemarks] = useState(""); // State for remarks input
+  const [sendTo, setSendTo] = useState(""); // State for selected division
+  const [divisions, setDivisions] = useState([]); // State for fetched division data
 
+  // Fetch received files data
   const getReceivedFilesData = async () => {
     try {
       const response = await axios.get(`${baseUrl}getAllFiles`);
@@ -21,18 +25,67 @@ const ReceivedFile = () => {
     }
   };
 
+  // Fetch division data
+  const fetchDivisions = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}getDivisionData`);
+      setDivisions(response.data);
+    } catch (error) {
+      console.error("Error fetching division data:", error);
+    }
+  };
+
+  // Fetch data on component mount
   useEffect(() => {
     getReceivedFilesData();
+    fetchDivisions();
   }, []);
 
+  // Handle file receive button click
   const handleReceive = (file) => {
     setSelectedFile(file);
     setIsModalOpen(true);
   };
 
+  // Capitalize the first letter of a string
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
+
+  // Handle remarks input change
+  const handleRemarksChange = (event) => {
+    setRemarks(event.target.value);
+  };
+
+  // Handle sendTo dropdown change
+  const handleSendToChange = (event) => {
+    setSendTo(event.target.value);
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    if (!selectedFile) return;
+
+    const trackingDetails = {
+      fileUtn: selectedFile.fileUtn,
+      refTransId: selectedFile.transId,
+      masterTransId: selectedFile.masterTransId,
+      remarks: "testing ",
+      fileTo: 53924,
+      status:2
+      // Add other necessary fields here
+    };
+
+    try {
+      const response = await axios.post(`${baseUrl}AddTrackingDetails`, trackingDetails);
+      console.log("Tracking details added successfully:", response.data);
+      setIsModalOpen(false); // Close the modal after successful submission
+      setRemarks(""); // Reset remarks
+      setSendTo(""); // Reset sendTo
+    } catch (error) {
+      console.error("Error adding tracking details:", error);
+    }
+  };
 
   return (
     <>
@@ -200,6 +253,7 @@ const ReceivedFile = () => {
                   <table className={styles.workflowTable}>
                     <thead>
                       <tr>
+                        <th>sl.no</th>
                         <th>File Date</th>
                         <th>File From</th>
                         <th>File To</th>
@@ -210,6 +264,7 @@ const ReceivedFile = () => {
                     <tbody>
                       {selectedFile.etfsFileTracking.map((file, index) => (
                         <tr key={index}>
+                          <td>{index+1}</td>
                           <td>{file.fileDate}</td>
                           <td>{file.fileFrom}</td>
                           <td>{file.fileTo || "-"}</td>
@@ -224,38 +279,44 @@ const ReceivedFile = () => {
                 )}
               </div>
 
-              {/* Remarks and Send To Section - Stacked Layout */}
+              {/* Remarks and Send To Section */}
               <div className={styles.remarksSendContainer}>
-                {/* Remarks Input (Top) */}
-                <div className={styles.remarksContainer}>
+                <div className={styles.row}>
                   <label className={styles.label}>
                     <strong>Remarks:</strong>
                   </label>
                   <textarea
                     className={styles.remarksInput}
                     placeholder="Enter remarks..."
+                    value={remarks}
+                    onChange={handleRemarksChange}
                   ></textarea>
                 </div>
 
-                {/* Send To Dropdown (Below Remarks) */}
-                <div className={styles.sendToContainer}>
+                <div className={styles.row}>
                   <label className={styles.label}>
                     <strong>Send To:</strong>
                   </label>
-                  <select className={styles.sendToDropdown}>
+                  <select
+                    className={styles.sendToDropdown}
+                    value={sendTo}
+                    onChange={handleSendToChange}
+                  >
                     <option value="">Select Division</option>
-                    {selectedFile.divisionList?.map((division, index) => (
-                      <option key={index} value={division}>
-                        {division}
+                    {divisions.map((division, index) => (
+                      <option key={index} value={division.divName}>
+                        {division.divName}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
 
-              {/* Submit Button - Centered Below */}
+              {/* Submit Button */}
               <div className={styles.submitContainer}>
-                <button className={styles.submitButton}>Submit</button>
+                <button className={styles.submitButton} onClick={handleSubmit}>
+                  Submit
+                </button>
               </div>
             </>
           )}

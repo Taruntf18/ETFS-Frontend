@@ -1,9 +1,9 @@
 /* Import Google Font */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 
+/* Navbar Container */
 .navbar {
   position: fixed; /* Fix the navbar at the top */
-  margin-right: 200px;
   top: 0;
   left: 0;
   width: 100%;
@@ -17,37 +17,6 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   user-select: none;
   z-index: 1000; /* Ensures it stays above other content */
-}
-/* Logo */
-.navbar-logo {
-  height: 70px;
-  width: auto;
-}
-
-/* Navbar Links */
-.navbar ul {
-  list-style: none;
-  display: flex;
-  gap: 25px;
-  padding: 0;
-}
-
-.navbar ul li {
-  cursor: pointer;
-  padding: 0;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease-in-out;
-  text-transform: capitalize;
-}
-
-
-.navbar ul li button{
-  background-color: transparent;
-  padding: 15px 12px;
-  border-radius: 10px;
-  border: none;
 }
 
 /* Logo Container */
@@ -71,7 +40,33 @@
   color: white;
   text-transform: uppercase;
 }
-.nav-link{
+
+/* Navbar Links */
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  padding: 0;
+}
+
+.navbar ul li {
+  cursor: pointer;
+  padding: 0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  text-transform: capitalize;
+}
+
+.navbar ul li button {
+  background-color: transparent;
+  padding: 15px 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+.nav-link {
   font-size: 16px;
   text-decoration: none;
   color: white;
@@ -79,15 +74,9 @@
   border-radius: 8px;
 }
 
-.navbar ul li button:hover{
+.navbar ul li button:hover {
   background: #007bff;
 }
-/* .navbar ul li:hover,
-.navbar ul .active {
-  background: #007bff;
-  color: white;
-  transform: translateY(-2px);
-} */
 
 /* Navbar Right Section */
 .navbar-icons {
@@ -146,7 +135,10 @@
   z-index: 1000;
   color: black;
   animation: fadeIn 0.2s ease-in-out;
-  padding: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Fade-in effect */
@@ -168,6 +160,7 @@
   border-bottom: 1px solid #ddd;
   text-align: center;
   color: #333;
+  font-size: 18px;
 }
 
 /* Dropdown Items */
@@ -177,24 +170,36 @@
   transition: background 0.3s, color 0.3s;
   border-radius: 8px;
   font-size: 15px;
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  text-align: center;
 }
 
 .dropdown-item:hover {
   background: #007bff;
   color: white;
+  border-color: #007bff;
 }
 
-/* Nested Dropdown */
-.nested-dropdown {
-  background: #cacaca;
-  padding-left: 10px;
+/* Select Role Dropdown */
+.dropdown-menu select {
+  padding: 10px;
   border-radius: 8px;
-  margin-top: 5px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.nested-submenu {
-  padding-left: 15px;
-  border-left: 2px solid #007bff;
-  margin-left: 10px;
-  padding-top: 5px;
+.dropdown-menu select:hover {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.dropdown-menu select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
 }

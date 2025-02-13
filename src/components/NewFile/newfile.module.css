@@ -1,5 +1,5 @@
 .body {
-    font-family: "Poppins", sans-serif;
+    font-family: "Verdana";
     background: linear-gradient(125deg, rgba(0,0,0,1) 0%, rgb(114, 114, 114) 51%, rgba(0,0,0,1) 100%);
     display: flex;
     justify-content: center;
@@ -19,7 +19,7 @@
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 800px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Verdana";
 }
 
 .form_container h2 {
@@ -109,7 +109,7 @@
 }
 
 #description {
-  font-family: "Roboto", sans-serif;
+  font-family: "Verdana";
   width: 96.5%;
 }
 
@@ -124,7 +124,7 @@
 }
 
 .popup {
-  font-family: "Poppins", sans-serif;
+  font-family: "Verdana";
   position: fixed;
   top: 0;
   left: 0;

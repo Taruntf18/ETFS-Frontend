@@ -1,32 +1,41 @@
-import React from 'react'
-import Navbar from '../Navbar/Navbar'
-import styles from './status.module.css'
+import React from 'react';
+import Navbar from '../Navbar/Navbar';
+import styles from './status.module.css';
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { baseUrl } from '../../environments/environment';
 
 const Status = () => {
-    const [filesData, SetfilesData] = useState([]);
-    const [searchInput, SetSearchInput] = useState("");
-    const [searchType, setsearchType] = useState("");
-    const [fromdate, setFromdate] = useState();
-    const [todate, setTodate] = useState();
+    const [filesData, setFilesData] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
+    const [searchType, setSearchType] = useState("searchByFileUtn");
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
 
     const handleSearch = async () => {
         try {
             const response = await axios.get(`${baseUrl}getDataByKeywords/${searchInput.replaceAll('/', "_")}`);
-            SetfilesData(response.data);
+            setFilesData(response.data);
         } catch (error) {
             console.error("Axios Error:", error);
         }
-    }
-
+    };
 
     const getReceivedFilesData = async () => {
         try {
             const response = await axios.get(`${baseUrl}getAllFiles`);
-            console.log(response.data);
-            SetfilesData(response.data);
+            setFilesData(response.data);
+        } catch (error) {
+            console.error("Axios Error:", error);
+        }
+    };
+
+    const handleDateSearch = async () => {
+        try {
+            const response = await axios.get(`${baseUrl}getDataByDateRange`, {
+                params: { fromDate, toDate }
+            });
+            setFilesData(response.data);
         } catch (error) {
             console.error("Axios Error:", error);
         }
@@ -36,51 +45,70 @@ const Status = () => {
         getReceivedFilesData();
     }, []);
 
-    function handleDateSearch() {
-
-    }
-
-
     function capitalizeFirstLetter(val) {
         return String(val).charAt(0).toUpperCase() + String(val).slice(1);
     }
+
     return (
         <>
             <Navbar />
             <div className={styles.body}>
-                <div>
-                    Search By File Utn / Subject / Description: <input type="radio" name='searchType' onChange={(e) => { setsearchType(e.target.value) }} value={'searchByFileUtn'} />
-                    Search By Date: <input type="radio" name='searchType' onChange={(e) => {setsearchType(e.target.value) }} value={'searchByDate'} /><br /><br />
-                    {searchType == 'searchByFileUtn' && (
-                        <>
-                            <input className={styles.input_inset} type="text" onChange={(e) => SetSearchInput(e.target.value)} placeholder="Search"></input>
-                            <button onClick={handleSearch} className={styles.receiveButton} >
-                                Seach
+                <div className={styles.searchContainer}>
+                    <select 
+                        className={styles.listbox} 
+                        value={searchType} 
+                        onChange={(e) => setSearchType(e.target.value)}
+                    >
+                        <option value="searchByFileUtn">Search By File UTN / Subject / Description</option>
+                        <option value="searchByDate">Search By Date</option>
+                    </select>
+
+                    {searchType === 'searchByFileUtn' && (
+                        <div className={styles.searchInputContainer}>
+                            <input 
+                                className={styles.input_inset} 
+                                type="text" 
+                                value={searchInput} 
+                                onChange={(e) => setSearchInput(e.target.value)} 
+                                placeholder="Enter search term"
+                            />
+                            <button onClick={handleSearch} className={styles.receiveButton}>
+                                Search
                             </button>
-                        </>
+                        </div>
                     )}
-                    {searchType == 'searchByDate' && (
-                        <>
-                            <div className={styles.container}>
-                                <div className={styles.date_picker}>
-                                    <label htmlFor="dateInput">Select From Date:</label>
-                                    <input onChange={(e) => { setFromdate(e.target.value) }} type="date" id={styles.dateInput} />
-                                </div>
-                                <div className={styles.date_picker}>
-                                    <label htmlFor="dateInput">Select To Date:</label>
-                                    <input onChange={(e) => { setTodate(e.target.value) }} type="date" id={styles.dateInput} />
-                                </div>
-                                <button onClick={handleDateSearch} style={{padding:'0px 25px'}} className={styles.receiveButton} >
-                                    Search
-                                </button>
+
+                    {searchType === 'searchByDate' && (
+                        <div className={styles.dateSearchContainer}>
+                            <div className={styles.datePicker}>
+                                <label htmlFor="fromDate">From Date:</label>
+                                <input 
+                                    type="date" 
+                                    id="fromDate" 
+                                    value={fromDate} 
+                                    onChange={(e) => setFromDate(e.target.value)} 
+                                />
                             </div>
-                        </>
+                            <div className={styles.datePicker}>
+                                <label htmlFor="toDate">To Date:</label>
+                                <input 
+                                    type="date" 
+                                    id="toDate" 
+                                    value={toDate} 
+                                    onChange={(e) => setToDate(e.target.value)} 
+                                />
+                            </div>
+                            <button onClick={handleDateSearch} className={styles.receiveButton}>
+                                Search
+                            </button>
+                        </div>
                     )}
                 </div>
+
                 <table className={styles.table}>
                     <thead className={styles.thead}>
                         <tr className={styles.tr}>
-                            <th className={styles.th}>File Utn</th> 
+                            <th className={styles.th}>File Utn</th>
                             <th className={styles.th}>Type of Document</th>
                             <th className={styles.th}>Priority</th>
                             <th className={styles.th}>Prepared By</th>
@@ -109,7 +137,7 @@ const Status = () => {
                 </table>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Status
+export default Status;

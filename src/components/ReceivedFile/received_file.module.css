@@ -1,5 +1,5 @@
 .body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Verdana';
     margin: 50px 200px;
     padding-top: 60px; /* Adjust for navbar height */
   }
@@ -10,6 +10,7 @@
     border-spacing: 0;
     margin-bottom: 20px;
     overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   }
   
   .th, .td {
@@ -59,7 +60,7 @@
     max-height: 75vh; /* Adjust height due to navbar */
     overflow-y: auto; /* Enable scrolling */
     text-align: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     position: fixed;
     left: 50%;
     top: 55%; /* Adjusted to avoid navbar */
@@ -180,55 +181,51 @@
 
 /* Button */
 
-/* Stack Remarks and Send To one below the other */
+/* Main Container for Remarks and Send To */
 .remarksSendContainer {
   display: flex;
-  flex-direction: column; /* Stacks elements vertically */
-  gap: 15px; /* Space between Remarks and Send To */
+  flex-direction: column;
+  gap: 10px; /* Space between Remarks and Send To rows */
   width: 100%;
   margin-top: 15px;
+}
+
+/* Each row containing Label + Input */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between Label and Input */
+  width: 100%;
 }
 
 /* Label Styling */
 .label {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 5px;
-}
-
-/* Remarks Container */
-.remarksContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  min-width: 100px; /* Ensures labels are aligned */
+  text-align: left;
 }
 
 /* Remarks Text Box */
 .remarksInput {
-  width: 100%;
-  min-height: 60px;
-  padding: 8px;
+  min-height: 150px;
+  padding: 16px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
   resize: vertical;
-}
-
-/* Send To Container */
-.sendToContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  width: 37%;
 }
 
 /* Send To Dropdown */
 .sendToDropdown {
-  width: 100%;
+  
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  width: 40%;
 }
 
 /* Hover and focus effects */
@@ -268,3 +265,4 @@
   background-color: #004092;
   transform: scale(0.98);
 }
+

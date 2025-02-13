@@ -31,11 +31,11 @@ const NewFile = () => {
   const [isLoading, setIsLoading] = useState(false);
 
 
-
   const jsonObject = {
     priority: priority,
     docTypeID: typeOfDoc,
     divId: divId,
+    divName: user.userDivision,
     subject: subject,
     description: description,
     preparedBy: user.userId,
@@ -44,6 +44,9 @@ const NewFile = () => {
     status: "1",
     workflow: divisions.toString(),
   };
+
+
+  console.log(jsonObject)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
