@@ -1,5 +1,5 @@
 .body {
-  font-family:  Verdana,;
+  font-family: 'Verdana';
   margin: 50px 200px;
 }
 
@@ -26,13 +26,13 @@
 
 .searchInputContainer {
   display: flex;
-  align-items: center;
+  align-items:center;
   gap: 10px;
 }
 
 .dateSearchContainer {
   display: flex;
-  align-items: center;
+  align-items: end;
   gap: 20px;
 }
 
@@ -60,7 +60,6 @@
 }
 
 .input_inset {
-  
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ced4da;
@@ -105,7 +104,7 @@
   margin-bottom: 20px;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  border-radius: 1px;
+  border-radius: 8px;
 }
 
 .th,

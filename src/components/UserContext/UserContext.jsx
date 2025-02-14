@@ -1,28 +1,54 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
 // Create the User Context
 const UserContext = createContext(null);
 
 // Create a provider component
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    userId: "",
-    userName: "",
-    userRoles: "",
-    userDivision:"",
-    userSection:"",
-    isLoggedIn:false,
+  // Load user state from localStorage
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser
+      ? JSON.parse(savedUser)
+      : {
+          userId: "",
+          userName: "",
+          userRoles: "",
+          userDivision: "",
+          userSection: "",
+          isLoggedIn: false,
+        };
   });
-  const[currentUserRole, setCurrentUserRole]=useState("");
-  const[division, setDivision]=useState("");
+
+  const [currentUserRole, setCurrentUserRole] = useState(() => {
+    return localStorage.getItem("currentUserRole") || "";
+  });
+
+  const [division, setDivision] = useState(() => {
+    return localStorage.getItem("division") || "";
+  });
 
   // Function to update the user state
   const updateUser = (newUserData) => {
-    setUser((prevUser) => ({ ...prevUser, ...newUserData }));
+    setUser((prevUser) => {
+      const updatedUser = { ...prevUser, ...newUserData };
+      localStorage.setItem("user", JSON.stringify(updatedUser)); // Save to localStorage
+      return updatedUser;
+    });
   };
 
+  useEffect(() => {
+    localStorage.setItem("currentUserRole", currentUserRole);
+  }, [currentUserRole]);
+
+  useEffect(() => {
+    localStorage.setItem("division", division);
+  }, [division]);
+
   return (
-    <UserContext.Provider value={{ user, updateUser,  currentUserRole, setCurrentUserRole, division, setDivision}}>
+    <UserContext.Provider
+      value={{ user, updateUser, currentUserRole, setCurrentUserRole, division, setDivision }}
+    >
       {children}
     </UserContext.Provider>
   );

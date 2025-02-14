@@ -5,8 +5,11 @@ import axios from "axios";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { baseUrl } from "../../environments/environment";
+import { useUser } from "../UserContext/UserContext";
 
 const ReceivedFile = () => {
+  const{user} =  useUser();
+
   const [filesData, SetfilesData] = useState([]); // State for fetched files data
   const [selectedFile, setSelectedFile] = useState(null); // State for selected file
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
@@ -72,7 +75,8 @@ const ReceivedFile = () => {
       masterTransId: selectedFile.masterTransId,
       remarks: "testing ",
       fileTo: 53924,
-      status:2
+      status:2,
+      preparedBy: user.userName
       // Add other necessary fields here
     };
 
