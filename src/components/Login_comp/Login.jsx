@@ -18,7 +18,6 @@ const Login = () => {
   const [password, Setpassword] = useState("");
   const [message, SetMessage] = useState("");
   const { setCurrentUserRole } = useUser();
-  const { currentUserdivision } = useUser();
 
   const defaultOptions = {
     loop: true,
@@ -40,20 +39,26 @@ const Login = () => {
         "userId": result.data.user,
         "userName": result.data.empData.empname,
         "userRoles": result.data.roles,
-        "userDivision": result.data.empData.division,
+        "userDivision": "",
         "userSection": result.data.empData.section,
         "isLoggedIn": true,
       });
       setDivision(result.data.divisions);
       setCurrentUserRole("Employee");
       SetMessage("Login Successful");
-      if(result.data.divisions.length == 1){
+      if (result.data.divisions.length == 1) {
+        updateUser({
+          "userId": result.data.user,
+          "userName": result.data.empData.empname,
+          "userRoles": result.data.roles,
+          "userDivision": result.data.divisions[0],
+          "userSection": result.data.empData.section,
+          "isLoggedIn": true,
+        });
         navigate('/mainsection');
-      }else{
-        console.log(currentUserdivision);
-        navigate('/SelectRole');
+      } else {
+        navigate('/SelectDivision');
       }
-      // navigate('/mainsection');
     } catch (error) {
       SetMessage("Login Failed");
       console.log("Axios Error:", error);

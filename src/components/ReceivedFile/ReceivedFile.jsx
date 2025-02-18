@@ -34,6 +34,8 @@ const ReceivedFile = () => {
     }
   };
 
+  console.log(filesData);
+
   // Fetch data on component mount
   useEffect(() => {
     getReceivedFilesData();

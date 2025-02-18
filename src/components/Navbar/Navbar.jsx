@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../Images/CSIR-National_Aerospace_Laboratories_Logo.png";
 import { FaUserCircle } from "react-icons/fa";
 import { useUser } from "../UserContext/UserContext";
@@ -8,40 +8,37 @@ import "./navbar.css";
 const Navbar = () => {
     const navigate = useNavigate();
     const { user } = useUser();
-    const {division} = useUser();
-    const {setDivision} = useUser();
-    const {setUser} = useUser();
+    const { division } = useUser();
+    const { setDivision } = useUser();
+    const { updateUser } = useUser();
     const { currentUserRole } = useUser();
     const { setCurrentUserRole } = useUser();
+    
     const [showProfileMenu, setShowProfileMenu] = useState(false);
-    const [showSwitchMenu, setShowSwitchMenu] = useState(false);
     const profileRef = useRef(null);
-    // console.log(user);
+    console.log(user);
 
     const handleLogout = () => {
-        user.userDivision = "";
-        user.userId = "";
-        user.userName = "";
-        user.userRoles = "";
-        user.userSection = "";
-        user.isLoggedIn = false;
-        setDivision([]);
+        updateUser({
+            "userId": "",
+            "userName": "",
+            "userRoles": "",
+            "userDivision": "",
+            "userSection": "",
+            "isLoggedIn": false,
+        });
         localStorage.clear();
+        setDivision([]);
         navigate("/");
     };
-    console.log(user);
-    console.log(division);
-    let array = [];
-    array = user.userRoles.toString().replace(/^\[|\]$/g, "").split(",");
-    array[1]
+
+    let array = user.userRoles.toString().replace(/^\[|\]$/g, "").split(",");
     array.unshift("Employee");
 
     useEffect(() => {
-
         const handleClickOutside = (event) => {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
                 setShowProfileMenu(false);
-                setShowSwitchMenu(false);
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
@@ -54,14 +51,22 @@ const Navbar = () => {
         <>
             <div style={{ height: '100px' }}></div>
             <nav className="navbar">
-                <Link to="/mainsection" className="logo-container">
+                <NavLink to="/mainsection" className="logo-container">
                     <img src={logo} alt="CSIR-NAL Logo" className="navbar-logo" />
                     <span className="etfs-text">ETFS</span>
-                </Link>
+                </NavLink>
                 <ul>
-                    <li><button><Link className="nav-link" to="/new-file">New File</Link></button></li>
-                    {currentUserRole == "Divisional Office" && (<li><button><Link className="nav-link" to="/received-file">Inbox</Link></button></li>)}
-                    <li><button><Link className="nav-link" to="/status">Status</Link></button></li>
+                    <li>
+                        <NavLink to="/new-file" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>New File</NavLink>
+                    </li>
+                    {currentUserRole === "Divisional Office" && (
+                        <li>
+                            <NavLink to="/received-file" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Inbox</NavLink>
+                        </li>
+                    )}
+                    <li>
+                        <NavLink to="/status" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Status</NavLink>
+                    </li>
                 </ul>
                 <div className="navbar-icons">
                     <div ref={profileRef} className="profile-container">
@@ -74,7 +79,7 @@ const Navbar = () => {
                         {showProfileMenu && (
                             <div className="dropdown-menu">
                                 <p className="user-name">{user.userName}</p>
-                                <select onChange={(e) => { setCurrentUserRole(e.target.value) }} name="" id="">
+                                <select onChange={(e) => { setCurrentUserRole(e.target.value); window.location.reload() }}>
                                     <option className="dropdown-item">Select Role</option>
                                     {array.map((data, key) => <option value={data} key={key} className="dropdown-item">{data}</option>)}
                                 </select>

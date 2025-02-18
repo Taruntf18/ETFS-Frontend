@@ -4,6 +4,7 @@ import styles from './status.module.css';
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { baseUrl } from '../../environments/environment';
+import { useUser } from '../UserContext/UserContext';
 
 const Status = () => {
     const [filesData, setFilesData] = useState([]);
@@ -11,6 +12,10 @@ const Status = () => {
     const [searchType, setSearchType] = useState("searchByFileUtn");
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
+    const {currentUserRole} = useUser();
+    const {user} = useUser();
+
+    
 
     const handleSearch = async () => {
         try {
@@ -23,7 +28,13 @@ const Status = () => {
 
     const getReceivedFilesData = async () => {
         try {
-            const response = await axios.get(`${baseUrl}getAllFiles`);
+            let response;
+            if(currentUserRole == "Employee"){
+                response = await axios.get(`${baseUrl}getDataByEmpIdAndDivision/${user.userId}/${user.userDivision}`);
+            }else if(currentUserRole == "Divisional Office"){
+                response = await axios.get(`${baseUrl}getAllFilesByDivName/${user.userDivision}`);
+            }
+            console.log(response);
             setFilesData(response.data);
         } catch (error) {
             console.error("Axios Error:", error);

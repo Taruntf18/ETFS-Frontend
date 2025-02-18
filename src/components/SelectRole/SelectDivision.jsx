@@ -5,31 +5,28 @@ import { useNavigate } from "react-router";
 
 export default function SelectRole() {
   const navigate = useNavigate();
-  const [role, setRole] = useState(null);
-  const { division } = useUser();
-  const { setDivision } = useUser();
-  const { currentUserdivision } = useUser();
-  const { setcurrentUserdivision } = useUser();
-  const { user } = useUser();
-  const { updateUser } = useUser();
+    const [role, setRole] = useState(null);
+    const { division } = useUser();
+    const { setDivision } = useUser();
+    const { user } = useUser();
+    const { updateUser } = useUser();
 
   const handleRoleSelect = (selectedRole) => {
     setRole(selectedRole);
   };
 
-  const handleContinue = () => {
-    setcurrentUserdivision(role);
-    setDivision(["1"]);
-    updateUser({
-      userId: user.userId,
-      userName: user.userName,
-      userRoles: user.userRoles,
-      userDivision: role,
-      userSection: user.userSection,
-      isLoggedIn: true,
-    });
-    navigate("/mainsection");
-  };
+ const handleContinue = () => {
+        setDivision(["1"]);
+        updateUser({
+            "userId": user.userId,
+            "userName": user.userName,
+            "userRoles": user.userRoles,
+            "userDivision": role,
+            "userSection": user.userSection,
+            "isLoggedIn": true,
+        });
+        navigate('/mainsection');
+    }
 
   return (
     <div className={styles.body}>

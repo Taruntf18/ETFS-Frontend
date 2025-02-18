@@ -11,9 +11,12 @@ import { baseUrl } from "../../environments/environment";
 
 const NewFile = () => {
   const navigate = useNavigate();
-  // states for storing input form data
+  // context api states;
   const { user } = useUser();
   const { currentUserRole } = useUser();
+  console.log(currentUserRole);
+
+  // states for storing input form data
   const [priority, setPriority] = useState("");
   const [typeOfDoc, setTypeOfDoc] = useState();
   const [divId, SetDivId] = useState();
@@ -22,7 +25,7 @@ const NewFile = () => {
   const [sendingThrough, setsendingThrough] = useState("");
   const [workflow, setWorkflow] = useState("");
   const [fileInitiator, setFileInitiator] = useState("");
-  
+
   // states for handling ui changes
   const [divisions, setDivisions] = useState([]);
   const [documentArr, setDocumentArr] = useState([]);
@@ -31,24 +34,9 @@ const NewFile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [divisionalEmployees, setDivisionalEmployees] = useState([]);
 
-  const jsonObject = {
-    priority: priority,
-    docTypeID: typeOfDoc,
-    divId: divId,
-    divName: user.userDivision,
-    subject: subject,
-    description: description,
-    preparedBy: user.userId,
-    preparedDate: "",
-    sendingThrough: sendingThrough,
-    status: "1",
-    workflow: divisions.toString(),
-  };
-
   console.log(divisionalOffice);
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  const handleSubmit = async () => {
     if (!priority || !typeOfDoc || !subject || !description || !sendingThrough) {
       alert("Please fill all required fields.");
       return;
@@ -56,7 +44,36 @@ const NewFile = () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const result = await axios.post(`${baseUrl}addFile`, jsonObject);
+      let result;
+      if(currentUserRole == "Divisional Office"){
+        result = await axios.post(`${baseUrl}addFile`, {
+        "priority": priority,
+          "docTypeID": typeOfDoc,
+          "divId": divId,
+          "divName": user.userDivision,
+          "subject": subject,
+          "description": description,
+          "preparedBy": fileInitiator,
+          "preparedDate": "",
+          "sendingThrough": sendingThrough,
+          "status": "1",
+          "workflow": divisions.toString(),
+        });
+      }else{
+        result = await axios.post(`${baseUrl}addFile`, {
+          "priority": priority,
+          "docTypeID": typeOfDoc,
+          "divId": divId,
+          "divName": user.userDivision,
+          "subject": subject,
+          "description": description,
+          "preparedBy": user.userId,
+          "preparedDate": "",
+          "sendingThrough": sendingThrough,
+          "status": "1",
+          "workflow": divisions.toString(),
+        });
+      }
     } catch (error) {
       console.log("Axios Error:", error);
     } finally {
@@ -118,7 +135,7 @@ const NewFile = () => {
                 >
                   <option value="">Select Employee</option>
                   {divisionalEmployees.map((item) => (
-                    <option key={item.empname} value={item.empname}>
+                    <option key={item.empno} value={item.empno}>
                       {item.empname}
                     </option>
                   ))}
