@@ -7,8 +7,7 @@ import { UserProvider } from './components/UserContext/UserContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <UserProvider>
-
-    <App />
+      <App />
     </UserProvider>
   </StrictMode>,
 )

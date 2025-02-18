@@ -62,7 +62,6 @@ const Status = () => {
                         <option value="searchByFileUtn">Search By File UTN / Subject / Description</option>
                         <option value="searchByDate">Search By Date</option>
                     </select>
-
                     {searchType === 'searchByFileUtn' && (
                         <div className={styles.searchInputContainer}>
                             <input 

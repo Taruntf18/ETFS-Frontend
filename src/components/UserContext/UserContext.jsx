@@ -8,16 +8,14 @@ export const UserProvider = ({ children }) => {
   // Load user state from localStorage
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
-    return savedUser
-      ? JSON.parse(savedUser)
-      : {
-          userId: "",
-          userName: "",
-          userRoles: "",
-          userDivision: "",
-          userSection: "",
-          isLoggedIn: false,
-        };
+    return savedUser ? JSON.parse(savedUser): {
+        userId: "",
+        userName: "",
+        userRoles: "",
+        userDivision: "",
+        userSection: "",
+        isLoggedIn: false,
+      };
   });
 
   const [currentUserRole, setCurrentUserRole] = useState(() => {
@@ -26,6 +24,10 @@ export const UserProvider = ({ children }) => {
 
   const [division, setDivision] = useState(() => {
     return localStorage.getItem("division") || "";
+  });
+
+  const [currentUserdivision, setcurrentUserdivision] = useState(() => {
+    return localStorage.getItem("currentUserdivision") || "";
   });
 
   // Function to update the user state
@@ -42,13 +44,15 @@ export const UserProvider = ({ children }) => {
   }, [currentUserRole]);
 
   useEffect(() => {
+    localStorage.setItem("currentUserdivision", currentUserdivision);
+  }, [currentUserdivision]);
+
+  useEffect(() => {
     localStorage.setItem("division", division);
   }, [division]);
 
   return (
-    <UserContext.Provider
-      value={{ user, updateUser, currentUserRole, setCurrentUserRole, division, setDivision }}
-    >
+    <UserContext.Provider value={{ user, updateUser, currentUserRole, setCurrentUserRole, division, setDivision, currentUserdivision,setcurrentUserdivision  }}>
       {children}
     </UserContext.Provider>
   );

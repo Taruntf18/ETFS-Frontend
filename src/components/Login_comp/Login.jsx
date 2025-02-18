@@ -12,10 +12,13 @@ const Login = () => {
   const navigate = useNavigate();
   const { updateUser } = useUser();
   const { user } = useUser();
+  const { division } = useUser();
+  const { setDivision } = useUser();
   const [userid, SetUserid] = useState("");
   const [password, Setpassword] = useState("");
   const [message, SetMessage] = useState("");
   const { setCurrentUserRole } = useUser();
+  const { currentUserdivision } = useUser();
 
   const defaultOptions = {
     loop: true,
@@ -25,27 +28,32 @@ const Login = () => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  console.log(user);
 
   const fetchUserDetails = async () => {
     try {
       const result = await axios.post(`${baseUrl}login`, {
-        username: userid,
-        password: password,
-        active: "y",
+        "username": userid,
+        "password": password,
+        "active": "y"
       });
-
       updateUser({
-        userId: result.data.user,
-        userName: result.data.empData.empname,
-        userRoles: result.data.roles,
-        userDivision: result.data.empData.division,
-        userSection: result.data.empData.section,
-        isLoggedIn: true,
+        "userId": result.data.user,
+        "userName": result.data.empData.empname,
+        "userRoles": result.data.roles,
+        "userDivision": result.data.empData.division,
+        "userSection": result.data.empData.section,
+        "isLoggedIn": true,
       });
+      setDivision(result.data.divisions);
       setCurrentUserRole("Employee");
       SetMessage("Login Successful");
-      navigate("/mainsection");
+      if(result.data.divisions.length == 1){
+        navigate('/mainsection');
+      }else{
+        console.log(currentUserdivision);
+        navigate('/SelectRole');
+      }
+      // navigate('/mainsection');
     } catch (error) {
       SetMessage("Login Failed");
       console.log("Axios Error:", error);
@@ -70,22 +78,14 @@ const Login = () => {
     <div className={styles.body}>
       <div className={styles.container}>
         <div className={styles.animation}>
-          <Lottie
-            options={defaultOptions}
-            height={500}
-            width={500}
-            autoPlay
-            loop
-          />
+          <Lottie options={defaultOptions} height={500} width={500} autoPlay loop />
         </div>
         <div className={styles.login_form}>
           <h2>
             <img
               height={100}
               width={100}
-              src={Nal_Logo}
-              alt=""
-              style={{ display: "inline-block", marginRight: "20px" }}
+              src={Nal_Logo} alt="" style={{ display: "inline-block", marginRight: "20px" }}
             />
             ETFS
           </h2>
@@ -93,7 +93,7 @@ const Login = () => {
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="user-id">User ID</label>
             <input
-              placeholder="Enter UserID "
+              placeholder="Enter UserId"
               id="user-id"
               name="user-id"
               required
@@ -106,7 +106,7 @@ const Login = () => {
           <div className={`${styles.input_group} ${styles.role_select}`}>
             <label htmlFor="password">Password</label>
             <input
-              placeholder="Enter Password "
+              placeholder="Enter Password"
               id="password"
               name="password"
               required
@@ -119,7 +119,7 @@ const Login = () => {
           <button type="button" onClick={handleLogin}>
             Login
           </button>
-          <p style={{ color: "red", fontWeight: "bolder" }}>{message}</p>
+          <p style={{ color: 'red', fontWeight: 'bolder' }}>{message}</p>
         </div>
       </div>
     </div>

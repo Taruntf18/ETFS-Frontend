@@ -1,25 +1,34 @@
 .body {
-    font-family: "Verdana";
-    background: linear-gradient(125deg, rgba(0,0,0,1) 0%, rgb(114, 114, 114) 51%, rgba(0,0,0,1) 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Allow scrolling if needed */
-    overflow-y: auto; /* Prevents content overflow */
-    padding: 20px;
-    margin: 0;
-    width: 100%;
-    box-sizing: border-box;
-
+  font-family: "Verdana";
+  background: linear-gradient(
+    125deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgb(114, 114, 114) 51%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Allow scrolling if needed */
+  overflow-y: auto; /* Prevents content overflow */
+  padding: 20px;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form_container {
-  background: linear-gradient(125deg, rgba(144, 176, 218) 0%, rgb(187, 188, 189) 52%, rgb(144, 176, 218) 100%);
+  background: linear-gradient(
+    125deg,
+    rgba(144, 176, 218) 0%,
+    rgb(187, 188, 189) 52%,
+    rgb(144, 176, 218) 100%
+  );
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 800px;
-  font-family: "Verdana";
+  font-family: 'Verdana';
 }
 
 .form_container h2 {
@@ -109,7 +118,7 @@
 }
 
 #description {
-  font-family: "Verdana";
+  font-family: 'Verdana';
   width: 96.5%;
 }
 
@@ -124,7 +133,7 @@
 }
 
 .popup {
-  font-family: "Verdana";
+  font-family: 'Verdana';
   position: fixed;
   top: 0;
   left: 0;

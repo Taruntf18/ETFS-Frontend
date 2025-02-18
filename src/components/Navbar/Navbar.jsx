@@ -8,22 +8,34 @@ import "./navbar.css";
 const Navbar = () => {
     const navigate = useNavigate();
     const { user } = useUser();
-    const {currentUserRole} = useUser();
-    const {setCurrentUserRole} = useUser();
+    const {division} = useUser();
+    const {setDivision} = useUser();
+    const {setUser} = useUser();
+    const { currentUserRole } = useUser();
+    const { setCurrentUserRole } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showSwitchMenu, setShowSwitchMenu] = useState(false);
     const profileRef = useRef(null);
+    // console.log(user);
 
     const handleLogout = () => {
+        user.userDivision = "";
+        user.userId = "";
+        user.userName = "";
+        user.userRoles = "";
+        user.userSection = "";
         user.isLoggedIn = false;
+        setDivision([]);
+        localStorage.clear();
         navigate("/");
     };
-
+    console.log(user);
+    console.log(division);
     let array = [];
     array = user.userRoles.toString().replace(/^\[|\]$/g, "").split(",");
     array[1]
     array.unshift("Employee");
-    
+
     useEffect(() => {
 
         const handleClickOutside = (event) => {
@@ -33,7 +45,7 @@ const Navbar = () => {
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
-        return () => {  
+        return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
@@ -61,13 +73,11 @@ const Navbar = () => {
                         />
                         {showProfileMenu && (
                             <div className="dropdown-menu">
-                                <p style={{textWrap: "nowrap"}} className="user-name">{user.userName}</p>
-                                
-                                    <select onChange={(e) => {setCurrentUserRole(e.target.value)}} name="" id="">
-                                        <option className="dropdown-item">- Select Role -  </option>
-                                        {array.map((data, key) => <option value={data} key={key} className="dropdown-item">{data}</option>)}
-                                    </select>
-                                
+                                <p className="user-name">{user.userName}</p>
+                                <select onChange={(e) => { setCurrentUserRole(e.target.value) }} name="" id="">
+                                    <option className="dropdown-item">Select Role</option>
+                                    {array.map((data, key) => <option value={data} key={key} className="dropdown-item">{data}</option>)}
+                                </select>
                             </div>
                         )}
                     </div>
