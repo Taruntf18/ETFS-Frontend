@@ -37,43 +37,33 @@ const NewFile = () => {
   console.log(divisionalOffice);
 
   const handleSubmit = async () => {
-    if (!priority || !typeOfDoc || !subject || !description || !sendingThrough) {
+    if (
+      !priority ||
+      !typeOfDoc ||
+      !subject ||
+      !description ||
+      !sendingThrough
+    ) {
       alert("Please fill all required fields.");
       return;
     }
     if (isLoading) return;
     setIsLoading(true);
     try {
-      let result;
-      if(currentUserRole == "Divisional Office"){
-        result = await axios.post(`${baseUrl}addFile`, {
+      const result = await axios.post(`${baseUrl}addFile`, {
         "priority": priority,
-          "docTypeID": typeOfDoc,
-          "divId": divId,
-          "divName": user.userDivision,
-          "subject": subject,
-          "description": description,
-          "preparedBy": fileInitiator,
-          "preparedDate": "",
-          "sendingThrough": sendingThrough,
-          "status": "1",
-          "workflow": divisions.toString(),
-        });
-      }else{
-        result = await axios.post(`${baseUrl}addFile`, {
-          "priority": priority,
-          "docTypeID": typeOfDoc,
-          "divId": divId,
-          "divName": user.userDivision,
-          "subject": subject,
-          "description": description,
-          "preparedBy": user.userId,
-          "preparedDate": "",
-          "sendingThrough": sendingThrough,
-          "status": "1",
-          "workflow": divisions.toString(),
-        });
-      }
+        "docTypeID": typeOfDoc,
+        divId: 19,
+        divName: user.userDivision,
+        subject: subject,
+        description: description,
+        preparedBy: user.userId,
+        fileInitiator: currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
+        preparedDate: "",
+        sendingThrough: sendingThrough,
+        status: user.userDivision ,
+        workflow: divisions.toString(),
+      });
     } catch (error) {
       console.log("Axios Error:", error);
     } finally {
@@ -89,7 +79,7 @@ const NewFile = () => {
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getDivisionData`),
-          axios.get(`${baseUrl}getEmployeeByDivision/${user.userDivision}/0`)
+          axios.get(`${baseUrl}getEmployeeByDivision/${user.userDivision}/0`),
         ]);
         setDocumentArr(docResp.data);
         setEmp_of_my_div(empResp.data);
@@ -126,7 +116,9 @@ const NewFile = () => {
           <form onSubmit={handleSubmit}>
             {currentUserRole == "Divisional Office" && (
               <div className={styles.form_group}>
-                <label htmlFor="document-type">File Initiator <span style={{ color: "red" }}>*</span></label>
+                <label htmlFor="document-type">
+                  File Initiator <span style={{ color: "red" }}>*</span>
+                </label>
                 <select
                   id={styles.document_type}
                   onChange={(e) => {
@@ -228,7 +220,10 @@ const NewFile = () => {
             </div>
             {currentUserRole == "Divisional Office" && (
               <div className={styles.form_group_whome}>
-                <label>Sending To Divisional Office: <span style={{ color: "red" }}>*</span></label>
+                <label>
+                  Sending To Divisional Office:{" "}
+                  <span style={{ color: "red" }}>*</span>
+                </label>
                 <div className={`${styles.form_group}`}>
                   <select
                     id={styles.document_type}

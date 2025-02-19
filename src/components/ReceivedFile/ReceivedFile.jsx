@@ -53,16 +53,6 @@ const ReceivedFile = () => {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
-  // Handle remarks input change
-  const handleRemarksChange = (event) => {
-    setRemarks(event.target.value);
-  };
-
-  // Handle sendTo dropdown change
-  const handleSendToChange = (event) => {
-    setSendTo(event.target.value);
-  };
-
   // Handle form submission
   const handleSubmit = async () => {
     if (!selectedFile) return;
@@ -72,8 +62,7 @@ const ReceivedFile = () => {
       refTransId: selectedFile.transId,
       masterTransId: selectedFile.masterTransId,
       remarks: "testing ",
-      fileTo: 53924,
-      status:2
+      fileTo: sendTo
       // Add other necessary fields here
     };
 
@@ -290,7 +279,7 @@ const ReceivedFile = () => {
                     className={styles.remarksInput}
                     placeholder="Enter remarks..."
                     value={remarks}
-                    onChange={handleRemarksChange}
+                    onChange={(e)=> setRemarks(e.target.value)}
                   ></textarea>
                 </div>
 
@@ -301,7 +290,7 @@ const ReceivedFile = () => {
                   <select
                     className={styles.sendToDropdown}
                     value={sendTo}
-                    onChange={handleSendToChange}
+                    onChange={(e)=> setSendTo(e.target.value)}
                   >
                     <option value="">Select Division</option>
                     {divisions.map((division, index) => (

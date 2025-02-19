@@ -204,8 +204,11 @@
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
 }
 
-/* Highlight active link */
 .nav-link.active {
-  background: #007bff;
-
+  font-weight: bold;
+  border-bottom: 3px solid #007bff;
+  border-top: 3px solid #007bff;
+  padding-bottom: 8px;
+  padding-top: 8px;
 }
+
