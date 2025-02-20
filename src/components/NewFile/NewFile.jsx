@@ -13,6 +13,7 @@ const NewFile = () => {
   const navigate = useNavigate();
   // context api states;
   const { user } = useUser();
+  const { division } = useUser();
   const { currentUserRole } = useUser();
   console.log(currentUserRole);
 
@@ -25,6 +26,7 @@ const NewFile = () => {
   const [sendingThrough, setsendingThrough] = useState("");
   const [workflow, setWorkflow] = useState("");
   const [fileInitiator, setFileInitiator] = useState("");
+  const [sendingto, setSendingto] = useState("");
 
   // states for handling ui changes
   const [divisions, setDivisions] = useState([]);
@@ -34,9 +36,26 @@ const NewFile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [divisionalEmployees, setDivisionalEmployees] = useState([]);
 
-  console.log(divisionalOffice);
+  // console.log(divisionalOffice);
+  const jsonObject = {
+    priority: priority,
+    docTypeID: typeOfDoc,
+    divId: user.userDivision.divid,
+    subject: subject,
+    description: description,
+    preparedBy: user.userId,
+    fileInitiator: currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
+    sendingThrough: sendingThrough,
+    sendingTo:parseInt(currentUserRole == "Divisional Office" ? sendingto : user.userDivision.divid),
+    workflow: divisions.toString(),
+  }
 
-  const handleSubmit = async () => {
+  console.log(sendingto);
+  console.log(jsonObject );
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (
       !priority ||
       !typeOfDoc ||
@@ -50,20 +69,11 @@ const NewFile = () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const result = await axios.post(`${baseUrl}addFile`, {
-        "priority": priority,
-        "docTypeID": typeOfDoc,
-        divId: 19,
-        divName: user.userDivision,
-        subject: subject,
-        description: description,
-        preparedBy: user.userId,
-        fileInitiator: currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
-        preparedDate: "",
-        sendingThrough: sendingThrough,
-        status: user.userDivision ,
-        workflow: divisions.toString(),
-      });
+      alert("input : " + JSON.stringify(jsonObject) );alert(baseUrl);
+
+      const result = await axios.post(`${baseUrl}addFile`,jsonObject);
+      alert(result);
+      console.log("result : " + result)
     } catch (error) {
       console.log("Axios Error:", error);
     } finally {
@@ -79,7 +89,9 @@ const NewFile = () => {
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getDivisionData`),
-          axios.get(`${baseUrl}getEmployeeByDivision/${user.userDivision}/0`),
+          axios.get(
+            `${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`
+          ),
         ]);
         setDocumentArr(docResp.data);
         setEmp_of_my_div(empResp.data);
@@ -227,7 +239,10 @@ const NewFile = () => {
                 <div className={`${styles.form_group}`}>
                   <select
                     id={styles.document_type}
-                    onChange={(e) => SetDivId(e.target.value)}
+                    onChange={
+                      (e) => setSendingto(e.target.value)
+
+                    }
                   >
                     <option>Select Division</option>
                     {divisionalOffice.map((item) => (

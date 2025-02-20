@@ -41,9 +41,11 @@ const Login = () => {
         "userRoles": result.data.roles,
         "userDivision": "",
         "userSection": result.data.empData.section,
+        "userDesignation": result.data.empData.designation,
         "isLoggedIn": true,
       });
-      setDivision(result.data.divisions);
+      setDivision(Array.isArray(result.data.divisions) ? result.data.divisions : []);
+      
       setCurrentUserRole("Employee");
       SetMessage("Login Successful");
       if (result.data.divisions.length == 1) {
@@ -53,6 +55,7 @@ const Login = () => {
           "userRoles": result.data.roles,
           "userDivision": result.data.divisions[0],
           "userSection": result.data.empData.section,
+          "userDesignation": result.data.empData.designation,
           "isLoggedIn": true,
         });
         navigate('/mainsection');

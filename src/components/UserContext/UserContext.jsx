@@ -14,6 +14,7 @@ export const UserProvider = ({ children }) => {
         userRoles: "",
         userDivision: "",
         userSection: "",
+        userDesignation:"",
         isLoggedIn: false,
       };
   });

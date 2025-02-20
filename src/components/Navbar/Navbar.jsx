@@ -13,7 +13,7 @@ const Navbar = () => {
     const { updateUser } = useUser();
     const { currentUserRole } = useUser();
     const { setCurrentUserRole } = useUser();
-    
+
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileRef = useRef(null);
     console.log(user);
@@ -25,6 +25,7 @@ const Navbar = () => {
             "userRoles": "",
             "userDivision": "",
             "userSection": "",
+            "userDesignation": "",
             "isLoggedIn": false,
         });
         localStorage.clear();
@@ -78,7 +79,7 @@ const Navbar = () => {
                         />
                         {showProfileMenu && (
                             <div className="dropdown-menu">
-                                <p className="user-name">{user.userName}</p>
+                                <p style={{ textWrap: 'nowrap' }} className="user-name">{user.userName} <br /> <p style={{ fontSize: '16px', fontWeight: 'normal' }}>{user.userDesignation}</p> <p style={{ fontSize: '16px', fontWeight: 'normal' }}>{user.userId}</p> </p>
                                 <select onChange={(e) => { setCurrentUserRole(e.target.value); window.location.reload() }}>
                                     <option className="dropdown-item">Select Role</option>
                                     {array.map((data, key) => <option value={data} key={key} className="dropdown-item">{data}</option>)}
