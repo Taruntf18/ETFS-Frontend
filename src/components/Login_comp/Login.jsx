@@ -31,9 +31,8 @@ const Login = () => {
   const fetchUserDetails = async () => {
     try {
       const result = await axios.post(`${baseUrl}login`, {
-        "username": userid,
-        "password": password,
-        "active": "y"
+        "empNo": userid,
+        "password": password
       });
       updateUser({
         "userId": result.data.user,

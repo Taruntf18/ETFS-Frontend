@@ -44,15 +44,16 @@ const NewFile = () => {
     subject: subject,
     description: description,
     preparedBy: user.userId,
-    fileInitiator: currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
+    fileInitiator:
+      currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
     sendingThrough: sendingThrough,
-    sendingTo:parseInt(currentUserRole == "Divisional Office" ? sendingto : user.userDivision.divid),
+    sendingTo: parseInt(
+      currentUserRole == "Divisional Office"
+        ? sendingto
+        : user.userDivision.divid
+    ),
     workflow: divisions.toString(),
-  }
-
-  console.log(sendingto);
-  console.log(jsonObject );
-
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,11 +70,7 @@ const NewFile = () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      alert("input : " + JSON.stringify(jsonObject) );alert(baseUrl);
-
-      const result = await axios.post(`${baseUrl}addFile`,jsonObject);
-      alert(result);
-      console.log("result : " + result)
+      const result = await axios.post(`${baseUrl}addFile`, jsonObject);
     } catch (error) {
       console.log("Axios Error:", error);
     } finally {
@@ -239,10 +236,7 @@ const NewFile = () => {
                 <div className={`${styles.form_group}`}>
                   <select
                     id={styles.document_type}
-                    onChange={
-                      (e) => setSendingto(e.target.value)
-
-                    }
+                    onChange={(e) => setSendingto(e.target.value)}
                   >
                     <option>Select Division</option>
                     {divisionalOffice.map((item) => (
