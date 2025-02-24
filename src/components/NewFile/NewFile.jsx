@@ -39,7 +39,7 @@ const NewFile = () => {
   // console.log(divisionalOffice);
   const jsonObject = {
     priority: priority,
-    docTypeID: typeOfDoc,
+    docId: typeOfDoc,
     divId: user.userDivision.divid,
     subject: subject,
     description: description,
@@ -86,8 +86,7 @@ const NewFile = () => {
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getDivisionData`),
-          axios.get(
-            `${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`
+          axios.get(`${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`
           ),
         ]);
         setDocumentArr(docResp.data);

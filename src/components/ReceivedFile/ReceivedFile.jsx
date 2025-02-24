@@ -255,7 +255,7 @@ const ReceivedFile = () => {
                       {selectedFile.etfsFileTracking.map((file, index) => (
                         <tr key={index}>
                           <td>{index+1}</td>
-                          <td>{file.fileDate}</td>
+                          <td>{file.fromDate}</td>
                           <td>{file.fileFrom}</td>
                           <td>{file.fileTo || "-"}</td>
                           <td>{file.toDate || "-"}</td>
