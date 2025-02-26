@@ -77,9 +77,14 @@ const Login = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleLogin();
+      if (e.target.id === "user-id") {
+        document.getElementById("password").focus();
+      } else {
+        handleLogin();
+      }
     }
   };
+  
 
   return (
     <div className={styles.body}>

@@ -55,8 +55,7 @@ const NewFile = () => {
     workflow: divisions.toString(),
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (
       !priority ||
       !typeOfDoc ||
@@ -86,7 +85,8 @@ const NewFile = () => {
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getAllDocument`),
           axios.get(`${baseUrl}getDivisionData`),
-          axios.get(`${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`
+          axios.get(
+            `${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`
           ),
         ]);
         setDocumentArr(docResp.data);
