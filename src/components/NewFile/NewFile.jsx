@@ -15,7 +15,7 @@ const NewFile = () => {
   const { user } = useUser();
   const { division } = useUser();
   const { currentUserRole } = useUser();
-  console.log(currentUserRole);
+
 
   // states for storing input form data
   const [priority, setPriority] = useState("");
@@ -38,23 +38,22 @@ const NewFile = () => {
 
   // console.log(divisionalOffice);
   const jsonObject = {
-    priority: priority,
-    docId: typeOfDoc,
-    divId: user.userDivision.divid,
-    subject: subject,
-    description: description,
-    preparedBy: user.userId,
-    fileInitiator:
-      currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
-    sendingThrough: sendingThrough,
-    sendingTo: parseInt(
-      currentUserRole == "Divisional Office"
-        ? sendingto
-        : user.userDivision.divid
-    ),
-    workflow: divisions.toString(),
-  };
+    "fileInitiator":currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
+    "description":description,
+    "divId":user.userDivision.divid,
+    "docId":typeOfDoc,
+    "preparedBy":user.userId,
+    "preparedDate":"",
+    "priority":priority,
+    "status":currentUserRole == "Divisional Office" ? sendingto.divName: user.userDivision.divname,
+    "subject":subject,
+    "workflow":divisions.toString(),
+    "sendingTo":parseInt(currentUserRole == "Divisional Office" ? sendingto.divId : user.userDivision.divid),
+    "sendingThrough":sendingThrough
+  }
 
+  console.log(jsonObject);
+  console.log(sendingto);
   const handleSubmit = async () => {
     if (
       !priority ||
@@ -69,7 +68,7 @@ const NewFile = () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const result = await axios.post(`${baseUrl}addFile`, jsonObject);
+      const result = await axios.post(`${baseUrl}addFile`,jsonObject);
     } catch (error) {
       console.log("Axios Error:", error);
     } finally {
@@ -235,11 +234,14 @@ const NewFile = () => {
                 <div className={`${styles.form_group}`}>
                   <select
                     id={styles.document_type}
-                    onChange={(e) => setSendingto(e.target.value)}
+                    onChange={
+                      (e) => setSendingto(JSON.parse(e.target.value))
+
+                    }
                   >
                     <option>Select Division</option>
                     {divisionalOffice.map((item) => (
-                      <option key={item.divId} value={item.divId}>
+                      <option key={item.divId} value={JSON.stringify(item)}>
                         {item.divName}
                       </option>
                     ))}

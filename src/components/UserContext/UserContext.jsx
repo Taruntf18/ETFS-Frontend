@@ -24,7 +24,7 @@ export const UserProvider = ({ children }) => {
   });
 
   const [division, setDivision] = useState(() => {
-    return localStorage.getItem("division") || "";
+    return JSON.parse(localStorage.getItem("division")) || "";
   });
 
   const [currentUserdivision, setcurrentUserdivision] = useState(() => {
@@ -49,7 +49,7 @@ export const UserProvider = ({ children }) => {
   }, [currentUserdivision]);
 
   useEffect(() => {
-    localStorage.setItem("division", division);
+    localStorage.setItem("division", JSON.stringify(division));
   }, [division]);
 
   return (

@@ -5,22 +5,25 @@ import axios from "axios";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { baseUrl } from "../../environments/environment";
-import { useUser } from '../UserContext/UserContext';
+import { useUser } from "../UserContext/UserContext";
 
 const ReceivedFile = () => {
-  const {user} = useUser();
+  const { user } = useUser();
   const [filesData, SetfilesData] = useState([]); // State for fetched files data
   const [selectedFile, setSelectedFile] = useState(null); // State for selected file
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [remarks, setRemarks] = useState(""); // State for remarks input
-  const [sendTo, setSendTo] = useState(""); // State for selected division
+  const [sendTo, setSendTo] = useState({}); // State for selected division
   const [divisions, setDivisions] = useState([]); // State for fetched division data
-  console.log(user.userDivision.divname)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [refTransId, setRefTransId] = useState(0);
 
   // Fetch received files data
   const getReceivedFilesData = async () => {
     try {
-      const response = await axios.get(`${baseUrl}getAllFilesByDivName/${user.userDivision.divname}`);
+      const response = await axios.get(
+        `${baseUrl}getAllFilesByStatus/${user.userDivision.divname}`
+      );
       // console.log(response.data);
       SetfilesData(response.data);
     } catch (error) {
@@ -38,8 +41,6 @@ const ReceivedFile = () => {
     }
   };
 
-  console.log(filesData);
-
   // Fetch data on component mount
   useEffect(() => {
     getReceivedFilesData();
@@ -48,6 +49,14 @@ const ReceivedFile = () => {
 
   // Handle file receive button click
   const handleReceive = (file) => {
+    if (file != null) {
+      for (let i = 0; i < file.etfsFileTracking.length; i++) {
+        if (file.etfsFileTracking[i].toDate == null) {
+          setRefTransId(file.etfsFileTracking[i].transId);
+          console.log(file.etfsFileTracking[i].transId);
+        }
+      }
+    }
     setSelectedFile(file);
     setIsModalOpen(true);
   };
@@ -57,27 +66,38 @@ const ReceivedFile = () => {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
+  const trackingDetails = {
+    "refTransId": refTransId,
+    "masterTransId": selectedFile != null ? selectedFile.masterTransId : "",
+    "fileFrom": user.userId,
+    "fromDivId": user.userDivision.divid,
+    "fileTo": sendTo.divName,
+    "toDivId": sendTo.divId,
+    "status": sendTo.divName,
+    "remarks": remarks,
+  };
+  console.log(trackingDetails);
+  if (isModalOpen) {
+    console.log(selectedFile);
+  }
   // Handle form submission
   const handleSubmit = async () => {
-    if (!selectedFile) return;
-
-    const trackingDetails = {
-      fileUtn: selectedFile.fileUtn,
-      refTransId: selectedFile.transId,
-      masterTransId: selectedFile.masterTransId,
-      remarks: "testing ",
-      fileTo: sendTo
-      // Add other necessary fields here
-    };
-
+    if (!selectedFile || isSubmitting) return;
+    setIsSubmitting(true); // Prevent multiple submissions
     try {
-      const response = await axios.post(`${baseUrl}AddTrackingDetails`, trackingDetails);
+      const response = await axios.post(
+        `${baseUrl}AddTrackingDetails`,
+        trackingDetails
+      );
       console.log("Tracking details added successfully:", response.data);
-      setIsModalOpen(false); // Close the modal after successful submission
-      setRemarks(""); // Reset remarks
-      setSendTo(""); // Reset sendTo
+      setIsModalOpen(false);
+      setRemarks("");
+      setSendTo("");
+      window.location.reload();
     } catch (error) {
       console.error("Error adding tracking details:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -118,7 +138,7 @@ const ReceivedFile = () => {
                   {capitalizeFirstLetter(item.priority)}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.empName} - {item.empNumber}
+                  {item.empName} - {item.empNo}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.preparedDate}
@@ -182,7 +202,7 @@ const ReceivedFile = () => {
                       <strong>Prepared By:</strong>
                     </td>
                     <td>
-                      {selectedFile.empName} - {selectedFile.empNumber}
+                      {selectedFile.empName} - {selectedFile.empNo}
                     </td>
                   </tr>
                   <tr>
@@ -258,10 +278,10 @@ const ReceivedFile = () => {
                     <tbody>
                       {selectedFile.etfsFileTracking.map((file, index) => (
                         <tr key={index}>
-                          <td>{index+1}</td>
-                          <td>{file.fileDate}</td>
-                          <td>{file.fileFrom}</td>
-                          <td>{file.fileTo || "-"}</td>
+                          <td>{index + 1}</td>
+                          <td>{file.fromDate}</td>
+                          <td>{file.fromDivName}</td>
+                          <td>{file.toDivName || "-"}</td>
                           <td>{file.toDate || "-"}</td>
                           <td>{file.remarks || "-"}</td>
                         </tr>
@@ -283,7 +303,7 @@ const ReceivedFile = () => {
                     className={styles.remarksInput}
                     placeholder="Enter remarks..."
                     value={remarks}
-                    onChange={(e)=> setRemarks(e.target.value)}
+                    onChange={(e) => setRemarks(e.target.value)}
                   ></textarea>
                 </div>
 
@@ -294,15 +314,16 @@ const ReceivedFile = () => {
                   <select
                     className={styles.sendToDropdown}
                     value={sendTo}
-                    onChange={(e)=> setSendTo(e.target.value)}
+                    onChange={(e) => setSendTo(JSON.parse(e.target.value))}
                   >
                     <option value="">Select Division</option>
                     {divisions.map((division, index) => (
-                      <option key={index} value={division.divName}>
+                      <option key={index} value={JSON.stringify(division)}>
                         {division.divName}
                       </option>
                     ))}
                   </select>
+                  <p>{sendTo.divName}</p>
                 </div>
               </div>
 

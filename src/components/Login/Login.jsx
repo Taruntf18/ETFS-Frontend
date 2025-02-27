@@ -37,21 +37,20 @@ const Login = () => {
       updateUser({
         "userId": result.data.user,
         "userName": result.data.empData.empname,
-        "userRoles": result.data.roles,
+        "userRoles": "",
         "userDivision": "",
         "userSection": result.data.empData.section,
         "userDesignation": result.data.empData.designation,
         "isLoggedIn": true,
       });
       setDivision(Array.isArray(result.data.divisions) ? result.data.divisions : []);
-      
       setCurrentUserRole("Employee");
       SetMessage("Login Successful");
-      if (result.data.divisions.length == 1) {
+      if (result.data.divisions.length <= 1) {
         updateUser({
           "userId": result.data.user,
           "userName": result.data.empData.empname,
-          "userRoles": result.data.roles,
+          "userRoles": "",
           "userDivision": result.data.divisions[0],
           "userSection": result.data.empData.section,
           "userDesignation": result.data.empData.designation,
@@ -84,7 +83,6 @@ const Login = () => {
       }
     }
   };
-  
 
   return (
     <div className={styles.body}>

@@ -10,25 +10,21 @@ export default function SelectRole() {
   const { setDivision } = useUser();
   const { user } = useUser();
   const { updateUser } = useUser();
-  console.log(division);
-
-  const handleRoleSelect = (selectedRole) => {
-    setRole(selectedRole);
-  };
 
   const handleContinue = () => {
-    setDivision(["1"]);
     updateUser({
-      userId: user.userId,
-      userName: user.userName,
-      userRoles: user.userRoles,
-      userDivision: role,
-      userSection: user.userSection,
-      isLoggedIn: true,
+      "userId": user.userId,
+      "userName": user.userName,
+      "userRoles": user.userRoles,
+      "userDivision": role,
+      "userSection": user.userSection,
+      "userDesignation": user.userDesignation,
+      "isLoggedIn": true,
     });
     navigate("/mainsection");
   };
 
+  console.log(division);
   return (
     <div className={styles.body}>
       <div className={styles.role_container}>
@@ -36,7 +32,7 @@ export default function SelectRole() {
         {division.map((item, index) => (
           <button
             key={index}
-            onClick={() => handleRoleSelect(item)}
+            onClick={() => setRole(item)}
             className={`${styles.role_button} ${
               role === item ? styles.selected : ""
             }`}

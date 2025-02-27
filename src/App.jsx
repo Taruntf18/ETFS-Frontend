@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./components/Login_comp/Login";
+import Login from "./components/Login/Login";
 import MainSection from "./components/Mainsection/Mainsection";
 import NewFile from "./components/NewFile/NewFile";
 import ReceivedFile from "./components/ReceivedFile/ReceivedFile";
