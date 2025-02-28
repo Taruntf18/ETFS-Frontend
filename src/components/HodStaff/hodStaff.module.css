@@ -1,0 +1,153 @@
+.body {
+  font-family: 'Verdana';
+  background: linear-gradient(
+      125deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgb(114, 114, 114) 51%,
+      rgba(0, 0, 0, 1) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Center vertically */
+}
+
+
+.form_container {
+  background: linear-gradient(
+      125deg,
+      rgba(144, 176, 218) 0%,
+      rgb(187, 188, 189) 52%,
+      rgb(144, 176, 218) 100%
+  );
+  width: 100%;
+  max-width: 800px; 
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 1rem;
+}
+
+.radio_group {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 0.5rem;
+}
+
+.employee_list {
+  margin-bottom: 1.5rem;
+}
+
+.listbox {
+  height: 12rem;
+  overflow-y: auto;
+  border: 2px solid #4a5568;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #edf2f7;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.listbox_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #cbd5e0;
+  font-size: 1rem;
+}
+
+.listbox_item:last-child {
+  border-bottom: none;
+}
+
+.options_container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.add_incharge, .remove_incharge {
+  width: 48%; /* Adjust width for both sections */
+}
+
+.button_group {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.add_button, .delete_button, .submit_button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.add_button {
+  background-color: #3b82f6; /* Blue */
+  color: white;
+  margin-right: 0.5rem;
+}
+
+.delete_button {
+  background-color: #ef4444; /* Red */
+  color: white;
+}
+
+.submit_container {
+  text-align: center;
+}
+
+.submit_button {
+  background-color: #22c55e; /* Green */
+  color: white;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.select_container {
+  margin-top: 1rem;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+
+.checkbox {
+  margin-right: 0.5rem;
+}
+
+
+.form_wrapper {
+  background: black; /* Black background behind form */
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}

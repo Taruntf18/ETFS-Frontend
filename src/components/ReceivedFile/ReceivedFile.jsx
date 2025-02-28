@@ -13,7 +13,7 @@ const ReceivedFile = () => {
   const [selectedFile, setSelectedFile] = useState(null); // State for selected file
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [remarks, setRemarks] = useState(""); // State for remarks input
-  const [sendTo, setSendTo] = useState({}); // State for selected division
+  const [sendTo, setSendTo] = useState({}); // Keep initial state as an empty object // State for selected division
   const [divisions, setDivisions] = useState([]); // State for fetched division data
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refTransId, setRefTransId] = useState(0);
@@ -67,14 +67,14 @@ const ReceivedFile = () => {
   }
 
   const trackingDetails = {
-    "refTransId": refTransId,
-    "masterTransId": selectedFile != null ? selectedFile.masterTransId : "",
-    "fileFrom": user.userId,
-    "fromDivId": user.userDivision.divid,
-    "fileTo": sendTo.divName,
-    "toDivId": sendTo.divId,
-    "status": sendTo.divName,
-    "remarks": remarks,
+    refTransId: refTransId,
+    masterTransId: selectedFile != null ? selectedFile.masterTransId : "",
+    fileFrom: user.userId,
+    fromDivId: user.userDivision.divid,
+    fileTo: sendTo.divName,
+    toDivId: sendTo.divId,
+    status: sendTo.divName,
+    remarks: remarks,
   };
   console.log(trackingDetails);
   if (isModalOpen) {
@@ -313,8 +313,13 @@ const ReceivedFile = () => {
                   </label>
                   <select
                     className={styles.sendToDropdown}
-                    value={sendTo}
-                    onChange={(e) => setSendTo(JSON.parse(e.target.value))}
+                    value={sendTo.divName ? JSON.stringify(sendTo) : ""}
+                    onChange={(e) => {
+                      const selectedDivision = e.target.value
+                        ? JSON.parse(e.target.value)
+                        : {};
+                      setSendTo(selectedDivision);
+                    }}
                   >
                     <option value="">Select Division</option>
                     {divisions.map((division, index) => (
@@ -323,7 +328,7 @@ const ReceivedFile = () => {
                       </option>
                     ))}
                   </select>
-                  <p>{sendTo.divName}</p>
+                  
                 </div>
               </div>
 

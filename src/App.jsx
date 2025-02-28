@@ -8,6 +8,7 @@ import Status from "./components/Status/Status";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import SelectDivision from "./components/SelectRole/SelectDivision";
 import { useUser } from "./components/UserContext/UserContext";
+import HodStaff from "./components/HodStaff/HodStaff";
 
 const App = () => {
   const { user } = useUser();
@@ -24,9 +25,11 @@ const App = () => {
             <Route path="/received-file" element={currentUserRole == "Divisional Office" ? (<ReceivedFile />) : (<Navigate to='/mainsection' />)} />
             <Route path="/status" element={<Status />} />
             <Route path="/SelectDivision" element={<SelectDivision />} />
+            <Route path="/hod" element={<HodStaff />} />
           </Route>
         </Routes>
       </Router>
+      {/* <HodStaff/> */}
     </>
   );
 };

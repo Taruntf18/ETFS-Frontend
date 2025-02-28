@@ -107,6 +107,16 @@ const Navbar = () => {
               Status
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/hod"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
+              HOD
+            </NavLink>
+          </li>
         </ul>
         <div className="navbar-icons">
           <div ref={profileRef} className="profile-container">
