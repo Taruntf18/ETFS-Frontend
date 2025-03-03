@@ -6,6 +6,7 @@ import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { baseUrl } from "../../environments/environment";
 import { useUser } from "../UserContext/UserContext";
+// import QRCodeGenerator from "../QRCodeGenerator/QRCodeGenerator";
 
 const ReceivedFile = () => {
   const { user } = useUser();
@@ -69,9 +70,9 @@ const ReceivedFile = () => {
   const trackingDetails = {
     refTransId: refTransId,
     masterTransId: selectedFile != null ? selectedFile.masterTransId : "",
-    fileFrom: user.userId,
+    fileFrom:  user.userId,
     fromDivId: user.userDivision.divid,
-    fileTo: sendTo.divName,
+    fileTo: user.userId,
     toDivId: sendTo.divId,
     status: sendTo.divName,
     remarks: remarks,
@@ -173,6 +174,7 @@ const ReceivedFile = () => {
         overlayStyle={styles.popupOverlay}
       >
         <div className={styles.modal}>
+          {/* <QRCodeGenerator value={selectedFile.fileUtn}/> */}
           <h2>File Details</h2>
           {selectedFile && (
             <>
@@ -268,10 +270,11 @@ const ReceivedFile = () => {
                     <thead>
                       <tr>
                         <th>sl.no</th>
-                        <th>File Date</th>
                         <th>File From</th>
+                        <th>File Date</th>
                         <th>File To</th>
                         <th>To Date</th>
+                        <th>Status</th>
                         <th>Remarks</th>
                       </tr>
                     </thead>
@@ -279,10 +282,14 @@ const ReceivedFile = () => {
                       {selectedFile.etfsFileTracking.map((file, index) => (
                         <tr key={index}>
                           <td>{index + 1}</td>
+                          <td>
+                            {file.fileFrom} - {file.fromEmpName} (
+                            {file.fromDivName})
+                          </td>
                           <td>{file.fromDate}</td>
-                          <td>{file.fromDivName}</td>
-                          <td>{file.toDivName || "-"}</td>
+                          <td>{file.fileTo} {file.toEmpName} ({file.toDivName || "-"})</td>
                           <td>{file.toDate || "-"}</td>
+                          <td>{file.status || "-"}</td>
                           <td>{file.remarks || "-"}</td>
                         </tr>
                       ))}
@@ -328,7 +335,6 @@ const ReceivedFile = () => {
                       </option>
                     ))}
                   </select>
-                  
                 </div>
               </div>
 

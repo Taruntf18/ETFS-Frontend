@@ -20,24 +20,28 @@ const Status = () => {
   const { currentUserRole, user } = useUser();
 
   // Fetch divisions for the "Send To" dropdown
- 
+
   useEffect(() => {
     const getReceivedFilesData = async () => {
-        try {
-            let response;
-            if(currentUserRole == "Employee"){
-                response = await axios.get(`${baseUrl}getDataByEmpIdAndDivision/${user.userId}/${user.userDivision.divname}`);
-                console.log(response);
-            }else if(currentUserRole == "Divisional Office"){
-                response = await axios.get(`${baseUrl}getAllFilesByStatus/${user.userDivision.divname}`);
-            }
-            setFilesData(response.data);
-        } catch (error) {
-            console.error("Axios Error:", error);
+      try {
+        let response;
+        if (currentUserRole == "Employee") {
+          response = await axios.get(
+            `${baseUrl}getDataByEmpIdAndDivision/${user.userId}/${user.userDivision.divname}`
+          );
+          console.log(response);
+        } else if (currentUserRole == "Divisional Office") {
+          response = await axios.get(
+            `${baseUrl}getAllFilesByStatus/${user.userDivision.divname}`
+          );
         }
+        setFilesData(response.data);
+      } catch (error) {
+        console.error("Axios Error:", error);
+      }
     };
     getReceivedFilesData();
-}, []);
+  }, []);
 
   // Handle search by keywords
   const handleSearch = async () => {
@@ -164,6 +168,7 @@ const Status = () => {
               <th className={styles.th}>Prepared By</th>
               <th className={styles.th}>Date</th>
               <th className={styles.th}>Subject</th>
+              <th className={styles.th}>Description</th>
               <th className={styles.th}>Status</th>
             </tr>
           </thead>
@@ -186,6 +191,8 @@ const Status = () => {
                 </td>
                 <td className={styles.td}>{item.preparedDate}</td>
                 <td className={styles.td}>{item.subject}</td>
+                <td style={{ textWrap: "wrap" }} className={styles.td}>{item.description}
+                </td>
                 <td className={styles.td}>
                   <button
                     className={styles.statusButton}
@@ -306,10 +313,11 @@ const Status = () => {
                       <thead>
                         <tr>
                           <th>sl.no</th>
-                          <th>File Date</th>
                           <th>File From</th>
+                          <th>File Date</th>
                           <th>File To</th>
                           <th>To Date</th>
+                          <th>Status</th>
                           <th>Remarks</th>
                         </tr>
                       </thead>
@@ -317,14 +325,18 @@ const Status = () => {
                       {selectedFile.etfsFileTracking.map((file, index) => (
                         <tr key={index}>
                           <td>{index + 1}</td>
+                          <td>
+                            {file.fileFrom} - {file.fromEmpName} (
+                            {file.fromDivName})
+                          </td>
                           <td>{file.fromDate}</td>
-                          <td>{file.fromDivName}</td>
-                          <td>{file.toDivName || "-"}</td>
+                          <td>{file.fileTo} {file.toEmpName} ({file.toDivName || "-"})</td>
                           <td>{file.toDate || "-"}</td>
+                          <td>{file.status || "-"}</td>
                           <td>{file.remarks || "-"}</td>
                         </tr>
                       ))}
-                    </tbody>
+                      </tbody>
                     </table>
                   ) : (
                     <p>No file tracking data available.</p>
