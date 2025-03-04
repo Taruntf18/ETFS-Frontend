@@ -20,6 +20,7 @@ export default function SelectRole() {
       "userSection": user.userSection,
       "userDesignation": user.userDesignation,
       "isLoggedIn": true,
+      "hod":null,
     });
     navigate("/mainsection");
   };

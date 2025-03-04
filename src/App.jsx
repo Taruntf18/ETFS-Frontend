@@ -25,7 +25,7 @@ const App = () => {
             <Route path="/received-file" element={currentUserRole == "Divisional Office" ? (<ReceivedFile />) : (<Navigate to='/mainsection' />)} />
             <Route path="/status" element={<Status />} />
             <Route path="/SelectDivision" element={<SelectDivision />} />
-            <Route path="/hod" element={<HodStaff />} />
+            <Route path="/hod" element={user.hod != null ? (<HodStaff />) : (<Navigate to='/mainsection' />)} />
           </Route>
         </Routes>
       </Router>

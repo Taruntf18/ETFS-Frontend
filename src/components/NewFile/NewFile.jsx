@@ -52,8 +52,7 @@ const NewFile = () => {
     "sendingThrough":sendingThrough
   }
 
-  console.log(jsonObject);
-  console.log(sendingto);
+  console.log(user);
   const handleSubmit = async () => {
     if (
       !priority ||

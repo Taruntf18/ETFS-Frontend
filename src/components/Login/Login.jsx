@@ -42,6 +42,7 @@ const Login = () => {
         "userSection": result.data.empData.section,
         "userDesignation": result.data.empData.designation,
         "isLoggedIn": true,
+        "hod":null,
       });
       setDivision(Array.isArray(result.data.divisions) ? result.data.divisions : []);
       setCurrentUserRole("Employee");
@@ -55,6 +56,7 @@ const Login = () => {
           "userSection": result.data.empData.section,
           "userDesignation": result.data.empData.designation,
           "isLoggedIn": true,
+          "hod":null,
         });
         navigate('/mainsection');
       } else {

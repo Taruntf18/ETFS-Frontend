@@ -29,13 +29,13 @@ const Status = () => {
           response = await axios.get(
             `${baseUrl}getDataByEmpIdAndDivision/${user.userId}/${user.userDivision.divname}`
           );
-          console.log(response);
+          setFilesData(response.data);
         } else if (currentUserRole == "Divisional Office") {
           response = await axios.get(
             `${baseUrl}getAllFilesByStatus/${user.userDivision.divname}`
           );
+          setFilesData(response.data);
         }
-        setFilesData(response.data);
       } catch (error) {
         console.error("Axios Error:", error);
       }
@@ -62,9 +62,7 @@ const Status = () => {
       return;
     }
     try {
-      const response = await axios.get(`${baseUrl}getDataByDateRange`, {
-        params: { fromDate, toDate },
-      });
+      const response = await axios.get(`${baseUrl}getDataByDateRange/${fromDate}/${toDate}`);
       setFilesData(response.data);
     } catch (error) {
       console.error("Axios Error:", error);

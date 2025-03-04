@@ -16,7 +16,9 @@ const Navbar = () => {
   const { currentUserRole } = useUser();
   const { setCurrentUserRole } = useUser();
   const [rolesData, setRolesData] = useState("");
+  const [hodData, setHodData] = useState(null);
   const rolesArray = new Array();
+
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileRef = useRef(null);
@@ -30,9 +32,20 @@ const Navbar = () => {
     const getReceivedFilesData = async () => {
       try {
         const response = await axios.get(
-          `${baseUrl}getRoleMappingDetails/${user.userId}/${user.userDivision.divid}`
+          `${baseUrl}getRolesDetails/${user.userId}/${user.userDivision.divid}`
         );
-        setRolesData(response.data);
+        setRolesData(response.data.roles); 
+        setHodData(response.data.hod);
+        updateUser({
+          "userId": user.userId,
+          "userName": user.userName,
+          "userRoles": user.userRoles,
+          "userDivision": user.userDivision,
+          "userSection": user.userSection,
+          "userDesignation": user.userDesignation,
+          "isLoggedIn": true,
+          "hod":response.data.hod,
+        });
       } catch (error) {
         console.error("Axios Error:", error);
       }
@@ -42,13 +55,14 @@ const Navbar = () => {
 
   const handleLogout = () => {
     updateUser({
-      userId: "",
-      userName: "",
-      userRoles: "",
-      userDivision: "",
-      userSection: "",
-      userDesignation: "",
-      isLoggedIn: false,
+      "userId": "",
+      "userName": "",
+      "userRoles": "",
+      "userDivision": "",
+      "userSection": "",
+      "userDesignation": "",
+      "isLoggedIn": false,
+      "hod": null,
     });
     localStorage.clear();
     navigate("/");
@@ -107,16 +121,18 @@ const Navbar = () => {
               Status
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/hod"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
-              HOD
-            </NavLink>
-          </li>
+          {hodData != null && (
+            <li>
+              <NavLink
+                to="/hod"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                HOD
+              </NavLink>
+            </li>
+          )}
         </ul>
         <div className="navbar-icons">
           <div ref={profileRef} className="profile-container">

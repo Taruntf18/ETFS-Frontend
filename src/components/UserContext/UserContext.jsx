@@ -16,6 +16,7 @@ export const UserProvider = ({ children }) => {
         userSection: "",
         userDesignation:"",
         isLoggedIn: false,
+        hod:null
       };
   });
 
