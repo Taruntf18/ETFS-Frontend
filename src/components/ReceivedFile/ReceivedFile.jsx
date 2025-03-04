@@ -6,6 +6,9 @@ import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { baseUrl } from "../../environments/environment";
 import { useUser } from "../UserContext/UserContext";
+import FileDetails from "../FileDetails/FileDetails";
+import Workflow from "../Worksflow/Workflow";
+
 // import QRCodeGenerator from "../QRCodeGenerator/QRCodeGenerator";
 
 const ReceivedFile = () => {
@@ -68,14 +71,14 @@ const ReceivedFile = () => {
   }
 
   const trackingDetails = {
-    refTransId: refTransId,
-    masterTransId: selectedFile != null ? selectedFile.masterTransId : "",
-    fileFrom:  user.userId,
-    fromDivId: user.userDivision.divid,
-    fileTo: user.userId,
-    toDivId: sendTo.divId,
-    status: sendTo.divName,
-    remarks: remarks,
+    "refTransId": refTransId,
+    "masterTransId": selectedFile != null ? selectedFile.masterTransId : "",
+    "fileFrom": user.userId,
+    "fromDivId": user.userDivision.divid,
+    "fileTo": user.userId,
+    "toDivId": sendTo.divId,
+    "status": sendTo.divName,
+    "remarks": remarks,
   };
   console.log(trackingDetails);
   if (isModalOpen) {
@@ -175,177 +178,58 @@ const ReceivedFile = () => {
       >
         <div className={styles.modal}>
           {/* <QRCodeGenerator value={selectedFile.fileUtn}/> */}
-          <h2>File Details</h2>
           {selectedFile && (
-            <>
-              {/* File Details Table */}
-              <table className={styles.modalTable}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <strong>File Utn:</strong>
-                    </td>
-                    <td>{selectedFile.fileUtn}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Type of Document:</strong>
-                    </td>
-                    <td>{selectedFile.docType}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Priority:</strong>
-                    </td>
-                    <td>{capitalizeFirstLetter(selectedFile.priority)}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Prepared By:</strong>
-                    </td>
-                    <td>
-                      {selectedFile.empName} - {selectedFile.empNo}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Date:</strong>
-                    </td>
-                    <td>{selectedFile.preparedDate}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Subject:</strong>
-                    </td>
-                    <td>{selectedFile.subject}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Description:</strong>
-                    </td>
-                    <td>{selectedFile.description}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>From Division:</strong>
-                    </td>
-                    <td>{selectedFile.divName}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Through Whom:</strong>
-                    </td>
-                    <td>{selectedFile.sendingThrough}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Proposed Workflow</strong>
-                    </td>
-                    <td>
-                      <div className={styles.workflowContainer}>
-                        {selectedFile.workflow &&
-                        selectedFile.workflow.trim() !== "" ? (
-                          selectedFile.workflow
-                            .split(",")
-                            .map((step, index) => (
-                              <div key={index} className={styles.workflowStep}>
-                                {index + 1}. {step}
-                              </div>
-                            ))
-                        ) : (
-                          <div>-</div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-              {/* Actual Workflow - Separate Table */}
-              <h3>WORKFLOW</h3>
-              <div className={styles.workflowContainer}>
-                {selectedFile.etfsFileTracking &&
-                selectedFile.etfsFileTracking.length > 0 ? (
-                  <table className={styles.workflowTable}>
-                    <thead>
-                      <tr>
-                        <th>sl.no</th>
-                        <th>File From</th>
-                        <th>File Date</th>
-                        <th>File To</th>
-                        <th>To Date</th>
-                        <th>Status</th>
-                        <th>Remarks</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedFile.etfsFileTracking.map((file, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>
-                            {file.fileFrom} - {file.fromEmpName} (
-                            {file.fromDivName})
-                          </td>
-                          <td>{file.fromDate}</td>
-                          <td>{file.fileTo} {file.toEmpName} ({file.toDivName || "-"})</td>
-                          <td>{file.toDate || "-"}</td>
-                          <td>{file.status || "-"}</td>
-                          <td>{file.remarks || "-"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p>No file tracking data available.</p>
-                )}
-              </div>
-
-              {/* Remarks and Send To Section */}
-              <div className={styles.remarksSendContainer}>
-                <div className={styles.row}>
-                  <label className={styles.label}>
-                    <strong>Remarks:</strong>
-                  </label>
-                  <textarea
-                    className={styles.remarksInput}
-                    placeholder="Enter remarks..."
-                    value={remarks}
-                    onChange={(e) => setRemarks(e.target.value)}
-                  ></textarea>
-                </div>
-
-                <div className={styles.row}>
-                  <label className={styles.label}>
-                    <strong>Send To:</strong>
-                  </label>
-                  <select
-                    className={styles.sendToDropdown}
-                    value={sendTo.divName ? JSON.stringify(sendTo) : ""}
-                    onChange={(e) => {
-                      const selectedDivision = e.target.value
-                        ? JSON.parse(e.target.value)
-                        : {};
-                      setSendTo(selectedDivision);
-                    }}
-                  >
-                    <option value="">Select Division</option>
-                    {divisions.map((division, index) => (
-                      <option key={index} value={JSON.stringify(division)}>
-                        {division.divName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className={styles.submitContainer}>
-                <button className={styles.submitButton} onClick={handleSubmit}>
-                  Submit
-                </button>
-              </div>
-            </>
+            <FileDetails
+              selectedFile={selectedFile}
+              capitalizeFirstLetter={capitalizeFirstLetter}
+            />
           )}
+          {selectedFile && <Workflow selectedFile={selectedFile} />}
+
+          {/* Remarks and Send To Section */}
+          <div className={styles.remarksSendContainer}>
+            <div className={styles.row}>
+              <label className={styles.label}>
+                <strong>Remarks:</strong>
+              </label>
+              <textarea
+                className={styles.remarksInput}
+                placeholder="Enter remarks..."
+                value={remarks}
+                onChange={(e) => setRemarks(e.target.value)}
+              ></textarea>
+            </div>
+
+            <div className={styles.row}>
+              <label className={styles.label}>
+                <strong>Send To:</strong>
+              </label>
+              <select
+                className={styles.sendToDropdown}
+                value={sendTo.divName ? JSON.stringify(sendTo) : ""}
+                onChange={(e) => {
+                  const selectedDivision = e.target.value
+                    ? JSON.parse(e.target.value)
+                    : {};
+                  setSendTo(selectedDivision);
+                }}
+              >
+                <option value="">Select Division</option>
+                {divisions.map((division, index) => (
+                  <option key={index} value={JSON.stringify(division)}>
+                    {division.divName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className={styles.submitContainer}>
+            <button className={styles.submitButton} onClick={handleSubmit}>
+              Submit
+            </button>
+          </div>
         </div>
       </Popup>
     </>

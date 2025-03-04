@@ -3,90 +3,176 @@ import axios from "axios";
 import styles from "./HodStaff.module.css"; // Import the external CSS file
 import { useUser } from "../UserContext/UserContext";
 import Navbar from "../Navbar/Navbar";
+import { baseUrl } from "../../environments/environment";
 
 const HodStaff = () => {
   const { user } = useUser();
-  const [employeeNames, setEmployeeNames] = useState([]);
   const [typeOfEmp, setTypeOfEmp] = useState("");
-  console.log(typeOfEmp);
+  const [showAddOptions, setShowAddOptions] = useState(false);
+  const [showRemoveOptions, setShowRemoveOptions] = useState(false);
+  const [employeeNames, setEmployeeNames] = useState({});
+  const [selectedContractEmployee, setSelectedContractEmployee] = useState("");
+  const [divisionalStaff, setDivisionalStaff] = useState([]);
+  const [allNalEmployees, setAllNalEmployees] = useState([]);
 
+  // useEffect(() => {
+  //   fetchDivisionalStaff();
+  // }, []);
   useEffect(() => {
-    const fetchEmployeeNames = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/getEmployeeByDivision/${user.userDivision.divname}/0`
-        );
-        setEmployeeNames(response.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchEmployeeNames();
+    fetchDivisionalStaff();
+    fetchAllNalEmployees();
   }, []);
+
+  const fetchDivisionalStaff = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}getDivisionalStaff/${user.userDivision.divid}`);
+      setDivisionalStaff(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const fetchAllNalEmployees = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}getAllEmpList/0`);
+      setAllNalEmployees(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+
 
   return (
     <>
       <Navbar />
       <div className={styles.body}>
         <div className={styles.form_container}>
-          <h1 className={styles.title}>DIVISIONAL STAFF</h1>
-
+          <h1 className={styles.title}>ADD DIVISIONAL OFFICE</h1>
           <div>
             <div className={styles.employee_list}>
               <h3 className={styles.subtitle}>List of Employees</h3>
               <div className={styles.listbox}>
-                <div className={styles.listbox_item}>Employee</div>
+                {divisionalStaff.map((item, key) => (
+                  <option key={item.transId} value={item.empname}>
+                    {item.empName}
+                  </option>
+                ))}
               </div>
             </div>
-
-            <select
-              name="employeeType"
-              value={typeOfEmp} // Bind state to select value
-              onChange={(e) => setTypeOfEmp(e.target.value)} // Update state on change
-              className={styles.document_type}
-            >
-              <option value="">Select Type of Employee</option>
-              <option value="Regular">Regular</option>
-              <option value="Contract">Contract</option>
-            </select>
             <div className={styles.options_container}>
               <div className={styles.add_incharge}>
-                <div>
-                  <div className={styles.select_container}>
-                    <h4 className={styles.subtitle}>EMPLOYEES</h4>
-                    <select id="employees" className={styles.select}>
-                      {employeeNames.map((item, key) => (
-                        <option key={key} value={item.empname}>
-                          {item.empname}
-                        </option>
-                      ))}
+                <p style={{ fontWeight: 'bold' }}>
+                  Do you want to Add New In-Charge:
+                </p>
+                <p>
+                  <input
+                    type="radio"
+                    name="add_incharge"
+                    value="yes"
+                    onClick={() => setShowAddOptions(true)}
+                  />{" "}
+                  Yes
+                  <input
+                    type="radio"
+                    name="add_incharge"
+                    value="no"
+                    onClick={() => setShowAddOptions(false)}
+                  />{" "}
+                  No
+                </p>
+                {showAddOptions && (
+                  <div>
+                    <select
+                      onChange={(e) => setTypeOfEmp(e.target.value)}
+                      name="employeeType"
+                      className={styles.select}
+                    >
+                      <option value="">Select Type of Employee</option>
+                      <option value="Regular">Regular</option>
+                      <option value="Contract">Contract</option>
                     </select>
-                  </div>
-                  {typeOfEmp == "Contract" && (
-                    <div>
-                      <h4 className={styles.subtitle}>Others</h4>
-                      <input className={styles.other_contract_emp} type="text" />
+                    <div className={styles.select_container}>
+                      {typeOfEmp == "Regular" && (
+                        <>
+                          <label htmlFor="employees" className={styles.label}>
+                            Regular Employees
+                          </label>
+                          <select id="employees" className={styles.select}>
+                            {allNalEmployees.map((item, key) => (
+                              <option key={key} value={item.empno}>
+                                {item.empname} - {item.empno}
+                              </option>
+                            ))}
+                          </select>
+                        </>
+                      )}
                     </div>
-                  )}
-                </div>
+                    <div className={styles.select_container}>
+                      {typeOfEmp == "Contract" && (
+                        <>
+                          <label htmlFor="employees" className={styles.label}>
+                            Contract Employees
+                          </label>
+                          <select id="employees" className={styles.select} onChange={(e) => setSelectedContractEmployee(e.target.value)}>
+                            <option value="contract" >
+                              Contract employees list
+                            </option>
+                            <option value="AddNewOther">
+                              Add New / Other
+                            </option>
+                          </select>
+                          <br />
+                          {selectedContractEmployee == "AddNewOther" && (
+                            <input type="text" style={{ margin: "10px 0px", width: '261px' }} className={styles.select} placeholder="Enter Contract Employee Name" />
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {
+
+                }
               </div>
               <div className={styles.remove_incharge}>
-                <h4 className={styles.subtitle}>REMOVE EXISTING</h4>
-
-                <div className={styles.listbox}>
-                  {Array.from({ length: 8 }, (_, i) => (
-                    <div className={styles.listbox_item} key={i}>
-                      <input type="checkbox" className={styles.checkbox} />{" "}
-                      Employee {i + 1}
-                    </div>
-                  ))}
-                </div>
+                <p style={{ fontWeight: 'bold' }}>
+                  Do you want to remove Existing In-Charge:
+                </p>
+                <p>
+                  <input
+                    type="radio"
+                    name="remove_incharge"
+                    value="yes"
+                    onClick={() => setShowRemoveOptions(true)}
+                  />{" "}
+                  Yes
+                  <input
+                    type="radio"
+                    name="remove_incharge"
+                    value="no"
+                    onClick={() => setShowRemoveOptions(false)}
+                  />{" "}
+                  No
+                </p>
+                {showRemoveOptions && (
+                  <div className={styles.listbox}>
+                    {divisionalStaff.map((item, key) => (
+                      <div className={styles.listbox_item} key={key}>
+                        <input type="checkbox" className={styles.checkbox} />{" "}
+                        {item.empName}
+                      </div>
+                    ))
+                    }
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.submit_container}>
               <button className={styles.submit_button}>SUBMIT</button>
             </div>
           </div>
+
         </div>
       </div>
     </>

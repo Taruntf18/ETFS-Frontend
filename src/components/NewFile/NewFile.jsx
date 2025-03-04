@@ -15,6 +15,7 @@ const NewFile = () => {
   const { user } = useUser();
   const { division } = useUser();
   const { currentUserRole } = useUser();
+  console.log(user);
 
 
   // states for storing input form data

@@ -5,6 +5,9 @@ import axios from "axios";
 import Popup from "reactjs-popup";
 import { baseUrl } from "../../environments/environment";
 import { useUser } from "../UserContext/UserContext";
+import FileDetails from "../FileDetails/FileDetails";
+import Workflow from "../Worksflow/Workflow";
+
 
 const Status = () => {
   const [filesData, setFilesData] = useState([]);
@@ -14,36 +17,29 @@ const Status = () => {
   const [toDate, setToDate] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [remarks, setRemarks] = useState("");
-  const [sendTo, setSendTo] = useState("");
-  const [divisions, setDivisions] = useState([]);
   const { currentUserRole, user } = useUser();
-
-  // Fetch divisions for the "Send To" dropdown
 
   useEffect(() => {
     const getReceivedFilesData = async () => {
       try {
         let response;
-        if (currentUserRole == "Employee") {
+        if (currentUserRole === "Employee") {
           response = await axios.get(
             `${baseUrl}getDataByEmpIdAndDivision/${user.userId}/${user.userDivision.divname}`
           );
-          setFilesData(response.data);
-        } else if (currentUserRole == "Divisional Office") {
+        } else if (currentUserRole === "Divisional Office") {
           response = await axios.get(
             `${baseUrl}getAllFilesByStatus/${user.userDivision.divname}`
           );
-          setFilesData(response.data);
         }
+        setFilesData(response.data);
       } catch (error) {
         console.error("Axios Error:", error);
       }
     };
     getReceivedFilesData();
-  }, []);
+  }, [currentUserRole, user]);
 
-  // Handle search by keywords
   const handleSearch = async () => {
     try {
       const response = await axios.get(
@@ -55,7 +51,10 @@ const Status = () => {
     }
   };
 
-  // Handle search by date range
+  function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+  }
+
   const handleDateSearch = async () => {
     if (new Date(fromDate) > new Date(toDate)) {
       alert("From Date cannot be greater than To Date");
@@ -69,29 +68,14 @@ const Status = () => {
     }
   };
 
-  // Open modal with selected file details
   const openStatusModal = (file) => {
     setSelectedFile(file);
     setShowModal(true);
   };
 
-  // Close modal and reset states
   const closeModal = () => {
     setShowModal(false);
     setSelectedFile(null);
-    setRemarks("");
-    setSendTo("");
-  };
-
-  // Handle closing the modal
-  const handleClose = () => {
-    closeModal(); // Assuming closeModal is defined to close the modal
-    console.log("Modal closed");
-  };
-
-  // Utility function to capitalize the first letter
-  const capitalizeFirstLetter = (val) => {
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   };
 
   return (
@@ -155,7 +139,6 @@ const Status = () => {
             </div>
           )}
         </div>
-
         {/* Status Table */}
         <table className={styles.table}>
           <thead className={styles.thead}>
@@ -175,27 +158,13 @@ const Status = () => {
               <tr className={styles.tr} key={item.fileUtn}>
                 <td className={styles.td}>{item.fileUtn}</td>
                 <td className={styles.td}>{item.docType}</td>
-                <td
-                  className={`${
-                    item.priority === "immediate"
-                      ? styles.priority_immediate
-                      : styles.priority_normal
-                  } ${styles.td}`}
-                >
-                  {capitalizeFirstLetter(item.priority)}
-                </td>
-                <td className={styles.td}>
-                  {item.empName} - {item.empNo}
-                </td>
+                <td className={styles.td}>{item.priority}</td>
+                <td className={styles.td}>{item.empName} - {item.empNo}</td>
                 <td className={styles.td}>{item.preparedDate}</td>
                 <td className={styles.td}>{item.subject}</td>
-                <td style={{ textWrap: "wrap" }} className={styles.td}>{item.description}
-                </td>
+                <td className={styles.td}>{item.description}</td>
                 <td className={styles.td}>
-                  <button
-                    className={styles.statusButton}
-                    onClick={() => openStatusModal(item)}
-                  >
+                  <button className={styles.statusButton} onClick={() => openStatusModal(item)}>
                     Status
                   </button>
                 </td>
@@ -205,150 +174,15 @@ const Status = () => {
         </table>
 
         {/* Popup Modal */}
-        <Popup
-          open={showModal}
-          closeOnDocumentClick
-          onClose={closeModal}
-          contentStyle={styles.popupContent}
-          overlayStyle={styles.popupOverlay}
-        >
+        <Popup open={showModal} closeOnDocumentClick onClose={closeModal}>
           <div className={styles.modal}>
-            <h2>File Details</h2>
-            {selectedFile && (
-              <>
-                {/* File Details Table */}
-                <table className={styles.modalTable}>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <strong>File Utn:</strong>
-                      </td>
-                      <td>{selectedFile.fileUtn}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Type of Document:</strong>
-                      </td>
-                      <td>{selectedFile.docType}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Priority:</strong>
-                      </td>
-                      <td>{capitalizeFirstLetter(selectedFile.priority)}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Prepared By:</strong>
-                      </td>
-                      <td>
-                        {selectedFile.empName} - {selectedFile.empNo}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Date:</strong>
-                      </td>
-                      <td>{selectedFile.preparedDate}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Subject:</strong>
-                      </td>
-                      <td>{selectedFile.subject}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Description:</strong>
-                      </td>
-                      <td>{selectedFile.description}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>From Division:</strong>
-                      </td>
-                      <td>{selectedFile.divName}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Through Whom:</strong>
-                      </td>
-                      <td>{selectedFile.sendingThrough}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Proposed Workflow</strong>
-                      </td>
-                      <td>
-                        <div className={styles.workflowContainer}>
-                          {selectedFile.workflow &&
-                          selectedFile.workflow.trim() !== "" ? (
-                            selectedFile.workflow
-                              .split(",")
-                              .map((step, index) => (
-                                <div
-                                  key={index}
-                                  className={styles.workflowStep}
-                                >
-                                  {index + 1}. {step}
-                                </div>
-                              ))
-                          ) : (
-                            <div>-</div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                {/* Actual Workflow - Separate Table */}
-                <h3>WORKFLOW</h3>
-                <div className={styles.workflowContainer}>
-                  {selectedFile.etfsFileTracking &&
-                  selectedFile.etfsFileTracking.length > 0 ? (
-                    <table className={styles.workflowTable}>
-                      <thead>
-                        <tr>
-                          <th>sl.no</th>
-                          <th>File From</th>
-                          <th>File Date</th>
-                          <th>File To</th>
-                          <th>To Date</th>
-                          <th>Status</th>
-                          <th>Remarks</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {selectedFile.etfsFileTracking.map((file, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>
-                            {file.fileFrom} - {file.fromEmpName} (
-                            {file.fromDivName})
-                          </td>
-                          <td>{file.fromDate}</td>
-                          <td>{file.fileTo} {file.toEmpName} ({file.toDivName || "-"})</td>
-                          <td>{file.toDate || "-"}</td>
-                          <td>{file.status || "-"}</td>
-                          <td>{file.remarks || "-"}</td>
-                        </tr>
-                      ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p>No file tracking data available.</p>
-                  )}
-                </div>
-
-                {/* Close Button */}
-                <div className={styles.closeContainer}>
-                  <button className={styles.closeButton} onClick={handleClose}>
-                    Close
-                  </button>
-                </div>
-              </>
-            )}
+            {selectedFile && <FileDetails selectedFile={selectedFile} capitalizeFirstLetter={capitalizeFirstLetter} />}
+            {selectedFile && <Workflow selectedFile={selectedFile} />}
+            <div className={styles.closeContainer}>
+              <button className={styles.closeButton} onClick={closeModal}>
+                Close
+              </button>
+            </div>
           </div>
         </Popup>
       </div>

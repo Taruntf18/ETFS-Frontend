@@ -129,7 +129,7 @@ const Navbar = () => {
                   isActive ? "nav-link active" : "nav-link"
                 }
               >
-                HOD
+                Divisional Staff
               </NavLink>
             </li>
           )}
