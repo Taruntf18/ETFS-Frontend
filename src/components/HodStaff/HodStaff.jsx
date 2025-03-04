@@ -14,6 +14,7 @@ const HodStaff = () => {
   const [selectedContractEmployee, setSelectedContractEmployee] = useState("");
   const [divisionalStaff, setDivisionalStaff] = useState([]);
   const [allNalEmployees, setAllNalEmployees] = useState([]);
+  const [contractEmployees, setContractEmployees] = useState([]);
 
   // useEffect(() => {
   //   fetchDivisionalStaff();
@@ -21,12 +22,25 @@ const HodStaff = () => {
   useEffect(() => {
     fetchDivisionalStaff();
     fetchAllNalEmployees();
+    fetchContractEmployees();
   }, []);
 
   const fetchDivisionalStaff = async () => {
     try {
-      const response = await axios.get(`${baseUrl}getDivisionalStaff/${user.userDivision.divid}`);
+      const response = await axios.get(
+        `${baseUrl}getDivisionalStaff/${user.userDivision.divid}`
+      );
       setDivisionalStaff(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const fetchContractEmployees = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}getContractEmpData`);
+      setContractEmployees(response.data);
+      console.log(response.data);
     } catch (e) {
       console.log(e);
     }
@@ -40,8 +54,6 @@ const HodStaff = () => {
       console.log(e);
     }
   };
-
-
 
   return (
     <>
@@ -62,7 +74,7 @@ const HodStaff = () => {
             </div>
             <div className={styles.options_container}>
               <div className={styles.add_incharge}>
-                <p style={{ fontWeight: 'bold' }}>
+                <p style={{ fontWeight: "bold" }}>
                   Do you want to Add New In-Charge:
                 </p>
                 <p>
@@ -114,29 +126,38 @@ const HodStaff = () => {
                           <label htmlFor="employees" className={styles.label}>
                             Contract Employees
                           </label>
-                          <select id="employees" className={styles.select} onChange={(e) => setSelectedContractEmployee(e.target.value)}>
-                            <option value="contract" >
-                              Contract employees list
-                            </option>
-                            <option value="AddNewOther">
-                              Add New / Other
-                            </option>
+                          <select
+                            id="employees"
+                            className={styles.select}
+                            onChange={(e) =>
+                              setSelectedContractEmployee(e.target.value)
+                            }
+                          >
+                            {contractEmployees.map((item, key) => (
+                              <option key={key} value={item.empNo}>
+                                {item.empName} - {item.empNo}
+                              </option>
+                            ))}
+                            <option value="AddNewOther">Add New / Other</option>
                           </select>
                           <br />
                           {selectedContractEmployee == "AddNewOther" && (
-                            <input type="text" style={{ margin: "10px 0px", width: '261px' }} className={styles.select} placeholder="Enter Contract Employee Name" />
+                            <input
+                              type="text"
+                              style={{ margin: "10px 0px", width: "261px" }}
+                              className={styles.select}
+                              placeholder="Enter Contract Employee Name"
+                            />
                           )}
                         </>
                       )}
                     </div>
                   </div>
                 )}
-                {
-
-                }
+                {}
               </div>
               <div className={styles.remove_incharge}>
-                <p style={{ fontWeight: 'bold' }}>
+                <p style={{ fontWeight: "bold" }}>
                   Do you want to remove Existing In-Charge:
                 </p>
                 <p>
@@ -162,8 +183,7 @@ const HodStaff = () => {
                         <input type="checkbox" className={styles.checkbox} />{" "}
                         {item.empName}
                       </div>
-                    ))
-                    }
+                    ))}
                   </div>
                 )}
               </div>
@@ -172,7 +192,6 @@ const HodStaff = () => {
               <button className={styles.submit_button}>SUBMIT</button>
             </div>
           </div>
-
         </div>
       </div>
     </>
