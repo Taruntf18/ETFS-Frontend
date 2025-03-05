@@ -7,23 +7,64 @@ import { baseUrl } from "../../environments/environment";
 
 const HodStaff = () => {
   const { user } = useUser();
+  // states for handling UI changes
   const [typeOfEmp, setTypeOfEmp] = useState("");
   const [showAddOptions, setShowAddOptions] = useState(false);
   const [showRemoveOptions, setShowRemoveOptions] = useState(false);
-  const [employeeNames, setEmployeeNames] = useState({});
-  const [selectedContractEmployee, setSelectedContractEmployee] = useState("");
-  const [divisionalStaff, setDivisionalStaff] = useState([]);
-  const [allNalEmployees, setAllNalEmployees] = useState([]);
-  const [contractEmployees, setContractEmployees] = useState([]);
 
-  // useEffect(() => {
-  //   fetchDivisionalStaff();
-  // }, []);
+  // states for handling fetching and posting data
+  const [selectedRegularEmployee, setSelectedRegularEmployee] = useState({});
+  const [selectedContractEmployee, setSelectedContractEmployee] = useState("");
+  const [
+    selectedContractEmployeeforInputField,
+    setSelectedContractEmployeeforInputField,
+  ] = useState("");
+  const [allNalEmployees, setAllNalEmployees] = useState([]);
+  const [divisionalStaff, setDivisionalStaff] = useState([]);
+  const [selectedEmpNosToRemove, setSelectedEmpNosToRemove] = useState([]);
+  const [contractEmp, setContractEmp] = useState([]);
+  // console.log(selectedRegularEmployee);
+
   useEffect(() => {
     fetchDivisionalStaff();
     fetchAllNalEmployees();
     fetchContractEmployees();
   }, []);
+
+  console.log(contractEmp);
+
+  const postContractEmp = async () => {
+    try {
+      const response = await axios.post(`${baseUrl}addRoleMapping`, {
+        empNo: "",
+        empName:
+          selectedContractEmployee == "AddNewOther"
+            ? selectedContractEmployeeforInputField
+            : selectedContractEmployee,
+        divId: user.userDivision.divid,
+        active: "Y",
+        roleId: 1,
+        empType: typeOfEmp,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const postRegularEmp = async () => {
+    try {
+      const response = await axios.post(`${baseUrl}addRoleMapping`, {
+        empNo: JSON.parse(selectedRegularEmployee).empno,
+        empName: JSON.parse(selectedRegularEmployee).empname,
+        divId: user.userDivision.divid,
+        active: "Y",
+        roleId: 1,
+        empType: typeOfEmp,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const fetchDivisionalStaff = async () => {
     try {
@@ -38,9 +79,10 @@ const HodStaff = () => {
 
   const fetchContractEmployees = async () => {
     try {
-      const response = await axios.get(`${baseUrl}getContractEmpData`);
-      setContractEmployees(response.data);
-      console.log(response.data);
+      const response = await axios.get(
+        `${baseUrl}getTempEmpDataByDivId/${user.userDivision.divid}`
+      );
+      setContractEmp(response.data);
     } catch (e) {
       console.log(e);
     }
@@ -55,6 +97,24 @@ const HodStaff = () => {
     }
   };
 
+  const handleCheckboxChange = (empNo) => {
+    setSelectedEmpNosToRemove(
+      (prevSelected) =>
+        prevSelected.includes(empNo)
+          ? prevSelected.filter((no) => no !== empNo) // Remove if already selected
+          : [...prevSelected, empNo] // Add if not selected
+    );
+  };
+
+  const handleSubmit = () => {
+    if (typeOfEmp == "Contract") {
+      postContractEmp();
+    } else if (typeOfEmp == "Regular") {
+      postRegularEmp();
+    }
+    window.location.reload();
+  };
+
   return (
     <>
       <Navbar />
@@ -66,8 +126,12 @@ const HodStaff = () => {
               <h3 className={styles.subtitle}>List of Employees</h3>
               <div className={styles.listbox}>
                 {divisionalStaff.map((item, key) => (
-                  <option key={item.transId} value={item.empname}>
-                    {item.empName}
+                  <option
+                    key={item.transId}
+                    style={{ margin: "10px" }}
+                    value={item.empname}
+                  >
+                    {item.empNo} - {item.empName}
                   </option>
                 ))}
               </div>
@@ -110,10 +174,17 @@ const HodStaff = () => {
                           <label htmlFor="employees" className={styles.label}>
                             Regular Employees
                           </label>
-                          <select id="employees" className={styles.select}>
+                          <select
+                            id="employees"
+                            onChange={(e) =>
+                              setSelectedRegularEmployee(e.target.value)
+                            }
+                            className={styles.select}
+                          >
+                            <option value="">Select Employee</option>
                             {allNalEmployees.map((item, key) => (
-                              <option key={key} value={item.empno}>
-                                {item.empname} - {item.empno}
+                              <option key={key} value={JSON.stringify(item)}>
+                                {item.empno} - {item.empname}
                               </option>
                             ))}
                           </select>
@@ -133,17 +204,21 @@ const HodStaff = () => {
                               setSelectedContractEmployee(e.target.value)
                             }
                           >
-                            {contractEmployees.map((item, key) => (
-                              <option key={key} value={item.empNo}>
-                                {item.empName} - {item.empNo}
-                              </option>
-                            ))}
+                            <option value="">Select Contract Employee</option>
+                            <option value="Tarun">100001 - Tarun</option>
+                            <option value="Harsha">100002 - Harsha</option>
+                            <option value="Pragati">100003 - Pragathi</option>
                             <option value="AddNewOther">Add New / Other</option>
                           </select>
                           <br />
                           {selectedContractEmployee == "AddNewOther" && (
                             <input
                               type="text"
+                              onChange={(e) =>
+                                setSelectedContractEmployeeforInputField(
+                                  e.target.value
+                                )
+                              }
                               style={{ margin: "10px 0px", width: "261px" }}
                               className={styles.select}
                               placeholder="Enter Contract Employee Name"
@@ -154,8 +229,11 @@ const HodStaff = () => {
                     </div>
                   </div>
                 )}
-                {}
               </div>
+
+              {/* Vertical line */}
+              <div className={styles.vertical_line}></div>
+
               <div className={styles.remove_incharge}>
                 <p style={{ fontWeight: "bold" }}>
                   Do you want to remove Existing In-Charge:
@@ -180,16 +258,24 @@ const HodStaff = () => {
                   <div className={styles.listbox}>
                     {divisionalStaff.map((item, key) => (
                       <div className={styles.listbox_item} key={key}>
-                        <input type="checkbox" className={styles.checkbox} />{" "}
-                        {item.empName}
+                        <input
+                          type="checkbox"
+                          className={styles.checkbox}
+                          onChange={() => handleCheckboxChange(item.empNo)}
+                          checked={selectedEmpNosToRemove.includes(item.empNo)}
+                        />{" "}
+                        {item.empNo} - {item.empName}
                       </div>
                     ))}
+                    <div></div>
                   </div>
                 )}
               </div>
             </div>
             <div className={styles.submit_container}>
-              <button className={styles.submit_button}>SUBMIT</button>
+              <button onClick={handleSubmit} className={styles.submit_button}>
+                SUBMIT
+              </button>
             </div>
           </div>
         </div>

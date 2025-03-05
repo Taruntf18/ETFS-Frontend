@@ -7,6 +7,7 @@ import { baseUrl } from "../../environments/environment";
 import { useUser } from "../UserContext/UserContext";
 import FileDetails from "../FileDetails/FileDetails";
 import Workflow from "../Worksflow/Workflow";
+import QRCode from "react-qr-code";
 
 
 const Status = () => {
@@ -149,7 +150,7 @@ const Status = () => {
               <th className={styles.th}>Prepared By</th>
               <th className={styles.th}>Date</th>
               <th className={styles.th}>Subject</th>
-              <th className={styles.th}>Description</th>
+             
               <th className={styles.th}>Status</th>
             </tr>
           </thead>
@@ -162,7 +163,7 @@ const Status = () => {
                 <td className={styles.td}>{item.empName} - {item.empNo}</td>
                 <td className={styles.td}>{item.preparedDate}</td>
                 <td className={styles.td}>{item.subject}</td>
-                <td className={styles.td}>{item.description}</td>
+               
                 <td className={styles.td}>
                   <button className={styles.statusButton} onClick={() => openStatusModal(item)}>
                     Status
@@ -176,6 +177,14 @@ const Status = () => {
         {/* Popup Modal */}
         <Popup open={showModal} closeOnDocumentClick onClose={closeModal}>
           <div className={styles.modal}>
+            <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
+              <QRCode
+                size={256}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={selectedFile ? `${selectedFile.fileUtn}-${selectedFile.fileInitiator}:${selectedFile.fileInitiatorEmpName}-${selectedFile.divName}` : ""}
+                viewBox="0 0 512 512"
+              />
+            </div>
             {selectedFile && <FileDetails selectedFile={selectedFile} capitalizeFirstLetter={capitalizeFirstLetter} />}
             {selectedFile && <Workflow selectedFile={selectedFile} />}
             <div className={styles.closeContainer}>

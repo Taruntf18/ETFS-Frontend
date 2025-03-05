@@ -39,18 +39,18 @@ const NewFile = () => {
 
   // console.log(divisionalOffice);
   const jsonObject = {
-    "fileInitiator":currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
-    "description":description,
-    "divId":user.userDivision.divid,
-    "docId":typeOfDoc,
-    "preparedBy":user.userId,
-    "preparedDate":"",
-    "priority":priority,
-    "status":currentUserRole == "Divisional Office" ? sendingto.divName: user.userDivision.divname,
-    "subject":subject,
-    "workflow":divisions.toString(),
-    "sendingTo":parseInt(currentUserRole == "Divisional Office" ? sendingto.divId : user.userDivision.divid),
-    "sendingThrough":sendingThrough
+    "fileInitiator": currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
+    "description": description,
+    "divId": user.userDivision.divid,
+    "docId": typeOfDoc,
+    "preparedBy": user.userId,
+    "preparedDate": "",
+    "priority": priority,
+    "status": currentUserRole == "Divisional Office" ? sendingto.divName : user.userDivision.divname,
+    "subject": subject,
+    "workflow": divisions.toString(),
+    "sendingTo": parseInt(currentUserRole == "Divisional Office" ? sendingto.divId : user.userDivision.divid),
+    "sendingThrough": sendingThrough
   }
 
   console.log(user);
@@ -68,7 +68,7 @@ const NewFile = () => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const result = await axios.post(`${baseUrl}addFile`,jsonObject);
+      const result = await axios.post(`${baseUrl}addFile`, jsonObject);
     } catch (error) {
       console.log("Axios Error:", error);
     } finally {

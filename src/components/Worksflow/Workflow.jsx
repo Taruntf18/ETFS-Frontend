@@ -24,9 +24,9 @@ const Workflow = ({ selectedFile }) => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{file.fileFrom} - {file.fromEmpName} ({file.fromDivName})</td>
-                  <td>{file.fromDate}</td>
-                  <td>{file.fileTo} {file.toEmpName} ({file.toDivName || "-"})</td>
-                  <td>{file.toDate || "-"}</td>
+                  <td style={{ textWrap: "nowrap" }}>{file.fromDate}</td>
+                  <td >{file.fileTo} - {file.toEmpName} ({file.toDivName || "-"})</td>
+                  <td style={{ textWrap: "nowrap" }}>{file.toDate || "-"}</td>
                   <td>{file.status || "-"}</td>
                   <td>{file.remarks || "-"}</td>
                 </tr>

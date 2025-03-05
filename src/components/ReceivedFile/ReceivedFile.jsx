@@ -8,8 +8,10 @@ import { baseUrl } from "../../environments/environment";
 import { useUser } from "../UserContext/UserContext";
 import FileDetails from "../FileDetails/FileDetails";
 import Workflow from "../Worksflow/Workflow";
-
+import QRCode from "react-qr-code";
+// import QRCode from 'react-native-qrcode-svg';
 // import QRCodeGenerator from "../QRCodeGenerator/QRCodeGenerator";
+
 
 const ReceivedFile = () => {
   const { user } = useUser();
@@ -61,6 +63,7 @@ const ReceivedFile = () => {
         }
       }
     }
+    // console.log(selectedFile.fileUtn);
     setSelectedFile(file);
     setIsModalOpen(true);
   };
@@ -133,11 +136,10 @@ const ReceivedFile = () => {
                   {item.docType}
                 </td>
                 <td
-                  className={`${
-                    item.priority === "immediate"
-                      ? styles.priority_immediate
-                      : styles.priority_normal
-                  } ${styles.td}`}
+                  className={`${item.priority === "immediate"
+                    ? styles.priority_immediate
+                    : styles.priority_normal
+                    } ${styles.td}`}
                 >
                   {capitalizeFirstLetter(item.priority)}
                 </td>
@@ -177,7 +179,18 @@ const ReceivedFile = () => {
         overlayStyle={styles.popupOverlay}
       >
         <div className={styles.modal}>
+          {/* <QRCode
+            value="http://awesome.link.qr"
+          /> */}
           {/* <QRCodeGenerator value={selectedFile.fileUtn}/> */}
+          <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
+            <QRCode
+              size={256}
+              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+              value={selectedFile ? `${selectedFile.fileUtn}$${selectedFile.fileInitiator}$${selectedFile.fileInitiatorEmpName}$${selectedFile.divName}` : ""}
+              viewBox="0 0 512 512"
+            />
+          </div>
           {selectedFile && (
             <FileDetails
               selectedFile={selectedFile}
