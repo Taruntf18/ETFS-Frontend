@@ -24,49 +24,46 @@ const HodStaff = () => {
   const [divisionalStaff, setDivisionalStaff] = useState([]);
   const [selectedEmpNosToRemove, setSelectedEmpNosToRemove] = useState([]);
   const [contractEmp, setContractEmp] = useState([]);
-
+  console.log(contractEmp);
   useEffect(() => {
     fetchDivisionalStaff();
     fetchAllNalEmployees();
     fetchContractEmployees();
   }, []);
 
-  console.log(selectedContractEmployee);
-
+  
   const submitJson = {
     addIncharge: showAddOptions == true ? "yes" : "no",
     typeOfEmp: typeOfEmp,
-
+    
     empNo:
-      typeOfEmp == "Regular" && selectedRegularEmployee != null
-        ? JSON.parse(selectedRegularEmployee).empno
-        : selectedContractEmployee == "AddNewOther"
-        ? ""
-        : selectedContractEmployee && selectedContractEmployee.trim()
-        ? JSON.parse(selectedContractEmployee).empNo
-        : "",
-
+    typeOfEmp == "Regular" && selectedRegularEmployee != null
+    ? JSON.parse(selectedRegularEmployee).empno
+    : selectedContractEmployee == "AddNewOther"
+    ? ""
+    : selectedContractEmployee && selectedContractEmployee.trim()
+    ? JSON.parse(selectedContractEmployee).empNo
+    : "",
+    
     empName:
-      typeOfEmp == "Regular" && selectedRegularEmployee != null
-        ? JSON.parse(selectedRegularEmployee).empname
-        : selectedContractEmployee == "AddNewOther"
-        ? selectedContractEmployeeforInputField
-        : selectedContractEmployee && selectedContractEmployee.trim()
-        ? JSON.parse(selectedContractEmployee).empName
-        : "",
-
+    typeOfEmp == "Regular" && selectedRegularEmployee != null
+    ? JSON.parse(selectedRegularEmployee).empname
+    : selectedContractEmployee == "AddNewOther"
+    ? selectedContractEmployeeforInputField
+    : selectedContractEmployee && selectedContractEmployee.trim()
+    ? JSON.parse(selectedContractEmployee).empName
+    : "",
+    
     divId: user.userDivision.divid,
     roleId: 1,
     
     removeIncharge: showRemoveOptions == true ? "yes" : "no",
-    empToRemove: selectedEmpNosToRemove,
+    etfsEmpRoleWrapper :selectedEmpNosToRemove.map(item => ({ transId : item })),
   };
   console.log(submitJson);
   const onSubmit = async () => {
     try {
-      const response = await axios.post(`${baseUrl}addOrRemoveDivStaff`, {
-        submitJson: "asda",
-      });
+      const response = await axios.post(`${baseUrl}addAndRemoveDivStaffRole`,submitJson);
     } catch (e) {
       console.log(e);
     }
@@ -308,8 +305,8 @@ const HodStaff = () => {
                         <input
                           type="checkbox"
                           className={styles.checkbox}
-                          onChange={() => handleCheckboxChange(item.empNo)}
-                          checked={selectedEmpNosToRemove.includes(item.empNo)}
+                          onChange={() => handleCheckboxChange(item.transId)}
+                          checked={selectedEmpNosToRemove.includes(item.transId)}
                         />{" "}
                         {item.empNo} - {item.empName}
                       </div>

@@ -53,6 +53,19 @@
   background-color: #ff1111;
 }
 
+.sendButton {
+  background-color: #3b3bf4ca;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.sendButton:hover {
+  background-color: #2626b6;
+}
+
 /* Modal Styles */
 .modal {
   font-family: "Verdana";

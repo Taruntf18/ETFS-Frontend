@@ -7,7 +7,6 @@ import QRCode from "react-qr-code";
 
 const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
   const [selectedFile, SetSelectedFile] = useState({});
- 
 
   const getReceivedFilesData = async () => {
     try {
@@ -34,20 +33,20 @@ const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
           viewBox="0 0 512 512"
         />
       </div>
-      <h2>File Details</h2>
+      <h2 style={{textAlign:'center'}}>File Details</h2>
       {selectedFile && (
         <table className={styles.modalTable}>
           <tbody>
             <tr>
-              <td><strong>File Utn:</strong></td>
+              <td><strong>File No</strong></td>
               <td>{selectedFile.fileUtn}</td>
             </tr>
             <tr>
-              <td><strong>Type of Document:</strong></td>
+              <td><strong>Type of Document</strong></td>
               <td>{selectedFile.docType}</td>
             </tr>
             <tr>
-              <td><strong>Priority:</strong></td>
+              <td><strong>Priority</strong></td>
               <td>{capitalizeFirstLetter(selectedFile.priority)}</td>
             </tr>
             <tr>
@@ -55,27 +54,27 @@ const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
               <td>{selectedFile.fileInitiatorEmpName} - {selectedFile.fileInitiator}</td>
             </tr>
             <tr>
-              <td><strong>Date:</strong></td>
-              <td>{selectedFile.preparedDate}</td>
-            </tr>
-            <tr>
-              <td><strong>Subject:</strong></td>
-              <td>{selectedFile.subject}</td>
-            </tr>
-            <tr>
-              <td><strong>Description:</strong></td>
-              <td>{selectedFile.description}</td>
-            </tr>
-            <tr>
-              <td><strong>From Division:</strong></td>
+              <td><strong>Division</strong></td>
               <td>{selectedFile.divName}</td>
             </tr>
             <tr>
-              <td><strong>Through Whom:</strong></td>
-              <td>{selectedFile.sendingThrough}</td>
+              <td><strong>Date</strong></td>
+              <td>{selectedFile.preparedDate}</td>
             </tr>
             <tr>
-              <td><strong>Proposed Workflow</strong></td>
+              <td><strong>Subject</strong></td>
+              <td>{selectedFile.subject}</td>
+            </tr>
+            <tr>
+              <td><strong>Description</strong></td>
+              <td>{selectedFile.description}</td>
+            </tr>
+            {/* <tr>
+              <td><strong>Through Whom</strong></td>
+              <td>{selectedFile.sendingThrough}</td>
+            </tr> */}
+            <tr>
+              <td><strong>Movement of the file</strong></td>
               <td>
                 <div className={styles.workflowContainer}>
                   {selectedFile.workflow && selectedFile.workflow.trim() !== "" ? (

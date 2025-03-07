@@ -12,7 +12,6 @@ import Workflow from "../Worksflow/Workflow";
 // import QRCode from 'react-native-qrcode-svg';
 // import QRCodeGenerator from "../QRCodeGenerator/QRCodeGenerator";
 
-
 const ReceivedFile = () => {
   const { user } = useUser();
   const [filesData, SetfilesData] = useState([]); // State for fetched files data
@@ -57,7 +56,6 @@ const ReceivedFile = () => {
   // Handle file receive button click
   const fetchWorkflowDetails = async (fileUtn) => {
     try {
-      
       const response = await axios.get(
         `${baseUrl}getTrackingDataByFileUTN/${fileUtn.replaceAll("/", "_")}`
       );
@@ -73,9 +71,6 @@ const ReceivedFile = () => {
       console.error("Axios Error:", error);
     }
   };
-
-  
-
 
   const handleReceive = async (file) => {
     await fetchWorkflowDetails(file.fileUtn);
@@ -98,17 +93,22 @@ const ReceivedFile = () => {
   }
 
   const trackingDetails = {
-    "refTransId": refTransId,
-    "masterTransId": selectedFile != null ? selectedFile.masterTransId : "",
-    "fileFrom": user.userId,
-    "fromDivId": user.userDivision.divid,
-    "fileTo": user.userId,
-    "toDivId": sendTo.divId,
-    "status": sendTo.divName,
-    "remarks": remarks,
+    refTransId: refTransId,
+    masterTransId: selectedFile != null ? selectedFile.masterTransId : "",
+    fileFrom: user.userId,
+    fromDivId: user.userDivision.divid,
+    fileTo: user.userId,
+    toDivId: sendTo.divId,
+    status: sendTo.divName,
+    remarks: remarks,
   };
-  console.log("tracking object:"+ JSON.stringify(trackingDetails))
+  console.log("tracking object:" + JSON.stringify(trackingDetails));
+
+
+
   // Handle form submission
+
+
   const handleSubmit = async () => {
     if (!selectedFile || isSubmitting) return;
     setIsSubmitting(true); // Prevent multiple submissions
@@ -143,6 +143,7 @@ const ReceivedFile = () => {
               <th className={styles.th}>Subject</th>
               <th className={styles.th}>Through Whom</th>
               <th className={styles.th}>Action</th>
+            
             </tr>
           </thead>
           <tbody>
@@ -155,15 +156,17 @@ const ReceivedFile = () => {
                   {item.docType}
                 </td>
                 <td
-                  className={`${item.priority === "immediate"
-                    ? styles.priority_immediate
-                    : styles.priority_normal
-                    } ${styles.td}`}
+                  className={`${
+                    item.priority === "immediate"
+                      ? styles.priority_immediate
+                      : styles.priority_normal
+                  } ${styles.td}`}
                 >
                   {capitalizeFirstLetter(item.priority)}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.etfsEmpModelforInitiator.empname} - {item.etfsEmpModelforInitiator.empno}
+                  {item.etfsEmpModelforInitiator.empname} -{" "}
+                  {item.etfsEmpModelforInitiator.empno}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.preparedDate}
@@ -180,6 +183,64 @@ const ReceivedFile = () => {
                     Receive
                   </button>
                 </td>
+             
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <table className={styles.table}>
+          <thead className={styles.thead}>
+            <tr className={styles.tr}>
+              <th className={styles.th}>File Utn</th>
+              <th className={styles.th}>Type of Document</th>
+              <th className={styles.th}>Priority</th>
+              <th className={styles.th}>Owner of the file</th>
+              <th className={styles.th}>Date</th>
+              <th className={styles.th}>Subject</th>
+              <th className={styles.th}>Through Whom</th>
+              <th className={styles.th}>Action</th>
+            
+            </tr>
+          </thead>
+          <tbody>
+            {filesData.map((item, key) => (
+              <tr className={styles.tr} key={key}>
+                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                  {item.fileUtn}
+                </td>
+                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                  {item.docType}
+                </td>
+                <td
+                  className={`${
+                    item.priority === "immediate"
+                      ? styles.priority_immediate
+                      : styles.priority_normal
+                  } ${styles.td}`}
+                >
+                  {capitalizeFirstLetter(item.priority)}
+                </td>
+                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                  {item.etfsEmpModelforInitiator.empname} -{" "}
+                  {item.etfsEmpModelforInitiator.empno}
+                </td>
+                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                  {item.preparedDate}
+                </td>
+                <td style={{ textWrap: "wrap" }} className={styles.td}>
+                  {item.subject}
+                </td>
+                <td className={styles.td}>{item.sendingThrough}</td>
+                <td className={styles.td}>
+                  <button
+                    className={styles.sendButton}
+                    onClick={() => handlesendButton(item)}
+                  >
+                    Send To
+                  </button>
+                </td>
+                
               </tr>
             ))}
           </tbody>

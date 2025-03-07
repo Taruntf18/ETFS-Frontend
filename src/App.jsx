@@ -31,6 +31,7 @@ const App = () => {
           </Route>
         </Routes>
       </Router>
+      {/* <PrintFile/> */}
       {/* <HodStaff/> */}
     </>
   );

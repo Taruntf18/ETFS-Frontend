@@ -1,0 +1,28 @@
+@media print {
+    /* Hide the print icon */
+    .printIcon {
+        display: none !important;
+    }
+
+    /* Hide elements with specific classes */
+    .viteReactText,
+    .browserInfo,
+    .pageFooter {
+        display: none !important;
+    }
+
+    /* Hide browser's default print headers & footers */
+    @page {
+        margin: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Verdana";
+    }
+}
+
+body{
+    font-family: "Verdana";
+}
