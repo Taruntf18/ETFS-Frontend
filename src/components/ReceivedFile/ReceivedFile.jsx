@@ -8,7 +8,7 @@ import { baseUrl } from "../../environments/environment";
 import { useUser } from "../UserContext/UserContext";
 import FileDetails from "../FileDetails/FileDetails";
 import Workflow from "../Worksflow/Workflow";
-import QRCode from "react-qr-code";
+
 // import QRCode from 'react-native-qrcode-svg';
 // import QRCodeGenerator from "../QRCodeGenerator/QRCodeGenerator";
 
@@ -23,6 +23,7 @@ const ReceivedFile = () => {
   const [divisions, setDivisions] = useState([]); // State for fetched division data
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refTransId, setRefTransId] = useState(0);
+  const [workflowDetails, SetWorkflowDetails] = useState(null);
 
   // Fetch received files data
   const getReceivedFilesData = async () => {
@@ -54,16 +55,39 @@ const ReceivedFile = () => {
   }, []);
 
   // Handle file receive button click
-  const handleReceive = (file) => {
-    if (file != null) {
-      for (let i = 0; i < file.etfsFileTracking.length; i++) {
-        if (file.etfsFileTracking[i].toDate == null) {
-          setRefTransId(file.etfsFileTracking[i].transId);
-          console.log(file.etfsFileTracking[i].transId);
+  const fetchWorkflowDetails = async (fileUtn) => {
+    try {
+      
+      const response = await axios.get(
+        `${baseUrl}getTrackingDataByFileUTN/${fileUtn.replaceAll("/", "_")}`
+      );
+      SetWorkflowDetails(JSON.stringify(response.data));
+      if (response.data != null) {
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].toDate == null) {
+            setRefTransId(response.data[i].transId);
+          }
         }
       }
+    } catch (error) {
+      console.error("Axios Error:", error);
     }
-    // console.log(selectedFile.fileUtn);
+  };
+
+  
+
+
+  const handleReceive = async (file) => {
+    await fetchWorkflowDetails(file.fileUtn);
+    // if (workflowDetails != null) {
+    //   alert("1")
+    //   for (let i = 0; i < workflowDetails.length; i++) {
+    //     if (workflowDetails[i].toDate == null) {
+    //       setRefTransId(workflowDetails[i].transId);
+    //       console.log(workflowDetails[i].transId);
+    //     }
+    //   }
+    // }
     setSelectedFile(file);
     setIsModalOpen(true);
   };
@@ -83,10 +107,7 @@ const ReceivedFile = () => {
     "status": sendTo.divName,
     "remarks": remarks,
   };
-  console.log(trackingDetails);
-  if (isModalOpen) {
-    console.log(selectedFile);
-  }
+  console.log("tracking object:"+ JSON.stringify(trackingDetails))
   // Handle form submission
   const handleSubmit = async () => {
     if (!selectedFile || isSubmitting) return;
@@ -96,7 +117,6 @@ const ReceivedFile = () => {
         `${baseUrl}AddTrackingDetails`,
         trackingDetails
       );
-      console.log("Tracking details added successfully:", response.data);
       setIsModalOpen(false);
       setRemarks("");
       setSendTo("");
@@ -118,10 +138,9 @@ const ReceivedFile = () => {
               <th className={styles.th}>File Utn</th>
               <th className={styles.th}>Type of Document</th>
               <th className={styles.th}>Priority</th>
-              <th className={styles.th}>Prepared By</th>
+              <th className={styles.th}>Owner of the file</th>
               <th className={styles.th}>Date</th>
               <th className={styles.th}>Subject</th>
-              <th className={styles.th}>Description</th>
               <th className={styles.th}>Through Whom</th>
               <th className={styles.th}>Action</th>
             </tr>
@@ -144,16 +163,13 @@ const ReceivedFile = () => {
                   {capitalizeFirstLetter(item.priority)}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.empName} - {item.empNo}
+                  {item.etfsEmpModelforInitiator.empname} - {item.etfsEmpModelforInitiator.empno}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.preparedDate}
                 </td>
                 <td style={{ textWrap: "wrap" }} className={styles.td}>
                   {item.subject}
-                </td>
-                <td style={{ textWrap: "wrap" }} className={styles.td}>
-                  {item.description}
                 </td>
                 <td className={styles.td}>{item.sendingThrough}</td>
                 <td className={styles.td}>
@@ -179,25 +195,13 @@ const ReceivedFile = () => {
         overlayStyle={styles.popupOverlay}
       >
         <div className={styles.modal}>
-          {/* <QRCode
-            value="http://awesome.link.qr"
-          /> */}
-          {/* <QRCodeGenerator value={selectedFile.fileUtn}/> */}
-          <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
-            <QRCode
-              size={256}
-              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-              value={selectedFile ? `${selectedFile.fileUtn}$${selectedFile.fileInitiator}$${selectedFile.fileInitiatorEmpName}$${selectedFile.divName}` : ""}
-              viewBox="0 0 512 512"
-            />
-          </div>
           {selectedFile && (
             <FileDetails
-              selectedFile={selectedFile}
+              fileUtn={selectedFile.fileUtn}
               capitalizeFirstLetter={capitalizeFirstLetter}
             />
           )}
-          {selectedFile && <Workflow selectedFile={selectedFile} />}
+          {selectedFile && <Workflow fileUtn={selectedFile.fileUtn} />}
 
           {/* Remarks and Send To Section */}
           <div className={styles.remarksSendContainer}>

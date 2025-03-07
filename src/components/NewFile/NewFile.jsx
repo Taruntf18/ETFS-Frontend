@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserContext/UserContext";
 import { baseUrl } from "../../environments/environment";
+import QRCode from "react-qr-code";
 
 const NewFile = () => {
   const navigate = useNavigate();
@@ -15,7 +16,8 @@ const NewFile = () => {
   const { user } = useUser();
   const { division } = useUser();
   const { currentUserRole } = useUser();
-  console.log(user);
+
+
 
 
   // states for storing input form data
@@ -53,8 +55,8 @@ const NewFile = () => {
     "sendingThrough": sendingThrough
   }
 
-  console.log(user);
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (
       !priority ||
       !typeOfDoc ||
@@ -65,12 +67,17 @@ const NewFile = () => {
       alert("Please fill all required fields.");
       return;
     }
+
     if (isLoading) return;
     setIsLoading(true);
     try {
       const result = await axios.post(`${baseUrl}addFile`, jsonObject);
+      alert("File submitted successfully!");
+      console.log(result.data.fileUtn);
+      navigate("/printFile", { state: { fileUtn: result.data.fileUtn } });
     } catch (error) {
       console.log("Axios Error:", error);
+      alert("Failed to submit file. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -314,6 +321,7 @@ const NewFile = () => {
           </form>
         </div>
       </div>
+
     </>
   );
 };

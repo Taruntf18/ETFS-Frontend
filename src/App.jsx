@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import SelectDivision from "./components/SelectRole/SelectDivision";
 import { useUser } from "./components/UserContext/UserContext";
 import HodStaff from "./components/HodStaff/HodStaff";
+import PrintFile from "./components/PrintFileComponent/PrintFile";
 
 const App = () => {
   const { user } = useUser();
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="/status" element={<Status />} />
             <Route path="/SelectDivision" element={<SelectDivision />} />
             <Route path="/hod" element={user.hod != null ? (<HodStaff />) : (<Navigate to='/mainsection' />)} />
+            <Route path="/printFile" element={<PrintFile/>}/> 
           </Route>
         </Routes>
       </Router>

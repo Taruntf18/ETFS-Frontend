@@ -1,12 +1,33 @@
 import React from "react";
 import styles from "./workflow.module.css";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { baseUrl } from "../../environments/environment";
 
-const Workflow = ({ selectedFile }) => {
+const Workflow = ({ fileUtn }) => {
+  const [workflowDetails, SetWorkflowDetails] = useState({});
+  
+    const getWorkflowDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}getTrackingDataByFileUTN/${fileUtn.replaceAll("/", "_")}`
+        );
+        SetWorkflowDetails(response.data);
+      } catch (error) {
+        console.error("Axios Error:", error);
+      }
+    };
+  
+    useEffect(() => {
+      getWorkflowDetails();
+    }, [])
   return (
     <div>
       <h3>WORKFLOW</h3>
+      {/* {JSON.stringify(workflowDetails)} */}
       <div className={styles.workflowContainer}>
-        {selectedFile?.etfsFileTracking?.length > 0 ? (
+        {workflowDetails.length > 0 ? (
           <table className={styles.workflowTable}>
             <thead>
               <tr>
@@ -16,11 +37,11 @@ const Workflow = ({ selectedFile }) => {
                 <th>File To</th>
                 <th>To Date</th>
                 <th>Status</th>
-                <th>Remarks</th>
+                <th>Comments</th>
               </tr>
             </thead>
             <tbody>
-              {selectedFile.etfsFileTracking.map((file, index) => (
+              {workflowDetails.map((file, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{file.fileFrom} - {file.fromEmpName} ({file.fromDivName})</td>

@@ -8,12 +8,13 @@ import { baseUrl } from "../../environments/environment";
 const HodStaff = () => {
   const { user } = useUser();
   // states for handling UI changes
+
   const [typeOfEmp, setTypeOfEmp] = useState("");
   const [showAddOptions, setShowAddOptions] = useState(false);
   const [showRemoveOptions, setShowRemoveOptions] = useState(false);
 
   // states for handling fetching and posting data
-  const [selectedRegularEmployee, setSelectedRegularEmployee] = useState({});
+  const [selectedRegularEmployee, setSelectedRegularEmployee] = useState(null);
   const [selectedContractEmployee, setSelectedContractEmployee] = useState("");
   const [
     selectedContractEmployeeforInputField,
@@ -23,7 +24,6 @@ const HodStaff = () => {
   const [divisionalStaff, setDivisionalStaff] = useState([]);
   const [selectedEmpNosToRemove, setSelectedEmpNosToRemove] = useState([]);
   const [contractEmp, setContractEmp] = useState([]);
-  // console.log(selectedRegularEmployee);
 
   useEffect(() => {
     fetchDivisionalStaff();
@@ -31,40 +31,80 @@ const HodStaff = () => {
     fetchContractEmployees();
   }, []);
 
-  console.log(contractEmp);
+  console.log(selectedContractEmployee);
 
-  const postContractEmp = async () => {
+  const submitJson = {
+    addIncharge: showAddOptions == true ? "yes" : "no",
+    typeOfEmp: typeOfEmp,
+
+    empNo:
+      typeOfEmp == "Regular" && selectedRegularEmployee != null
+        ? JSON.parse(selectedRegularEmployee).empno
+        : selectedContractEmployee == "AddNewOther"
+        ? ""
+        : selectedContractEmployee && selectedContractEmployee.trim()
+        ? JSON.parse(selectedContractEmployee).empNo
+        : "",
+
+    empName:
+      typeOfEmp == "Regular" && selectedRegularEmployee != null
+        ? JSON.parse(selectedRegularEmployee).empname
+        : selectedContractEmployee == "AddNewOther"
+        ? selectedContractEmployeeforInputField
+        : selectedContractEmployee && selectedContractEmployee.trim()
+        ? JSON.parse(selectedContractEmployee).empName
+        : "",
+
+    divId: user.userDivision.divid,
+    roleId: 1,
+    
+    removeIncharge: showRemoveOptions == true ? "yes" : "no",
+    empToRemove: selectedEmpNosToRemove,
+  };
+  console.log(submitJson);
+  const onSubmit = async () => {
     try {
-      const response = await axios.post(`${baseUrl}addRoleMapping`, {
-        empNo: "",
-        empName:
-          selectedContractEmployee == "AddNewOther"
-            ? selectedContractEmployeeforInputField
-            : selectedContractEmployee,
-        divId: user.userDivision.divid,
-        active: "Y",
-        roleId: 1,
-        empType: typeOfEmp,
+      const response = await axios.post(`${baseUrl}addOrRemoveDivStaff`, {
+        submitJson: "asda",
       });
     } catch (e) {
       console.log(e);
     }
+    window.location.reload();
   };
 
-  const postRegularEmp = async () => {
-    try {
-      const response = await axios.post(`${baseUrl}addRoleMapping`, {
-        empNo: JSON.parse(selectedRegularEmployee).empno,
-        empName: JSON.parse(selectedRegularEmployee).empname,
-        divId: user.userDivision.divid,
-        active: "Y",
-        roleId: 1,
-        empType: typeOfEmp,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const postContractEmp = async () => {
+  //   try {
+  //     const response = await axios.post(`${baseUrl}addRoleMapping`, {
+  //       empNo: "",
+  //       empName:
+  //         selectedContractEmployee == "AddNewOther"
+  //           ? selectedContractEmployeeforInputField
+  //           : selectedContractEmployee,
+  //       divId: user.userDivision.divid,
+  //       active: "Y",
+  //       roleId: 1,
+  //       empType: typeOfEmp,
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
+  // const postRegularEmp = async () => {
+  //   try {
+  //     const response = await axios.post(`${baseUrl}addRoleMapping`, {
+  //       empNo: JSON.parse(selectedRegularEmployee).empno,
+  //       empName: JSON.parse(selectedRegularEmployee).empname,
+  //       divId: user.userDivision.divid,
+  //       active: "Y",
+  //       roleId: 1,
+  //       empType: typeOfEmp,
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   const fetchDivisionalStaff = async () => {
     try {
@@ -106,14 +146,14 @@ const HodStaff = () => {
     );
   };
 
-  const handleSubmit = () => {
-    if (typeOfEmp == "Contract") {
-      postContractEmp();
-    } else if (typeOfEmp == "Regular") {
-      postRegularEmp();
-    }
-    window.location.reload();
-  };
+  // const handleSubmit = () => {
+  //   if (typeOfEmp == "Contract") {
+  //     postContractEmp();
+  //   } else if (typeOfEmp == "Regular") {
+  //     postRegularEmp();
+  //   }
+  //   window.location.reload();
+  // };
 
   return (
     <>
@@ -139,7 +179,7 @@ const HodStaff = () => {
             <div className={styles.options_container}>
               <div className={styles.add_incharge}>
                 <p style={{ fontWeight: "bold" }}>
-                  Do you want to Add New In-Charge:
+                  Do you want to Add New Divisional Staff:
                 </p>
                 <p>
                   <input
@@ -153,6 +193,7 @@ const HodStaff = () => {
                     type="radio"
                     name="add_incharge"
                     value="no"
+                    checked={!showAddOptions}
                     onClick={() => setShowAddOptions(false)}
                   />{" "}
                   No
@@ -205,9 +246,14 @@ const HodStaff = () => {
                             }
                           >
                             <option value="">Select Contract Employee</option>
-                            <option value="Tarun">100001 - Tarun</option>
-                            <option value="Harsha">100002 - Harsha</option>
-                            <option value="Pragati">100003 - Pragathi</option>
+                            {contractEmp.map((item, key) => (
+                              <option
+                                key={item.empNo}
+                                value={JSON.stringify(item)}
+                              >
+                                {item.empNo} - {item.empName}
+                              </option>
+                            ))}
                             <option value="AddNewOther">Add New / Other</option>
                           </select>
                           <br />
@@ -236,7 +282,7 @@ const HodStaff = () => {
 
               <div className={styles.remove_incharge}>
                 <p style={{ fontWeight: "bold" }}>
-                  Do you want to remove Existing In-Charge:
+                  Do you want to remove Existing Divisional Staff:
                 </p>
                 <p>
                   <input
@@ -250,6 +296,7 @@ const HodStaff = () => {
                     type="radio"
                     name="remove_incharge"
                     value="no"
+                    checked={!showRemoveOptions}
                     onClick={() => setShowRemoveOptions(false)}
                   />{" "}
                   No
@@ -273,7 +320,7 @@ const HodStaff = () => {
               </div>
             </div>
             <div className={styles.submit_container}>
-              <button onClick={handleSubmit} className={styles.submit_button}>
+              <button onClick={onSubmit} className={styles.submit_button}>
                 SUBMIT
               </button>
             </div>

@@ -166,19 +166,3 @@
   height: 30px;
   border-radius: 3px;
 }
-.options_container {
-  display: flex;
-  align-items: stretch; /* Ensure children stretch to the same height */
-  gap: 20px; /* Space between sections */
-}
-
-.add_incharge,
-.remove_incharge {
-  flex: 1; /* Allow both sections to grow equally */
-}
-
-.vertical_line {
-  width: 1px; /* Thickness of the line */
-  background-color: #4a5568; /* Color of the line */
-  align-self: stretch; /* Make the line stretch to match the height of the parent */
-}

@@ -1,11 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./filedetails.module.css";
+import { useEffect } from "react";
+import axios from "axios";
+import { baseUrl } from "../../environments/environment";
+import QRCode from "react-qr-code";
 
-const FileDetails = ({ selectedFile, capitalizeFirstLetter }) => {
+const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
+  const [selectedFile, SetSelectedFile] = useState({});
+ 
+
+  const getReceivedFilesData = async () => {
+    try {
+      const response = await axios.get(
+        `${baseUrl}getFileDataByFileUtn/${fileUtn.replaceAll("/", "_")}`
+      );
+      SetSelectedFile(response.data);
+    } catch (error) {
+      console.error("Axios Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    getReceivedFilesData();
+  }, [])
   return (
-    
+
     <div>
-      {console.log(selectedFile)}
+      <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
+        <QRCode
+          size={256}
+          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+          value={selectedFile ? `${selectedFile.fileUtn} $ ${selectedFile.fileInitiator} $ ${selectedFile.fileInitiatorEmpName}$ ${selectedFile.divName}` : ""}
+          viewBox="0 0 512 512"
+        />
+      </div>
       <h2>File Details</h2>
       {selectedFile && (
         <table className={styles.modalTable}>
@@ -23,8 +51,8 @@ const FileDetails = ({ selectedFile, capitalizeFirstLetter }) => {
               <td>{capitalizeFirstLetter(selectedFile.priority)}</td>
             </tr>
             <tr>
-              <td><strong>Prepared By:</strong></td>
-              <td>{selectedFile.empName} - {selectedFile.empNo}</td>
+              <td><strong>Owner Of The File</strong></td>
+              <td>{selectedFile.fileInitiatorEmpName} - {selectedFile.fileInitiator}</td>
             </tr>
             <tr>
               <td><strong>Date:</strong></td>
