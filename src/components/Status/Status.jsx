@@ -30,7 +30,7 @@ const Status = () => {
           );
         } else if (currentUserRole === "Divisional Office") {
           response = await axios.get(
-            `${baseUrl}getAllFilesByStatus/${user.userDivision.divname}`
+            `${baseUrl}getFileMasters/${user.userDivision.divid}`
           );
         }
         setFilesData(response.data);
