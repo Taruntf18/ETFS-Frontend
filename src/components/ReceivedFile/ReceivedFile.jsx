@@ -10,30 +10,36 @@ import FileDetails from "../FileDetails/FileDetails";
 import Workflow from "../Worksflow/Workflow";
 import Pagination from "react-js-pagination";
 
-// import QRCode from 'react-native-qrcode-svg';
-// import QRCodeGenerator from "../QRCodeGenerator/QRCodeGenerator";
-
 const ReceivedFile = () => {
   const { user } = useUser();
-  const [filesData, SetfilesData] = useState([]); // State for fetched files data
-  const [receivedFilesData, SetReceivedFilesData] = useState([]); // State for fetched files data
-  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const [remarks, setRemarks] = useState(""); // State for remarks input
-  const [sendTo, setSendTo] = useState({}); // Keep initial state as an empty object // State for selected division
-  const [divisions, setDivisions] = useState([]); // State for fetched division data
+  const [filesData, SetfilesData] = useState([]);
+  const [receivedFilesData, SetReceivedFilesData] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [remarks, setRemarks] = useState("");
+  const [sendTo, setSendTo] = useState({});
+  const [divisions, setDivisions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refTransId, setRefTransId] = useState(0);
   const [workflowDetails, SetWorkflowDetails] = useState(null);
-  const [activePage, setActivePage] = useState(1); // Tracks current page
-  const itemsPerPage = 5; // Number of items per page
-  const indexOfLastItem = activePage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const [isReceiving, setIsReceiving] = useState(false);
 
-  const displayedFilesData = filesData.slice(indexOfFirstItem, indexOfLastItem);
+  // Separate pagination states for both tables
+  const [activePageFiles, setActivePageFiles] = useState(1); // For files to be received
+  const [activePageReceivedFiles, setActivePageReceivedFiles] = useState(1); // For received files
+  const itemsPerPage = 5; // Number of items per page
+
+  // Calculate displayed data for files to be received
+  const indexOfLastFile = activePageFiles * itemsPerPage;
+  const indexOfFirstFile = indexOfLastFile - itemsPerPage;
+  const displayedFilesData = filesData.slice(indexOfFirstFile, indexOfLastFile);
+
+  // Calculate displayed data for received files
+  const indexOfLastReceivedFile = activePageReceivedFiles * itemsPerPage;
+  const indexOfFirstReceivedFile = indexOfLastReceivedFile - itemsPerPage;
   const displayedReceivedFilesData = receivedFilesData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
+    indexOfFirstReceivedFile,
+    indexOfLastReceivedFile
   );
 
   // Fetch files data to be received
@@ -42,14 +48,14 @@ const ReceivedFile = () => {
       const response = await axios.get(
         `${baseUrl}getAllInboxFilesByStatus/${user.userDivision.divname}`
       );
-      console.log(response.data);
       SetfilesData(response.data);
+      // console.log(response.data)
     } catch (error) {
       console.error("Axios Error:", error);
     }
   };
 
-  // Fetch received files data and to be sent
+  // Fetch received files data
   const getReceivedFilesData = async () => {
     try {
       const response = await axios.get(
@@ -57,7 +63,7 @@ const ReceivedFile = () => {
           user.userDivision.divname + " Received"
         }`
       );
-      console.log(response.data);
+      // console.log(response.data)
       SetReceivedFilesData(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
@@ -88,7 +94,6 @@ const ReceivedFile = () => {
         `${baseUrl}getTrackingDataByFileUTN/${fileUtn.replaceAll("/", "_")}`
       );
       SetWorkflowDetails(JSON.stringify(response.data));
-      console.log(JSON.stringify(response.data));
       if (response.data != null) {
         for (let i = 0; i < response.data.length; i++) {
           if (response.data[i].toDate == null) {
@@ -123,22 +128,32 @@ const ReceivedFile = () => {
     remarks: "File Received by Office",
   };
 
+  // Use useEffect to trigger the API call after state updates
+  useEffect(() => {
+    if (isReceiving && selectedFile) {
+      const receiveFile = async () => {
+        try {
+          const response = await axios.post(
+            `${baseUrl}AddTrackingDetails`,
+            receiveTrackingDetails
+          );
+          alert("File Successfully Received...!");
+          window.location.reload();
+        } catch (error) {
+          console.error("Error adding tracking details:", error);
+        } finally {
+          setIsReceiving(false); // Reset the receiving state
+        }
+      };
+
+      receiveFile();
+    }
+  }, [isReceiving, selectedFile]);
+
   const handleReceiveFile = async (file) => {
     setRefTransId(file.etfsFileTracking.transId);
     setSelectedFile(file);
-
-    try {
-      const response = await axios.post(
-        `${baseUrl}AddTrackingDetails`,
-        receiveTrackingDetails
-      );
-
-      alert("File Successfully Received...!");
-
-      window.location.reload();
-    } catch (error) {
-      console.error("Error adding tracking details:", error);
-    }
+    setIsReceiving(true); // Trigger the useEffect to handle the API call
   };
 
   const trackingDetails = {
@@ -151,11 +166,11 @@ const ReceivedFile = () => {
     status: sendTo.divName,
     remarks: remarks,
   };
-  // Handle form submission
 
+  // Handle form submission
   const handleSubmit = async () => {
     if (!selectedFile || isSubmitting) return;
-    setIsSubmitting(true); // Prevent multiple submissions
+    setIsSubmitting(true);
     try {
       const response = await axios.post(
         `${baseUrl}AddTrackingDetails`,
@@ -176,6 +191,7 @@ const ReceivedFile = () => {
     <>
       <Navbar />
       <div className={styles.body}>
+        {/* Table for files to be received */}
         <table className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
@@ -234,17 +250,17 @@ const ReceivedFile = () => {
             ))}
           </tbody>
         </table>
-
         <Pagination
-          activePage={activePage}
+          activePage={activePageFiles}
           itemsCountPerPage={itemsPerPage}
           totalItemsCount={filesData.length}
           pageRangeDisplayed={5}
-          onChange={(pageNumber) => setActivePage(pageNumber)}
+          onChange={(pageNumber) => setActivePageFiles(pageNumber)}
           itemClass={styles.pageItem}
           linkClass={styles.pageLink}
         />
 
+        {/* Table for received files */}
         <table style={{ margin: "140px 0px" }} className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
@@ -258,7 +274,7 @@ const ReceivedFile = () => {
             </tr>
           </thead>
           <tbody>
-            {receivedFilesData.map((item, key) => (
+            {displayedReceivedFilesData.map((item, key) => (
               <tr className={styles.tr} key={key}>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.etfsFileMaster.fileUtn}
@@ -297,13 +313,12 @@ const ReceivedFile = () => {
             ))}
           </tbody>
         </table>
-
         <Pagination
-          activePage={activePage}
+          activePage={activePageReceivedFiles}
           itemsCountPerPage={itemsPerPage}
           totalItemsCount={receivedFilesData.length}
           pageRangeDisplayed={5}
-          onChange={(pageNumber) => setActivePage(pageNumber)}
+          onChange={(pageNumber) => setActivePageReceivedFiles(pageNumber)}
           itemClass={styles.pageItem}
           linkClass={styles.pageLink}
         />

@@ -282,6 +282,7 @@
   margin: 0 4px;
   border: 1px solid #000000;
   border-radius: 4px;
+  align-items: center;
   color: #ffffff;
   cursor: pointer;
   background-color: #517491;
