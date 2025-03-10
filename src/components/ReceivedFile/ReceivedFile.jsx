@@ -261,7 +261,7 @@ const ReceivedFile = () => {
         />
 
         {/* Table for received files */}
-        <table style={{ margin: "140px 0px" }} className={styles.table}>
+        <table style={{ marginTop: "140px" }} className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
               <th className={styles.th}>File No</th>
