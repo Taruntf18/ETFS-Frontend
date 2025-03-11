@@ -8,7 +8,7 @@ import { useUser } from "../UserContext/UserContext";
 import FileDetails from "../FileDetails/FileDetails";
 import Workflow from "../Worksflow/Workflow";
 import QRCode from "react-qr-code";
-
+import Pagination from "react-js-pagination";
 
 const Status = () => {
   const [filesData, setFilesData] = useState([]);
@@ -18,6 +18,9 @@ const Status = () => {
   const [toDate, setToDate] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [activePage, setActivePage] = useState(1); // Pagination State
+  const itemsPerPage = 10;
+
   const { currentUserRole, user } = useUser();
 
   useEffect(() => {
@@ -79,68 +82,91 @@ const Status = () => {
     setSelectedFile(null);
   };
 
+  // Pagination Logic
+  const paginatedData = filesData.slice(
+    (activePage - 1) * itemsPerPage,
+    activePage * itemsPerPage
+  );
+
   return (
     <>
       <Navbar />
       <div className={styles.body}>
         {/* Search Section */}
-        <div className={styles.searchContainer}>
-          <select
-            className={styles.listbox}
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
-            <option value="searchByFileUtn">
-              Search By File UTN / Subject / Description
-            </option>
-            <option value="searchByDate">Search By Date</option>
-          </select>
+        <div className={styles.searchAndPagination}>
+          <div className={styles.searchContainer}>
+            <select
+              className={styles.listbox}
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+            >
+              <option value="searchByFileUtn">
+                Search By File UTN / Subject / Description
+              </option>
+              <option value="searchByDate">Search By Date</option>
+            </select>
 
-          {searchType === "searchByFileUtn" && (
-            <div className={styles.searchInputContainer}>
-              <input
-                className={styles.input_inset}
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Enter search term"
-              />
-              <button onClick={handleSearch} className={styles.receiveButton}>
-                Search
-              </button>
-            </div>
-          )}
+            {searchType === "searchByFileUtn" && (
+              <div className={styles.searchInputContainer}>
+                <input
+                  className={styles.input_inset}
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  placeholder="Enter search term"
+                />
+                <button onClick={handleSearch} className={styles.receiveButton}>
+                  Search
+                </button>
+              </div>
+            )}
 
-          {searchType === "searchByDate" && (
-            <div className={styles.dateSearchContainer}>
-              <div className={styles.datePicker}>
-                <label htmlFor="fromDate">From Date:</label>
-                <input
-                  type="date"
-                  id="fromDate"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
-                />
+            {searchType === "searchByDate" && (
+              <div className={styles.dateSearchContainer}>
+                <div className={styles.datePicker}>
+                  <label htmlFor="fromDate">From Date:</label>
+                  <input
+                    type="date"
+                    id="fromDate"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </div>
+                <div className={styles.datePicker}>
+                  <label htmlFor="toDate">To Date:</label>
+                  <input
+                    type="date"
+                    id="toDate"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </div>
+                <button
+                  onClick={handleDateSearch}
+                  className={styles.receiveButton}
+                >
+                  Search
+                </button>
               </div>
-              <div className={styles.datePicker}>
-                <label htmlFor="toDate">To Date:</label>
-                <input
-                  type="date"
-                  id="toDate"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                />
-              </div>
-              <button
-                onClick={handleDateSearch}
-                className={styles.receiveButton}
-              >
-                Search
-              </button>
-            </div>
-          )}
+            )}
+          </div>
+
+          {/* Pagination Component */}
+          <div className={styles.paginationContainer}>           
+            <Pagination
+              activePage={activePage}
+              itemsCountPerPage={itemsPerPage}
+              totalItemsCount={filesData.length}
+              pageRangeDisplayed={5}
+              onChange={(pageNumber) => setActivePage(pageNumber)}
+              itemClass={styles.pageItem}
+              linkClass={styles.pageLink}
+            />
+          </div>
         </div>
+
         {/* Status Table */}
+          
         <table className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
@@ -154,16 +180,22 @@ const Status = () => {
             </tr>
           </thead>
           <tbody>
-            {filesData.map((item) => (
+            {paginatedData.map((item) => (
               <tr className={styles.tr} key={item.fileUtn}>
                 <td className={styles.td}>{item.fileUtn}</td>
                 <td className={styles.td}>{item.docType}</td>
                 <td className={styles.td}>{item.priority}</td>
-                <td className={styles.td}>{item.etfsEmpModelforInitiator.empname} - {item.etfsEmpModelforInitiator.empno}</td>
+                <td className={styles.td}>
+                  {item.etfsEmpModelforInitiator?.empname} -{" "}
+                  {item.etfsEmpModelforInitiator?.empno}
+                </td>
                 <td className={styles.td}>{item.preparedDate}</td>
                 <td className={styles.td}>{item.subject}</td>
                 <td className={styles.td}>
-                  <button className={styles.statusButton} onClick={() => openStatusModal(item)}>
+                  <button
+                    className={styles.statusButton}
+                    onClick={() => openStatusModal(item)}
+                  >
                     Status
                   </button>
                 </td>
@@ -172,11 +204,17 @@ const Status = () => {
           </tbody>
         </table>
 
+        
+
         {/* Popup Modal */}
         <Popup open={showModal} closeOnDocumentClick onClose={closeModal}>
           <div className={styles.modal}>
-            
-            {selectedFile && <FileDetails fileUtn={selectedFile.fileUtn} capitalizeFirstLetter={capitalizeFirstLetter} />}
+            {selectedFile && (
+              <FileDetails
+                fileUtn={selectedFile.fileUtn}
+                capitalizeFirstLetter={capitalizeFirstLetter}
+              />
+            )}
             {selectedFile && <Workflow fileUtn={selectedFile.fileUtn} />}
             <div className={styles.closeContainer}>
               <button className={styles.closeButton} onClick={closeModal}>

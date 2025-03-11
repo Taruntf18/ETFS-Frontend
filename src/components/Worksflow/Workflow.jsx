@@ -48,7 +48,7 @@ const Workflow = ({ fileUtn }) => {
                   <td style={{ textWrap: "nowrap" }}>{file.fromDate}</td>
                   <td >{file.fileTo ? `${file.fileTo} - ${file.toEmpName} (${file.toDivName})` : file.toDivName + " Office"} </td>
                   {/* <td style={{ textWrap: "nowrap" }}>{file.toDate || "-"}</td> */}
-                  <td>{file.status || "For Approval"}</td>
+                  <td>{file.status || "Waiting to Receive"}</td>
                   <td>{file.remarks || " "}</td>
                 </tr>
               ))}

@@ -36,7 +36,7 @@ const Login = () => {
       });
       updateUser({
         "userId": result.data.user,
-        "userName": result.data.empData.empname,
+        "userName": result.data.user.length == 5 ? result.data.empData.empname : result.data.empData.empName,
         "userRoles": "",
         "userDivision": "",
         "userSection": result.data.empData.section,
@@ -50,7 +50,7 @@ const Login = () => {
       if (result.data.divisions.length <= 1) {
         updateUser({
           "userId": result.data.user,
-          "userName": result.data.empData.empname,
+          "userName":  result.data.user.length == 5 ? result.data.empData.empname : result.data.empData.empName,
           "userRoles": "",
           "userDivision": result.data.divisions[0],
           "userSection": result.data.empData.section,

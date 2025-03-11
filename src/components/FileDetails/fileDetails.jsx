@@ -23,7 +23,8 @@ const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
     getReceivedFilesData();
   }, [])
   return (
-
+    
+    
     <div>
       <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
         <QRCode

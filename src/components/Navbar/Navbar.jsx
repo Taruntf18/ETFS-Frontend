@@ -150,7 +150,7 @@ const Navbar = () => {
                     style={{
                       fontSize: "16px",
                       fontWeight: "normal",
-                      margin: "0px 10px",
+                      margin: "0px 0px",
                     }}
                   >
                     {user.userDesignation}

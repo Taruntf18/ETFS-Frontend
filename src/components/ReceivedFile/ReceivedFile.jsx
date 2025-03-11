@@ -23,6 +23,11 @@ const ReceivedFile = () => {
   const [refTransId, setRefTransId] = useState(0);
   const [workflowDetails, SetWorkflowDetails] = useState(null);
   const [isReceiving, setIsReceiving] = useState(false);
+  const [searchType, setSearchType] = useState("searchByFileUtn");
+
+  const [searchInput, setSearchInput] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   // Separate pagination states for both tables
   const [activePageFiles, setActivePageFiles] = useState(1); // For files to be received
@@ -167,6 +172,9 @@ const ReceivedFile = () => {
     remarks: remarks,
   };
 
+  console.log(displayedFilesData);
+  console.log(displayedReceivedFilesData);
+
   // Handle form submission
   const handleSubmit = async () => {
     if (!selectedFile || isSubmitting) return;
@@ -184,6 +192,31 @@ const ReceivedFile = () => {
       console.error("Error adding tracking details:", error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(
+        `${baseUrl}getDataByKeywordsForInbox/${searchInput.replaceAll("/", "_")}/${user.userDivision.divname + " Received"}`
+      );
+      SetReceivedFilesData(response.data);
+      console.log(response.data , "245445")
+    } catch (error) {
+      console.error("Axios Error:", error);
+    }
+  };
+
+  const handleDateSearch = async () => {
+    if (new Date(fromDate) > new Date(toDate)) {
+      alert("From Date cannot be greater than To Date");
+      return;
+    }
+    try {
+      const response = await axios.get(`${baseUrl}getDataByDateRangeAndStatus/${fromDate}/${toDate}/${user.userDivision.divname + " Received"}`);
+      SetReceivedFilesData(response.data);
+    } catch (error) {
+      console.error("Axios Error:", error);
     }
   };
 
@@ -227,8 +260,8 @@ const ReceivedFile = () => {
                   {item.etfsFileMaster.subject}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.etfsFileMaster.etfsEmpModelforInitiator.empname} -{" "}
-                  {item.etfsFileMaster.etfsEmpModelforInitiator.empno}
+                  {item.etfsFileMaster.etfsEmpModelforInitiator?.empname} -{" "}
+                  {item.etfsFileMaster.etfsEmpModelforInitiator?.empno}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.etfsFileTracking.fromEmpName} -{" "}
@@ -260,8 +293,64 @@ const ReceivedFile = () => {
           linkClass={styles.pageLink}
         />
 
+        <div style={{ marginTop: "140px" }} className={styles.searchContainer}>
+          <select
+            className={styles.listbox}
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+          >
+            <option value="searchByFileUtn">
+              Search By File UTN / Subject / FileIntiator
+            </option>
+            <option value="searchByDate">Search By Date</option>
+          </select>
+
+          {searchType === "searchByFileUtn" && (
+            <div className={styles.searchInputContainer}>
+              <input
+                className={styles.input_inset}
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Enter search term"
+              />
+              <button onClick={handleSearch} className={styles.searchButton}>
+                Search
+              </button>
+            </div>
+          )}
+
+          {searchType === "searchByDate" && (
+            <div className={styles.dateSearchContainer}>
+              <div className={styles.datePicker}>
+                <label htmlFor="fromDate">From Date:</label>
+                <input
+                  type="date"
+                  id="fromDate"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                />
+              </div>
+              <div className={styles.datePicker}>
+                <label htmlFor="toDate">To Date:</label>
+                <input
+                  type="date"
+                  id="toDate"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={handleDateSearch}
+                className={styles.searchButton}
+              >
+                Search
+              </button>
+            </div>
+          )}
+        </div>
         {/* Table for received files */}
-        <table style={{ marginTop: "140px" }} className={styles.table}>
+        <table style={{ marginTop: "40px" }} className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
               <th className={styles.th}>File No</th>
@@ -277,29 +366,29 @@ const ReceivedFile = () => {
             {displayedReceivedFilesData.map((item, key) => (
               <tr className={styles.tr} key={key}>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.etfsFileMaster.fileUtn}
+                  {item.etfsFileMaster?.fileUtn}
                 </td>
                 <td
                   className={`${
-                    item.etfsFileMaster.priority === "immediate"
+                    item.etfsFileMaster?.priority === "immediate"
                       ? styles.priority_immediate
                       : styles.priority_normal
                   } ${styles.td}`}
                 >
-                  {capitalizeFirstLetter(item.etfsFileMaster.priority)}
+                  {capitalizeFirstLetter(item.etfsFileMaster?.priority)}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.etfsFileMaster.docType}
+                  {item.etfsFileMaster?.docType}
                 </td>
                 <td style={{ textWrap: "wrap" }} className={styles.td}>
-                  {item.etfsFileMaster.subject}
+                  {item.etfsFileMaster?.subject}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.etfsFileMaster.etfsEmpModelforInitiator.empname} -{" "}
-                  {item.etfsFileMaster.etfsEmpModelforInitiator.empno}
+                  {item.etfsFileMaster?.etfsEmpModelforInitiator?.empname} -{" "}
+                  {item.etfsFileMaster?.etfsEmpModelforInitiator?.empno}
                 </td>
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.etfsFileTracking.fromDate}
+                  {item.etfsFileTracking?.fromDate}
                 </td>
                 <td className={styles.td}>
                   <button
