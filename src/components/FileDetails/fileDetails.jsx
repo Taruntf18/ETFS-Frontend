@@ -14,6 +14,12 @@ const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
         `${baseUrl}getFileDataByFileUtn/${fileUtn.replaceAll("/", "_")}`
       );
       SetSelectedFile(response.data);
+      if(response.data.fileInitiator == response.data.preparedBy){
+        localStorage.setItem("empCreatedFile", "YES");
+      }else{
+        localStorage.setItem("empCreatedFile", "NO");
+      }
+      console.log(selectedFile);
     } catch (error) {
       console.error("Axios Error:", error);
     }
@@ -21,6 +27,7 @@ const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
 
   useEffect(() => {
     getReceivedFilesData();
+   
   }, [])
   return (
     

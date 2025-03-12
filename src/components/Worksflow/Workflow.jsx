@@ -44,11 +44,11 @@ const Workflow = ({ fileUtn }) => {
               {workflowDetails.map((file, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{file.fileFrom} - {file.fromEmpName} ({file.fromDivName})</td>
+                  <td> {file.fileFrom} - {file.fromEmpName} ({file.fromDivName}{index == 0 ? (localStorage.getItem("empCreatedFile") == 'NO' ? " Office" : "") : " Office"})</td>
                   <td style={{ textWrap: "nowrap" }}>{file.fromDate}</td>
-                  <td >{file.fileTo ? `${file.fileTo} - ${file.toEmpName} (${file.toDivName})` : file.toDivName + " Office"} </td>
+                  <td >{file.fileTo ? `${file.fileTo} - ${file.toEmpName} (${file.toDivName  + " Office"})` : file.toDivName + " Office"} </td>
                   {/* <td style={{ textWrap: "nowrap" }}>{file.toDate || "-"}</td> */}
-                  <td>{file.status || "Waiting to Receive"}</td>
+                  <td>{file.status || "Waiting"}</td>
                   <td>{file.remarks || " "}</td>
                 </tr>
               ))}

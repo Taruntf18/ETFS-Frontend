@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import styles from './change_password.module.css';
+import { useUser } from '../UserContext/UserContext';
+import axios from 'axios';
+import { baseUrl } from '../../environments/environment';
+import { useNavigate } from 'react-router';
 
 const ChangePassword = () => {
+
+    const navigate = useNavigate();
+    const { user } = useUser();
+    const { updateUser } = useUser();
+    console.log(user);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -16,9 +25,36 @@ const ChangePassword = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
+    const handlePasswordPost = async () => {
+        try {
+            const response = await axios.post(`${baseUrl}resetPassword`, {
+                "empNo": user.userId,
+                "password": confirmPassword,
+                "isFirstLogin": "N"
+            });
+            // SetfilesData(response.data);
+            console.log(response.data)
+            updateUser({
+                "userId": "",
+                "userName": "",
+                "userRoles": "",
+                "userDivision": "",
+                "userSection": "",
+                "userDesignation": "",
+                "isLoggedIn": false,
+                "hod": null,
+            });
+            localStorage.clear();
+            navigate("/");
+        } catch (error) {
+            console.error("Axios Error:", error);
+        }
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (newPassword === confirmPassword) {
+            handlePasswordPost();
             alert('Password changed successfully!');
             // Handle password change logic here
         } else {

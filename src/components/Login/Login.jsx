@@ -11,8 +11,6 @@ import { baseUrl } from "../../environments/environment";
 const Login = () => {
   const navigate = useNavigate();
   const { updateUser } = useUser();
-  const { user } = useUser();
-  const { division } = useUser();
   const { setDivision } = useUser();
   const [userid, SetUserid] = useState("");
   const [password, Setpassword] = useState("");
@@ -45,7 +43,15 @@ const Login = () => {
         "hod":null,
       });
       setDivision(Array.isArray(result.data.divisions) ? result.data.divisions : []);
-      setCurrentUserRole("Employee");
+      if(result.data.user.length == 5) {
+        setCurrentUserRole("Employee");
+      }else{
+        if(result.data.roles.length == 0){
+          throw new Error("Something went wrong!");
+        }else{
+          setCurrentUserRole("Divisional Office");
+        }
+      } 
       SetMessage("Login Successful");
       if (result.data.divisions.length <= 1) {
         updateUser({
@@ -58,7 +64,12 @@ const Login = () => {
           "isLoggedIn": true,
           "hod":null,
         });
-        navigate('/mainsection');
+        if(result.data.user.length == 6 && result.data.isFirstLogin == 'Y'){
+          navigate('/changePassword');
+        }else{
+          if(result.data.user.length == 6 && result.data.roles == 'Divisional Office') navigate('/received-file');
+          else navigate('/mainsection');
+        }
       } else {
         navigate('/SelectDivision');
       }

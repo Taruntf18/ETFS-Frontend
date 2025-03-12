@@ -23,7 +23,8 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileRef = useRef(null);
 
-  rolesArray.push("Employee");
+  console.log()
+  if(user.userId.length == 5) rolesArray.push("Employee");
   for (let i = 0; i < rolesData.length; i++) {
     rolesArray.push(rolesData[i].role_name);
   }
@@ -135,6 +136,9 @@ const Navbar = () => {
           )}
         </ul>
         <div className="navbar-icons">
+          <h3>
+            {user.userDivision.divname}
+          </h3>
           <div ref={profileRef} className="profile-container">
             <FaUserCircle
               style={{ margin: "0px 10px" }}
@@ -163,6 +167,8 @@ const Navbar = () => {
                   <select
                     onChange={(e) => {
                       setCurrentUserRole(e.target.value);
+                      if(e.target.value == "Divisional Office") navigate('/received-file')
+                      if(e.target.value == "Employee") navigate('/new-file')
                       window.location.reload();
                     }}
                   >
