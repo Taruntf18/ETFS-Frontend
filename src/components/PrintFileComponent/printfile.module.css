@@ -1,9 +1,10 @@
+/* Existing styles */
 .container {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #f5f7fa; /* Light background for better contrast */
+    background-color: #f5f7fa;
 }
 
 .content {
@@ -11,7 +12,7 @@
     padding: 40px;
     width: 60%;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
@@ -27,11 +28,11 @@
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 6px 12px; /* Reduced padding for smaller height */
-    font-size: 14px; /* Adjusted font size for a balanced look */
+    padding: 6px 12px;
+    font-size: 14px;
     display: flex;
     align-items: center;
-    gap: 6px; /* Slightly reduced gap for better spacing */
+    gap: 6px;
     cursor: pointer;
     transition: background 0.3s ease;
 }
@@ -39,7 +40,6 @@
 .exitButton:hover {
     background-color: #d9363e;
 }
-
 
 .printIcon {
     cursor: pointer;
@@ -52,7 +52,17 @@
 
 /* Print styles */
 @media print {
-    .printIcon, .exitButton {
+    .container, .content {
+        background-color: white;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        display: block;
+    }
+
+    .buttonGroup, .printIcon, .exitButton {
         display: none !important;
     }
 
@@ -64,6 +74,7 @@
 
     @page {
         margin: 0;
+        padding: 55px 10px;
     }
 
     body {

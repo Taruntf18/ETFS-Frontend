@@ -46,7 +46,7 @@ const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
         <table className={styles.modalTable}>
           <tbody>
             <tr>
-              <td><strong>File No</strong></td>
+              <td><strong>File No.</strong></td>
               <td>{selectedFile.fileUtn}</td>
             </tr>
             <tr>

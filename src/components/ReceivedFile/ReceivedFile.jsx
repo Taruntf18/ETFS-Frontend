@@ -29,6 +29,8 @@ const ReceivedFile = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
+  const [showModal, setShowModal] = useState(false);
+
   // Separate pagination states for both tables
   const [activePageFiles, setActivePageFiles] = useState(1); // For files to be received
   const [activePageReceivedFiles, setActivePageReceivedFiles] = useState(1); // For received files
@@ -198,10 +200,13 @@ const ReceivedFile = () => {
   const handleSearch = async () => {
     try {
       const response = await axios.get(
-        `${baseUrl}getDataByKeywordsForInbox/${searchInput.replaceAll("/", "_")}/${user.userDivision.divname + " Received"}`
+        `${baseUrl}getDataByKeywordsForInbox/${searchInput.replaceAll(
+          "/",
+          "_"
+        )}/${user.userDivision.divname + " Received"}`
       );
       SetReceivedFilesData(response.data);
-      console.log(response.data , "245445")
+      console.log(response.data, "245445");
     } catch (error) {
       console.error("Axios Error:", error);
     }
@@ -213,11 +218,25 @@ const ReceivedFile = () => {
       return;
     }
     try {
-      const response = await axios.get(`${baseUrl}getDataByDateRangeAndStatus/${fromDate}/${toDate}/${user.userDivision.divname + " Received"}`);
+      const response = await axios.get(
+        `${baseUrl}getDataByDateRangeAndStatus/${fromDate}/${toDate}/${
+          user.userDivision.divname + " Received"
+        }`
+      );
       SetReceivedFilesData(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
     }
+  };
+
+  const openStatusModal = (file) => {
+    setSelectedFile(file);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedFile(null);
   };
 
   return (
@@ -225,10 +244,22 @@ const ReceivedFile = () => {
       <Navbar />
       <div className={styles.body}>
         {/* Table for files to be received */}
+        <div className={styles.paginationContain1}>
+          <Pagination
+            activePage={activePageFiles}
+            itemsCountPerPage={itemsPerPage}
+            totalItemsCount={filesData.length}
+            pageRangeDisplayed={5}
+            onChange={(pageNumber) => setActivePageFiles(pageNumber)}
+            itemClass={styles.pageItem}
+            linkClass={styles.pageLink}
+          />
+        </div>
+
         <table className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
-              <th className={styles.th}>File No</th>
+              <th className={styles.th}>File No.</th>
               <th className={styles.th}>Priority</th>
               <th className={styles.th}>Type of Document</th>
               <th className={styles.th}>Subject</th>
@@ -241,9 +272,18 @@ const ReceivedFile = () => {
           <tbody>
             {displayedFilesData.map((item, key) => (
               <tr className={styles.tr} key={key}>
-                <td style={{ textWrap: "nowrap" }} className={styles.td}>
-                  {item.etfsFileMaster.fileUtn}
+                <td
+                  style={{ whiteSpace: "nowrap" }}
+                  className={styles.tdButton}
+                >
+                  <button
+                    className={styles.statusButton}
+                    onClick={() => openStatusModal(item)}
+                  >
+                    {item.etfsFileMaster.fileUtn}
+                  </button>
                 </td>
+
                 <td
                   className={`${
                     item.etfsFileMaster.priority === "immediate"
@@ -271,7 +311,7 @@ const ReceivedFile = () => {
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.etfsFileTracking.fromDate}
                 </td>
-                <td className={styles.td}>
+                <td className={styles.tdButton}>
                   <button
                     className={styles.receiveButton}
                     onClick={() => handleReceiveFile(item)}
@@ -283,77 +323,86 @@ const ReceivedFile = () => {
             ))}
           </tbody>
         </table>
-        <Pagination
-          activePage={activePageFiles}
-          itemsCountPerPage={itemsPerPage}
-          totalItemsCount={filesData.length}
-          pageRangeDisplayed={5}
-          onChange={(pageNumber) => setActivePageFiles(pageNumber)}
-          itemClass={styles.pageItem}
-          linkClass={styles.pageLink}
-        />
 
-        <div style={{ marginTop: "140px" }} className={styles.searchContainer}>
-          <select
-            className={styles.listbox}
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-          >
-            <option value="searchByFileUtn">
-              Search By File UTN / Subject / FileIntiator
-            </option>
-            <option value="searchByDate">Search By Date</option>
-          </select>
+        <div
+          style={{ paddingTop: "100px" }}
+          className={styles.searchAndPagination2}
+        >
+          <div className={styles.searchContainer}>
+            <select
+              className={styles.listbox}
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+            >
+              <option value="searchByFileUtn">
+                Search By File UTN / Subject / File Initiator
+              </option>
+              <option value="searchByDate">Search By Date</option>
+            </select>
 
-          {searchType === "searchByFileUtn" && (
-            <div className={styles.searchInputContainer}>
-              <input
-                className={styles.input_inset}
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Enter search term"
-              />
-              <button onClick={handleSearch} className={styles.searchButton}>
-                Search
-              </button>
-            </div>
-          )}
-
-          {searchType === "searchByDate" && (
-            <div className={styles.dateSearchContainer}>
-              <div className={styles.datePicker}>
-                <label htmlFor="fromDate">From Date:</label>
+            {searchType === "searchByFileUtn" && (
+              <div className={styles.searchInputContainer}>
                 <input
-                  type="date"
-                  id="fromDate"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
+                  className={styles.input_inset}
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  placeholder="Enter search term"
                 />
+                <button onClick={handleSearch} className={styles.searchButton}>
+                  Search
+                </button>
               </div>
-              <div className={styles.datePicker}>
-                <label htmlFor="toDate">To Date:</label>
-                <input
-                  type="date"
-                  id="toDate"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                />
+            )}
+
+            {searchType === "searchByDate" && (
+              <div className={styles.dateSearchContainer}>
+                <div className={styles.datePicker}>
+                  <label htmlFor="fromDate">From Date:</label>
+                  <input
+                    type="date"
+                    id="fromDate"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </div>
+                <div className={styles.datePicker}>
+                  <label htmlFor="toDate">To Date:</label>
+                  <input
+                    type="date"
+                    id="toDate"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </div>
+                <button
+                  onClick={handleDateSearch}
+                  className={styles.searchButton}
+                >
+                  Search
+                </button>
               </div>
-              <button
-                onClick={handleDateSearch}
-                className={styles.searchButton}
-              >
-                Search
-              </button>
-            </div>
-          )}
+            )}
+          </div>
+          {/* Pagination Component */}
+          <div classname={styles.paginationContain2}>
+            <Pagination
+              activePage={activePageReceivedFiles}
+              itemsCountPerPage={itemsPerPage}
+              totalItemsCount={receivedFilesData.length}
+              pageRangeDisplayed={5}
+              onChange={(pageNumber) => setActivePageReceivedFiles(pageNumber)}
+              itemClass={styles.pageItem}
+              linkClass={styles.pageLink}
+            />
+          </div>
         </div>
+
         {/* Table for received files */}
-        <table style={{ marginTop: "40px" }} className={styles.table}>
+        <table className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
-              <th className={styles.th}>File No</th>
+              <th className={styles.th}>File No.</th>
               <th className={styles.th}>Priority</th>
               <th className={styles.th}>Type of Document</th>
               <th className={styles.th}>Subject</th>
@@ -390,7 +439,7 @@ const ReceivedFile = () => {
                 <td style={{ textWrap: "nowrap" }} className={styles.td}>
                   {item.etfsFileTracking?.fromDate}
                 </td>
-                <td className={styles.td}>
+                <td className={styles.tdButton}>
                   <button
                     className={styles.SendtoButton}
                     onClick={() => handleSentFile(item)}
@@ -402,15 +451,6 @@ const ReceivedFile = () => {
             ))}
           </tbody>
         </table>
-        <Pagination
-          activePage={activePageReceivedFiles}
-          itemsCountPerPage={itemsPerPage}
-          totalItemsCount={receivedFilesData.length}
-          pageRangeDisplayed={5}
-          onChange={(pageNumber) => setActivePageReceivedFiles(pageNumber)}
-          itemClass={styles.pageItem}
-          linkClass={styles.pageLink}
-        />
       </div>
 
       {/* Popup */}
@@ -478,6 +518,26 @@ const ReceivedFile = () => {
           <div className={styles.submitContainer}>
             <button className={styles.submitButton} onClick={handleSubmit}>
               Submit
+            </button>
+          </div>
+        </div>
+      </Popup>
+
+      {/* Popup Modal */}
+      <Popup open={showModal} closeOnDocumentClick onClose={closeModal}>
+        <div className={styles.modal}>
+          {selectedFile && (
+            <FileDetails
+              fileUtn={selectedFile.etfsFileMaster.fileUtn}
+              capitalizeFirstLetter={capitalizeFirstLetter}
+            />
+          )}
+          {selectedFile && (
+            <Workflow fileUtn={selectedFile.etfsFileMaster.fileUtn} />
+          )}
+          <div className={styles.closeContainer}>
+            <button className={styles.closeButton} onClick={closeModal}>
+              Close
             </button>
           </div>
         </div>

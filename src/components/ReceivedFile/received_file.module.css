@@ -19,6 +19,11 @@
   border: 1px solid #ddd;
   text-align: left;
 }
+.tdButton {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: Center;
+}
 
 .th {
   background-color: #363636;
@@ -41,12 +46,13 @@
 }
 
 .receiveButton {
-  background-color: #ff4d4d;
-  color: white;
+  background-color: rgb(255, 48, 48);
+  color: rgb(255, 255, 255);
   border: none;
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
+
 }
 
 .receiveButton:hover {
@@ -57,7 +63,7 @@
   background-color: #3b3bf4ca;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 16px;
   cursor: pointer;
   border-radius: 5px;
 }
@@ -309,14 +315,12 @@
   height: 100%;
 }
 
-
-
 .searchContainer {
   margin-bottom: 30px;
 }
 
 .listbox {
-  width: 24%;
+  width: 102%;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ced4da;
@@ -334,7 +338,7 @@
 
 .searchInputContainer {
   display: flex;
-  align-items:center;
+  align-items: center;
   gap: 10px;
 }
 
@@ -380,7 +384,7 @@
   padding-left: 40px;
 }
 
-.input_inset::placeholder { 
+.input_inset::placeholder {
   color: #838d99;
 }
 
@@ -401,4 +405,28 @@
 
 .searchButton:hover {
   background-color: #2626b6;
+}
+
+.paginationContain1 {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin: 0;
+}
+
+.searchAndPagination2{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100px;
+}
+
+.statusButton {
+  all: unset;
+  color: inherit; 
+  cursor: pointer;
+  text-decoration: underline; 
+  background-color: transparent; 
+  padding: 0; 
+  border: none; 
 }

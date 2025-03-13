@@ -7,11 +7,13 @@ import { baseUrl } from "../../environments/environment";
 import { useUser } from "../UserContext/UserContext";
 import FileDetails from "../FileDetails/FileDetails";
 import Workflow from "../Worksflow/Workflow";
-import QRCode from "react-qr-code";
+import { useNavigate } from "react-router";
+
 import Pagination from "react-js-pagination";
 
 const Status = () => {
   const [filesData, setFilesData] = useState([]);
+  const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [searchType, setSearchType] = useState("searchByFileUtn");
   const [fromDate, setFromDate] = useState("");
@@ -36,6 +38,8 @@ const Status = () => {
             `${baseUrl}getFileMasters/${user.userDivision.divid}`
           );
         }
+        console.log(response.data);
+
         setFilesData(response.data);
       } catch (error) {
         console.error("Axios Error:", error);
@@ -65,7 +69,9 @@ const Status = () => {
       return;
     }
     try {
-      const response = await axios.get(`${baseUrl}getDataByDateRange/${fromDate}/${toDate}`);
+      const response = await axios.get(
+        `${baseUrl}getDataByDateRange/${fromDate}/${toDate}`
+      );
       setFilesData(response.data);
     } catch (error) {
       console.error("Axios Error:", error);
@@ -152,7 +158,7 @@ const Status = () => {
           </div>
 
           {/* Pagination Component */}
-          <div className={styles.paginationContainer}>           
+          <div className={styles.paginationContainer}>
             <Pagination
               activePage={activePage}
               itemsCountPerPage={itemsPerPage}
@@ -166,45 +172,54 @@ const Status = () => {
         </div>
 
         {/* Status Table */}
-          
+
         <table className={styles.table}>
           <thead className={styles.thead}>
             <tr className={styles.tr}>
-              <th className={styles.th}>File Utn</th>
+              <th className={styles.th}>File No.</th>
               <th className={styles.th}>Type of Document</th>
               <th className={styles.th}>Priority</th>
               <th className={styles.th}>Owner of the file</th>
               <th className={styles.th}>Date</th>
               <th className={styles.th}>Subject</th>
               <th className={styles.th}>Status</th>
+              <th className={styles.th}></th>
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((item) => (
-              <tr className={styles.tr} key={item.fileUtn}>
-                <td className={styles.td}>{item.fileUtn}</td>
-                <td className={styles.td}>{item.docType}</td>
-                <td className={styles.td}>{item.priority}</td>
-                <td className={styles.td}>
-                  {item.etfsEmpModelforInitiator?.empname} -{" "}
-                  {item.etfsEmpModelforInitiator?.empno}
-                </td>
-                <td className={styles.td}>{item.preparedDate}</td>
-                <td className={styles.td}>{item.subject}</td>
-                <td className={styles.td}>
-                  <button
-                    className={styles.statusButton}
-                    onClick={() => openStatusModal(item)}
+            {paginatedData.length > 0 &&
+              paginatedData.map((item) => (
+                <tr className={styles.tr} key={item.fileUtn}>
+                  <td className={styles.td}>{item.fileUtn}</td>
+                  <td className={styles.td}>{item.docType}</td>
+                  <td
+                    className={`${
+                      item?.priority === "immediate"
+                        ? styles.priority_immediate
+                        : styles.priority_normal
+                    } ${styles.td}`}
                   >
-                    Status
-                  </button>
-                </td>
-              </tr>
-            ))}
+                    {capitalizeFirstLetter(item?.priority)}
+                  </td>
+                  <td className={styles.td}>
+                    {item.etfsEmpModelforInitiator?.empname} -{" "}
+                    {item.etfsEmpModelforInitiator?.empno}
+                  </td>
+                  <td className={styles.td}>{item.preparedDate}</td>
+                  <td className={styles.td}>{item.subject}</td>
+                  <td className={styles.td}>{item.status}</td>
+                  <td className={styles.td}>
+                    <button
+                      className={styles.statusButton}
+                      onClick={() => openStatusModal(item)}
+                    >
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
-
-        
 
         {/* Popup Modal */}
         <Popup open={showModal} closeOnDocumentClick onClose={closeModal}>
@@ -215,6 +230,16 @@ const Status = () => {
                 capitalizeFirstLetter={capitalizeFirstLetter}
               />
             )}
+            <button
+              className={styles.printButton}
+              onClick={() =>
+                navigate("/printFile", {
+                  state: { fileUtn: selectedFile.fileUtn },
+                })
+              }
+            >
+              PrintFile
+            </button>
             {selectedFile && <Workflow fileUtn={selectedFile.fileUtn} />}
             <div className={styles.closeContainer}>
               <button className={styles.closeButton} onClick={closeModal}>

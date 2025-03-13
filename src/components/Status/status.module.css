@@ -362,3 +362,25 @@ text-align: left;
   display: flex;
   justify-content: space-between;
 }
+
+.printButton{
+  background-color: #dc3545; /* Red color for a close action */
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin: 13px;
+}
+
+.printButton:hover {
+  background-color: #c82333;
+}
+
+/* Click effect */
+.printButton:active {
+  background-color: #a71d2a;
+  transform: scale(0.98);
+}

@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserContext/UserContext";
 import { baseUrl } from "../../environments/environment";
-import QRCode from "react-qr-code";
+
 
 const NewFile = () => {
   const navigate = useNavigate();
