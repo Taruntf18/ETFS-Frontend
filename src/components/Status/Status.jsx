@@ -207,7 +207,12 @@ const Status = () => {
                   </td>
                   <td className={styles.td}>{item.preparedDate}</td>
                   <td className={styles.td}>{item.subject}</td>
-                  <td className={styles.td}>{item.status}</td>
+                  <td className={styles.td}>
+                    {item.status.includes("Received")
+                      ? item.status.replace("Received", " - Office Received")
+                      : `Waiting at ${item.status} office for Acceptance`}
+                  </td>
+
                   <td className={styles.td}>
                     <button
                       className={styles.statusButton}

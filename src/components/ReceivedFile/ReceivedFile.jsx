@@ -414,7 +414,7 @@ const ReceivedFile = () => {
           <tbody>
             {displayedReceivedFilesData.map((item, key) => (
               <tr className={styles.tr} key={key}>
-                <td style={{ textWrap: "nowrap" }} className={styles.td}>
+                <td style={{ textWrap: "nowrap" , textDecoration:'underline', cursor:'pointer'}} onClick={() => openStatusModal(item)} className={styles.td}>
                   {item.etfsFileMaster?.fileUtn}
                 </td>
                 <td
