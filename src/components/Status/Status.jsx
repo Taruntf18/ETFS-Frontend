@@ -210,7 +210,7 @@ const Status = () => {
                   <td className={styles.td}>
                     {item.status.includes("Received")
                       ? item.status.replace("Received", " - Office Received")
-                      : `Waiting at ${item.status} office for Acceptance`}
+                      : `Pending Acceptance at ${item.status} Office`}
                   </td>
 
                   <td className={styles.td}>

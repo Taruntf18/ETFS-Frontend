@@ -83,18 +83,19 @@
 }
 
 .receiveButton {
-  background-color: #4d77ff;
+  background-color: #7c3bf4ca;
   color: white;
   font-size: 15px;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 16px;
+  width: 90px;
   cursor: pointer;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
 .receiveButton:hover {
-  background-color: #6085ff;
+  background-color: #600ff7ca;
 }
 
 .table {
@@ -177,7 +178,8 @@
   background-color: #4d6eff;
   color: white;
   border: none;
-  padding: 8px 15px;
+  width: 80px;
+  padding: 10px 16px;
   cursor: pointer;
   text-align: center;
   border-radius: 5px;
@@ -364,7 +366,7 @@ text-align: left;
 }
 
 .printButton{
-  background-color: #dc3545; 
+  background-color: #9454dd; 
   color: white;
   padding: 10px 20px;
   font-size: 16px;
@@ -376,7 +378,7 @@ text-align: left;
 }
 
 .printButton:hover {
-  background-color: #c82333;
+  background-color: #7710ee;
 }
 
 /* Click effect */

@@ -31,7 +31,7 @@ const PrintFile = () => {
             className={styles.exitButton}
             onClick={() => navigate(-1)} // Navigates back to the previous page
           >
-            <IoExitOutline size={24} /> Exit
+            <IoExitOutline size={24} /> Back
           </button>
 
           <FcPrint
