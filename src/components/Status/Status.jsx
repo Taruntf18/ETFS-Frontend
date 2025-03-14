@@ -31,7 +31,7 @@ const Status = () => {
         let response;
         if (currentUserRole === "Employee") {
           response = await axios.get(
-            `${baseUrl}getDataByEmpIdAndDivision/${user.userId}/${user.userDivision.divname}`
+            `${baseUrl}getDataByFileInitiatorAndDivision/${user.userId}/${user.userDivision.divid}`
           );
         } else if (currentUserRole === "Divisional Office") {
           response = await axios.get(

@@ -32,6 +32,12 @@ const Login = () => {
         "empNo": userid,
         "password": password
       });
+
+      if (result.data.user.length === 6 && result.data.roles.length === 0) {
+        SetMessage("Not Authorized");
+        return;
+      }
+
       updateUser({
         "userId": result.data.user,
         "userName": result.data.user.length == 5 ? result.data.empData.empname : result.data.empData.empName,
@@ -42,7 +48,9 @@ const Login = () => {
         "isLoggedIn": true,
         "hod":null,
       });
+
       setDivision(Array.isArray(result.data.divisions) ? result.data.divisions : []);
+
       if(result.data.user.length == 5) {
         setCurrentUserRole("Employee");
       }else{
@@ -53,6 +61,7 @@ const Login = () => {
         }
       } 
       SetMessage("Login Successful");
+
       if (result.data.divisions.length <= 1) {
         updateUser({
           "userId": result.data.user,
@@ -64,6 +73,7 @@ const Login = () => {
           "isLoggedIn": true,
           "hod":null,
         });
+
         if(result.data.user.length == 6 && result.data.isFirstLogin == 'Y'){
           navigate('/changePassword');
         }else{

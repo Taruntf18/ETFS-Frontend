@@ -15,9 +15,14 @@ const MainSection = () => {
 
 const WelcomePage = () => (
   <div className="welcome-content">
-    <h1>Welcome to the E-Tracking System</h1>
-    <p>Track, manage, and monitor your files effortlessly with our streamlined interface. Use the navigation bar above to navigate.</p>
-    <p>Start your journey with efficient file tracking today!</p>
+    <h1>e -Tracking File System</h1><br/>
+    <p>
+      Effortlessly manage and monitor your files with a powerful yet simple interface.
+      Stay informed, stay organized, and streamline your workflow.
+    </p>
+    <p>
+      Navigate through the options above to get started.
+    </p>
   </div>
 );
 
