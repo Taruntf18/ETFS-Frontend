@@ -9,16 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserContext/UserContext";
 import { baseUrl } from "../../environments/environment";
 
-
 const NewFile = () => {
   const navigate = useNavigate();
   // context api states;
   const { user } = useUser();
   const { division } = useUser();
   const { currentUserRole } = useUser();
-
-
-
 
   // states for storing input form data
   const [priority, setPriority] = useState("");
@@ -30,8 +26,14 @@ const NewFile = () => {
   const [workflow, setWorkflow] = useState("");
   const [fileInitiator, setFileInitiator] = useState("");
   const [sendingto, setSendingto] = useState("");
+  const [projectNo, setProjectNo] = useState("");
+  const [amount, setAmount] = useState("");
+  const [referenceNo, setReferenceNo] = useState("");
+
+  const [allNalEmployees, setAllNalEmployees] = useState([]);
 
   // states for handling ui changes
+  const [selectedDivType, setSelectedDivType] = useState("");
   const [divisions, setDivisions] = useState([]);
   const [documentArr, setDocumentArr] = useState([]);
   const [emp_of_my_div, setEmp_of_my_div] = useState([]);
@@ -41,19 +43,32 @@ const NewFile = () => {
 
   // console.log(divisionalOffice);
   const jsonObject = {
-    "fileInitiator": currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
-    "description": description,
-    "divId": user.userDivision.divid,
-    "docId": typeOfDoc,
-    "preparedBy": user.userId,
-    "preparedDate": "",
-    "priority": priority,
-    "status": currentUserRole == "Divisional Office" ? sendingto.divName : user.userDivision.divname,
-    "subject": subject,
-    "workflow": divisions.toString(),
-    "sendingTo": parseInt(currentUserRole == "Divisional Office" ? sendingto.divId : user.userDivision.divid),
-    "sendingThrough": sendingThrough
-  }
+    fileInitiator:
+      currentUserRole == "Divisional Office" ? fileInitiator : user.userId,
+    description: description,
+    divId: user.userDivision.divid,
+    docId: typeOfDoc,
+    preparedBy: user.userId,
+    preparedDate: "",
+    priority: priority,
+    status:
+      currentUserRole == "Divisional Office"
+        ? sendingto.divName
+        : user.userDivision.divname,
+    subject: subject,
+    projectNo: projectNo,
+    amount: amount,
+    referenceNo: referenceNo,
+    workflow: divisions.toString(),
+    sendingTo: parseInt(
+      currentUserRole == "Divisional Office"
+        ? sendingto.divId
+        : user.userDivision.divid
+    ),
+    sendingThrough: sendingThrough,
+  };
+
+  console.log(jsonObject);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,22 +98,43 @@ const NewFile = () => {
     }
   };
 
+  // useEffect(() => {
+  //   const fetchDivisionalOrAllEmpData = async () => {
+  //     try {
+  //       let response = null;
+  //       if (selectedDivType === "same_division") {
+  //         response = await axios.get(`${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`);
+  //       } else {
+  //         response = await axios.get(`${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`);
+  //       }
+  //       setDivisionalEmployees(response.data);
+  //     } catch (error) {
+  //       console.error("Axios Error:", error);
+  //     }
+  //   };
+
+  //   fetchDivisionalOrAllEmpData();
+  // }, [selectedDivType, user.userDivision.divname]);
+
   // fetching DATA
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [docResp, empResp, divResp, employeeResp] = await Promise.all([
-          axios.get(`${baseUrl}getAllDocument`),
-          axios.get(`${baseUrl}getAllDocument`),
-          axios.get(`${baseUrl}getDivisionData`),
-          axios.get(
-            `${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`
-          ),
-        ]);
+        const [docResp, empResp, divResp, employeeResp, allEmpResp] =
+          await Promise.all([
+            axios.get(`${baseUrl}getAllDocument`),
+            axios.get(`${baseUrl}getAllDocument`),
+            axios.get(`${baseUrl}getDivisionData`),
+            axios.get(
+              `${baseUrl}getEmployeeByDivision/${user.userDivision.divname}/0`
+            ),
+            axios.get(`${baseUrl}getAllEmpList/0`),
+          ]);
         setDocumentArr(docResp.data);
         setEmp_of_my_div(empResp.data);
         setDivisionalOffice(divResp.data);
         setDivisionalEmployees(employeeResp.data);
+        setAllNalEmployees(allEmpResp.data);
       } catch (error) {
         console.error("Axios Error:", error);
       }
@@ -128,6 +164,34 @@ const NewFile = () => {
         <div className={styles.form_container}>
           <h2>Create New File</h2>
           <form onSubmit={handleSubmit}>
+            <div className={styles.form_group}>
+              {currentUserRole === "Divisional Office" && (
+                <div className={styles.radio_group}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="selectedDivision"
+                      checked={selectedDivType === "same_division"}
+                      onChange={(e) => setSelectedDivType(e.target.value)}
+                      value="same_division"
+                      required
+                    />{" "}
+                    Same Division
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="selectedDivision"
+                      checked={selectedDivType === "other_division"}
+                      onChange={(e) => setSelectedDivType(e.target.value)}
+                      value="other_division"
+                      required
+                    />{" "}
+                    Other Division
+                  </label>
+                </div>
+              )}
+            </div>
             {currentUserRole == "Divisional Office" && (
               <div className={styles.form_group}>
                 <label htmlFor="document-type">
@@ -140,11 +204,19 @@ const NewFile = () => {
                   }}
                 >
                   <option value="">Select Employee</option>
-                  {divisionalEmployees.map((item) => (
-                    <option key={item.empno} value={item.empno}>
-                      {item.empname}
-                    </option>
-                  ))}
+                  {selectedDivType === "same_division" &&
+                    divisionalEmployees.map((item) => (
+                      <option key={item.empno} value={item.empno}>
+                        {item.empname}
+                      </option>
+                    ))}
+
+                  {selectedDivType === "other_division" &&
+                    allNalEmployees.map((item) => (
+                      <option key={item.empno} value={item.empno}>
+                        {item.empno} - {item.empname}
+                      </option>
+                    ))}
                 </select>
               </div>
             )}
@@ -209,6 +281,33 @@ const NewFile = () => {
               />
             </div>
             <div className={styles.form_group}>
+              <label htmlFor="">Project No.</label>
+              <input
+                type="text"
+                onChange={(e) => setProjectNo(e.target.value)}
+                className={styles.subject}
+                placeholder="Enter the Project Number"
+              />
+            </div>
+            <div className={styles.form_group}>
+              <label htmlFor="">Amount</label>
+              <input
+                type="number"
+                onChange={(e) => setAmount(e.target.value)}
+                className={styles.subject}
+                placeholder="Enter the Amount"
+              />
+            </div>
+            <div className={styles.form_group}>
+              <label htmlFor="">UTN/Reference No.</label>
+              <input
+                type="text"
+                onChange={(e) => setReferenceNo(e.target.value)}
+                className={styles.subject}
+                placeholder="Enter the Subject"
+              />
+            </div>
+            <div className={styles.form_group}>
               <label htmlFor="description">
                 Description <span style={{ color: "red" }}>*</span>
               </label>
@@ -241,10 +340,7 @@ const NewFile = () => {
                 <div className={`${styles.form_group}`}>
                   <select
                     id={styles.document_type}
-                    onChange={
-                      (e) => setSendingto(JSON.parse(e.target.value))
-
-                    }
+                    onChange={(e) => setSendingto(JSON.parse(e.target.value))}
                   >
                     <option>Select Division</option>
                     {divisionalOffice.map((item) => (
@@ -321,7 +417,6 @@ const NewFile = () => {
           </form>
         </div>
       </div>
-
     </>
   );
 };

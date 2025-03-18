@@ -107,7 +107,7 @@ const Status = () => {
               onChange={(e) => setSearchType(e.target.value)}
             >
               <option value="searchByFileUtn">
-                Search By File UTN / Subject / Description
+                Search By File No. / Subject / Description
               </option>
               <option value="searchByDate">Search By Date</option>
             </select>

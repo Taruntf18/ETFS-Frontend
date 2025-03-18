@@ -335,7 +335,7 @@ const ReceivedFile = () => {
               onChange={(e) => setSearchType(e.target.value)}
             >
               <option value="searchByFileUtn">
-                Search By File UTN / Subject / File Initiator
+                Search By File No. / Subject / File Initiator
               </option>
               <option value="searchByDate">Search By Date</option>
             </select>

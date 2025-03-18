@@ -143,15 +143,8 @@ const HodStaff = () => {
     );
   };
 
-  // const handleSubmit = () => {
-  //   if (typeOfEmp == "Contract") {
-  //     postContractEmp();
-  //   } else if (typeOfEmp == "Regular") {
-  //     postRegularEmp();
-  //   }
-  //   window.location.reload();
-  // };
 
+  
   return (
     <>
       <Navbar />

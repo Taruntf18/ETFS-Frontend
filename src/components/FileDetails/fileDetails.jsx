@@ -72,6 +72,18 @@ const FileDetails = ({ fileUtn, capitalizeFirstLetter }) => {
             <tr>
               <td><strong>Subject</strong></td>
               <td>{selectedFile.subject}</td>
+            </tr>           
+            <tr>
+              <td><strong>Project No</strong></td>
+              <td>{selectedFile.projectNo}</td>
+            </tr>    
+            <tr>
+              <td><strong>Amount</strong></td>
+              <td>{selectedFile.amount}</td>
+            </tr>
+            <tr>
+              <td><strong>Reference No</strong></td>
+              <td>{selectedFile.referenceNo}</td>
             </tr>
             <tr>
               <td><strong>Description</strong></td>
