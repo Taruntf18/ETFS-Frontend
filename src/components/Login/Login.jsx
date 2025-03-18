@@ -10,12 +10,11 @@ import { baseUrl } from "../../environments/environment";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { updateUser } = useUser();
-  const { setDivision } = useUser();
+  const { updateUser, setDivision, setCurrentUserRole } = useUser();
   const [userid, SetUserid] = useState("");
   const [password, Setpassword] = useState("");
   const [message, SetMessage] = useState("");
-  const { setCurrentUserRole } = useUser();
+  const [loading, setLoading] = useState(false); // Added loading state
 
   const defaultOptions = {
     loop: true,
@@ -27,11 +26,19 @@ const Login = () => {
   };
 
   const fetchUserDetails = async () => {
+    setLoading(true);  // Start loading
+    SetMessage("");    // Clear previous messages
+
     try {
       const result = await axios.post(`${baseUrl}login`, {
         "empNo": userid,
         "password": password
       });
+
+      if (result.data.user.length === 5 && result.data.activecode === 9) {
+        SetMessage("Not Authorized");
+        return;
+      }
 
       if (result.data.user.length === 6 && result.data.roles.length === 0) {
         SetMessage("Not Authorized");
@@ -40,45 +47,52 @@ const Login = () => {
 
       updateUser({
         "userId": result.data.user,
-        "userName": result.data.user.length == 5 ? result.data.empData.empname : result.data.empData.empName,
+        "userName": result.data.user.length === 5 
+          ? result.data.empData.empname 
+          : result.data.empData.empName,
         "userRoles": "",
         "userDivision": "",
         "userSection": result.data.empData.section,
         "userDesignation": result.data.empData.designation,
         "isLoggedIn": true,
-        "hod":null,
+        "hod": null,
       });
 
       setDivision(Array.isArray(result.data.divisions) ? result.data.divisions : []);
 
-      if(result.data.user.length == 5) {
+      if (result.data.user.length === 5) {
         setCurrentUserRole("Employee");
-      }else{
-        if(result.data.roles.length == 0){
+      } else {
+        if (result.data.roles.length === 0) {
           throw new Error("Something went wrong!");
-        }else{
+        } else {
           setCurrentUserRole("Divisional Office");
         }
-      } 
+      }
       SetMessage("Login Successful");
 
       if (result.data.divisions.length <= 1) {
         updateUser({
           "userId": result.data.user,
-          "userName":  result.data.user.length == 5 ? result.data.empData.empname : result.data.empData.empName,
+          "userName": result.data.user.length === 5 
+            ? result.data.empData.empname 
+            : result.data.empData.empName,
           "userRoles": "",
           "userDivision": result.data.divisions[0],
           "userSection": result.data.empData.section,
           "userDesignation": result.data.empData.designation,
           "isLoggedIn": true,
-          "hod":null,
+          "hod": null,
         });
 
-        if(result.data.user.length == 6 && result.data.isFirstLogin == 'Y'){
+        if (result.data.user.length === 6 && result.data.isFirstLogin === 'Y') {
           navigate('/changePassword');
-        }else{
-          if(result.data.user.length == 6 && result.data.roles == 'Divisional Office') navigate('/received-file');
-          else navigate('/mainsection');
+        } else {
+          if (result.data.user.length === 6 && result.data.roles === 'Divisional Office') {
+            navigate('/received-file');
+          } else {
+            navigate('/mainsection');
+          }
         }
       } else {
         navigate('/SelectDivision');
@@ -86,6 +100,8 @@ const Login = () => {
     } catch (error) {
       SetMessage("Login Failed");
       console.log("Axios Error:", error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -118,7 +134,8 @@ const Login = () => {
             <img
               height={100}
               width={100}
-              src={Nal_Logo} alt="" style={{ display: "inline-block", marginRight: "20px" }}
+              src={Nal_Logo} alt=""
+              style={{ display: "inline-block", marginRight: "20px" }}
             />
             ETFS
           </h2>
@@ -149,9 +166,10 @@ const Login = () => {
               onKeyDown={handleKeyDown}
             />
           </div>
-          <button type="button" onClick={handleLogin}>
-            Login
+          <button type="button" onClick={handleLogin} disabled={loading}>
+            {loading ? "Processing..." : "Login"}
           </button>
+          {loading && <p style={{ color: 'blue' }}>Processing...</p>}
           <p style={{ color: 'red', fontWeight: 'bolder' }}>{message}</p>
         </div>
       </div>

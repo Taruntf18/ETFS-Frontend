@@ -20,9 +20,6 @@ const WelcomePage = () => (
       Effortlessly manage and monitor your files with a powerful yet simple interface.
       Stay informed, stay organized, and streamline your workflow.
     </p>
-    <p>
-      Navigate through the options above to get started.
-    </p>
   </div>
 );
 

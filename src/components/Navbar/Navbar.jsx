@@ -158,7 +158,7 @@ const Navbar = () => {
                     }}
                   >
                     {user.userDesignation}
-                  </span>{" "}
+                  </span>{" "}<br/>
                   <span style={{ fontSize: "16px", fontWeight: "normal" }}>
                     {user.userId}
                   </span>{" "}
